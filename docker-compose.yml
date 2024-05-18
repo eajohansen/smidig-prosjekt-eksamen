@@ -28,6 +28,8 @@ services:
       - database
     networks:
       - sjekk-inn
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 networks:
   sjekk-inn:
     driver: bridge

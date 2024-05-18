@@ -1,4 +1,5 @@
 using agile_dev.Repo;
+using Microsoft.EntityFrameworkCore;
 
 namespace agile_dev;
 
@@ -8,6 +9,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddDbContext<InitContext>(options =>
+            options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -27,13 +30,21 @@ public class Program
         //app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            var context = services.GetRequiredService<InitContext>();    
+            context.Database.Migrate();
+        }
 
         var summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
         app.MapPost("/test", (HttpContext httpContext) => {
-            using (var db = new InitContext())
+            using (var db = new InitContext(builder.Configuration))
             {
                 // Create and save a new Blog
                 Console.Write("Enter a name for a new Blog: ");

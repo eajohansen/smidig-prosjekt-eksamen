@@ -5,13 +5,25 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace agile_dev.Repo;
 
 public class InitContext : DbContext{
-    public InitContext() {}
-    public InitContext(DbContextOptions<InitContext> options) : base(options) {}
-    public virtual DbSet<Blog> Blog { get; set; }
+    private readonly IConfiguration _configuration;
+
+    public InitContext(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    public InitContext(DbContextOptions<InitContext> options, IConfiguration configuration) : base(options)
+    {
+        _configuration = configuration;
+    }    public virtual DbSet<Blog> Blog { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        /* For denne eksamen vil vi inkludere dette, men generelt sett skal det være plassert i en annen fil og refere til den derfra */
-        optionsBuilder.UseMySQL("Server=host.docker.internal;port=3306;database=agile-project;user=root;password=agileavengers");
+        if (!optionsBuilder.IsConfigured)
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseMySQL(connectionString);
+            
+        }
+        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
