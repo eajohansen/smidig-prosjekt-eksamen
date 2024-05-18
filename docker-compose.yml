@@ -1,0 +1,35 @@
+services:
+  database:
+    image: mysql
+    restart: always
+    ports:
+      - '3306:3306'
+    networks:
+      - sjekk-inn
+    expose:
+      - '3306'
+    volumes:
+      - agile-database:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=agile-project
+      - MYSQL_PASSWORD=agileavengers
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '5500:8080'
+      - '5501:8081'
+    expose:
+      - '5500'
+      - '5501'
+    links:
+      - database
+    networks:
+      - sjekk-inn
+networks:
+  sjekk-inn:
+    driver: bridge
+volumes:
+  agile-database:

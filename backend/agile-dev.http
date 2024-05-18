@@ -1,0 +1,6 @@
+@agile_dev_HostAddress = http://localhost:5500
+
+GET {{agile_dev_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
