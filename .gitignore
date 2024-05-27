@@ -4,3 +4,4 @@ backend/obj/
 backend/.vs/
 backend/.config
 node_modules/
+.DS_Store

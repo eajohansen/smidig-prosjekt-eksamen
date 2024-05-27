@@ -12,7 +12,6 @@ services:
       - agile-database:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=agile-project
-      - MYSQL_PASSWORD=agileavengers
       - MYSQL_ROOT_PASSWORD=agileavengers
   backend:
     build:

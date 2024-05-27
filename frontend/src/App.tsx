@@ -1,20 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import axios from "axios";
 
 function App() {
-  const [count, setCount] = useState(0)
-    async function testClick() {
-        const response = await fetch('http://localhost:5500/test', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        const data = await response.json()
-        console.log(data);
-}
+  const [count, setCount] = useState(0);
+  async function testClick() {
+    const response = await axios.post("http://localhost:5500/test");
+    console.log(response);
+  }
 
   return (
     <>
@@ -27,22 +22,22 @@ function App() {
         </a>
       </div>
       <h1>Vite + yaya </h1>
-        <button onClick={() => testClick()}> Test </button>
+      <button onClick={() => testClick()}> Test </button>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           Co is {count}
         </button>
-          asfsas
+        asfsas
         <p>
-            ssf <code>src/App.tsx</code> and save to test HMR
+          ssf <code>src/App.tsx</code> and save to test HMR
         </p>
-          sdf
+        sdf
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
