@@ -56,22 +56,7 @@ public class Program
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-        app.MapPost("/test", (HttpContext httpContext) =>
-        {
-            using (var db = new InitContext(builder.Configuration))
-            {
-                // Create and save a new Blog
-                Console.Write("Enter a name for a new Blog: ");
-                var name = Console.ReadLine();
-
-                var blog = new Blog { Name = "name", Url = "test" };
-                db.Blog.Add(blog);
-                db.SaveChanges();
-                return blog;
-
-            }
-        });
-
+        
         app.MapGet("/weatherforecast", (HttpContext httpContext) =>
                 {
                     var forecast = Enumerable.Range(1, 5).Select(index =>
