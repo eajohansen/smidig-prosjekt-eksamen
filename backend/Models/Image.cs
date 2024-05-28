@@ -15,6 +15,6 @@ public class Image {
     
     [Required]
     [Display(Name = "Link")]
-    [StringLength(200)]
+    [StringLength(500)]
     public string Link { get; set; }
 }

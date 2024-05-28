@@ -11,7 +11,7 @@ public class ContactPerson {
     [Required]
     [Key]
     [Display(Name = "Contact person Id")]
-    public int ConactPersonId { get; set; }
+    public int ContactPersonId { get; set; }
     
     [Required]
     [Display(Name = "Name")]

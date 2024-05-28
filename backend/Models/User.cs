@@ -12,7 +12,7 @@ public class User {
     [Required]
     [Key]
     [Display(Name = "User Id")]
-    public int userId { get; set; }
+    public int UserId { get; set; }
     
     [Required]
     [Display(Name = "Email")]
@@ -32,7 +32,7 @@ public class User {
     [Display(Name = "Profile id")]
     public int ProfileId { get; set; }
     
-    [ForeignKey("Profileid")]
+    [ForeignKey("ProfileId")]
     public Profile Profile { get; set; }
     
     // Still need to see the reason
@@ -43,7 +43,7 @@ public class User {
     [ForeignKey("UserEventId")]
     public UserEvent UserEvent { get; set; }
     
-    // Thinks this is a many to many
+    // Think this is a many to many
     [Required]
     [Display(Name = "Organization id")]
     public int OrganizationId { get; set; }
@@ -51,7 +51,7 @@ public class User {
     [ForeignKey("OrganizationId")]
     public Organization Organization { get; set; }
     
-    // Thinks this is a many to many
+    // Think this is a many to many
     [Required]
     [Display(Name = "Follow organization id")]
     public int FollowOrganizationId { get; set; }

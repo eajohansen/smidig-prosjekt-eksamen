@@ -19,9 +19,8 @@ public class Allergy {
      [StringLength(200)]
      public string Name { get; set; }
      
-     [Required]
      [Display(Name = "Description")]
-     [StringLength(200)]
+     [StringLength(1000)]
      public string Description { get; set; }
      
      // Still need to see the reason

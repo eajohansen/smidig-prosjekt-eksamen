@@ -14,6 +14,6 @@ public class Capacity {
     public int CapacityId { get; set; }
     
     [Required]
-    [Display(Name = "Capacity")]
+    [Display(Name = "MaxParticipants")]
     public int MaxParticipants { get; set; }
 }

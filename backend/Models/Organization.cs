@@ -17,11 +17,11 @@ public class Organization {
     [Required]
     [Display(Name = "Name")]
     [StringLength(200)]
-    public string name { get; set; }
+    public string Name { get; set; }
     
     [Required]
     [Display(Name = "Description")]
-    [StringLength(200)]
+    [StringLength(2000)]
     public string Description { get; set; }
     
     [Required]

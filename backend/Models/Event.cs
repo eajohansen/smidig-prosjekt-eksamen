@@ -17,12 +17,12 @@ public class Event {
     [Required]
     [Display(Name = "Title")]
     [StringLength(200)]
-    public string Tile { get; set; }
+    public string Title { get; set; }
     
     [Required]
     [Display(Name = "Description")]
     [StringLength(200)]
-    public string StreetName { get; set; }
+    public string Description { get; set; }
     
     [Required]
     [Display(Name = "Event DateTime id")]
@@ -55,8 +55,8 @@ public class Event {
     
     // Still need to see the reason
     [Required]
-    [Display(Name = "Event Custom file id")]
-    public int EventCustomFileId { get; set; }
+    [Display(Name = "Event Custom field id")]
+    public int EventCustomFieldId { get; set; }
     
     [ForeignKey("EventCustomFileId")]
     public EventCustomField EventCustomField { get; set; }
