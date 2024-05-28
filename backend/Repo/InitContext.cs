@@ -14,11 +14,10 @@ public class InitContext : DbContext{
     public InitContext(DbContextOptions<InitContext> options, IConfiguration configuration) : base(options)
     {
         _configuration = configuration;
-    }    public virtual DbSet<Blog> Blog { get; set; }
+    }   
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        if (!optionsBuilder.IsConfigured)
-        {
+        if (!optionsBuilder.IsConfigured) {
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseMySQL(connectionString);
             
