@@ -5,4 +5,4 @@
 5. Voila,  
 http://localhost:5173 for frontend  
 http://localhost:5500 for backend  
-http://localhost:3306 for databasen  
+http://localhost:3307 for databasen  
