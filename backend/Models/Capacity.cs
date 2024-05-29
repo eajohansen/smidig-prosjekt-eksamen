@@ -26,5 +26,6 @@ public class Capacity {
     [Display(Name = "MaxParticipants")]
     public int MaxParticipants { get; set; }
     
+    // A HasSet of all Events with this Capacity
     public virtual ICollection<Event> Events { get; set; }
 }

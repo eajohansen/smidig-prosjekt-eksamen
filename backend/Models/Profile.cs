@@ -45,7 +45,9 @@ public class Profile {
     [StringLength(1000)]
     public string ExtraInfo { get; set; }
     
+    // The User connected to this Profile
     public virtual User User { get; set; }
     
+    // A HasSet of all ProfileAllergies with this Profile
     public virtual ICollection<ProfileAllergy> ProfileAllergies { get; set; }
 }

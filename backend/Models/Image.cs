@@ -29,7 +29,9 @@ public class Image {
     [StringLength(500)]
     public string Link { get; set; }
     
+    // A HasSet of all Organizations with this Image
     public virtual ICollection<Organization> Organizations { get; set; }
     
+    // A HasSet of all Events with this Image
     public virtual ICollection<Event> Events { get; set; }
 }

@@ -11,6 +11,8 @@ public class ContactPerson {
        [Required] = Data annotation for making it a necessary field for the row
        [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
        [StringLength(*number*)] = Data annotation for setting a max length on the field
+       [DataType(*Type*)] = Data annotation for specifying the type of data
+       [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
        
     */
 
@@ -28,14 +30,16 @@ public class ContactPerson {
     [StringLength(200)]
     public string Name { get; set; }
     
-    [Required]
     [Display(Name = "Email")]
     [StringLength(200)]
-    public string Email { get; set; }
+    [DataType(DataType.EmailAddress)]
+    [EmailAddress(ErrorMessage = "Invalid Email Address")]
+    public string? Email { get; set; }
     
-    [Required]
     [Display(Name = "Phone number")]
-    public int Number { get; set; }
+    [StringLength(200)]
+    public string? Number { get; set; }
     
+    // A HasSet of all Events with this ContactPerson
     public virtual ICollection<Event> Events { get; set; }
 }

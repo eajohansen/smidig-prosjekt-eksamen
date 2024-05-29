@@ -13,13 +13,15 @@ public class User {
        [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
        [StringLength(*number*)] = Data annotation for setting a max length on the field
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
+       [DataType(*Type*)] = Data annotation for specifying the type of data
+       [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
 
     */
 
     public User() {
         // Initializing them to avoid NULL reference
-        Followers = new HashSet<Follower>();
-        Organisators = new HashSet<Organisator>();
+        FollowOrganization = new HashSet<Follower>();
+        OrganisatorOrganization = new HashSet<Organisator>();
         UserEvents = new HashSet<UserEvent>();
     }
     
@@ -30,6 +32,8 @@ public class User {
     [Required]
     [Display(Name = "Email")]
     [StringLength(200)]
+    [DataType(DataType.EmailAddress)]
+    [EmailAddress(ErrorMessage = "Invalid Email Address")]
     public string Email { get; set; }
     
     [Required]
@@ -48,9 +52,12 @@ public class User {
     [ForeignKey("ProfileId")]
     public virtual Profile Profile { get; set; }
     
-    public virtual ICollection<Follower> Followers { get; set; }
+    // A HasSet of all Organizations that this User follows
+    public virtual ICollection<Follower> FollowOrganization { get; set; }
     
-    public virtual ICollection<Organisator> Organisators { get; set; }
+    // A HasSet of all Organizations that this User can organize
+    public virtual ICollection<Organisator> OrganisatorOrganization { get; set; }
     
+    // A HasSet of all UserEvents with this User 
     public virtual ICollection<UserEvent> UserEvents { get; set; }
 }

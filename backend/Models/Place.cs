@@ -32,5 +32,6 @@ public class Place {
     [StringLength(500)]
     public string Url { get; set; }
     
+    // A HasSet of all Events with this Place
     public virtual ICollection<Event> Events { get; set; }
 }

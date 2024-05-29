@@ -25,12 +25,13 @@ public class CustomField {
     
     [Required]
     [Display(Name = "Description")]
-    [StringLength(1000)]
+    [StringLength(200)]
     public string Description { get; set; }
     
     [Required]
     [Display(Name = "Value")]
     public bool Value { get; set; }
     
+    // A HasSet of all EventCustomFields with this CustomField
     public virtual ICollection<EventCustomField> EventCustomFields { get; set; }
 }
