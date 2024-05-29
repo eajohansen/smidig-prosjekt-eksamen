@@ -1,5 +1,6 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import { validateEmail } from "../validateEmail";
+import "bootstrap/dist/css/bootstrap.min.css";
 const LoginPopup = () => {
   const [login, setLogin] = useState(true);
   const [mailCheck, setMailCheck] = useState("");
@@ -17,7 +18,12 @@ const LoginPopup = () => {
         <div className="loginContainer">
           <h2>Logg inn</h2>
           <div className="loginBtnContainer">
-            <button className="loginToggleBtn">Logg Inn</button>
+            <button
+              className="loginToggleBtn"
+              style={{ color: "white", backgroundColor: "#497D95" }}
+            >
+              Logg Inn
+            </button>
             <button
               className="registerToggleBtn"
               onClick={() => setLogin(false)}
@@ -30,7 +36,7 @@ const LoginPopup = () => {
           <label style={{ alignSelf: "flex-start" }}>Passord</label>
           <input type="password" />
 
-          <button>Logg Inn</button>
+          <button className="cntBtn">Logg Inn</button>
           <button
             onClick={() => {
               console.log(validateEmail(mailCheck));
@@ -48,7 +54,12 @@ const LoginPopup = () => {
             <button className="loginToggleBtn" onClick={() => setLogin(true)}>
               Logg inn
             </button>
-            <button className="registerToggleBtn">Opprett Profil</button>
+            <button
+              className="registerToggleBtn"
+              style={{ color: "white", backgroundColor: "#497D95" }}
+            >
+              Opprett Profil
+            </button>
           </div>
           <label style={{ alignSelf: "flex-start" }}>Epost</label>
           <input type="email" />
@@ -57,7 +68,7 @@ const LoginPopup = () => {
           <label style={{ alignSelf: "flex-start" }}>Gjenta Passord</label>
           <input type="password" />
 
-          <button>Fortsett</button>
+          <button className="cntBtn">Fortsett</button>
         </div>
       );
     }
