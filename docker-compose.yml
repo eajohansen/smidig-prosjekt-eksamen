@@ -13,6 +13,12 @@ services:
     environment:
       - MYSQL_DATABASE=agile-project
       - MYSQL_ROOT_PASSWORD=agileavengers
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
   backend:
     build:
       context: ./backend
@@ -24,6 +30,10 @@ services:
     expose:
       - '5500'
       - '5501'
+    depends_on:
+      database:
+         condition: service_healthy
+
     links:
       - database
     networks:
