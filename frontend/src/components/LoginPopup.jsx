@@ -33,7 +33,7 @@ const LoginPopup = () => {
           <button>Logg Inn</button>
           <button
             onClick={() => {
-              console.log(mailCheck);
+              console.log(validateEmail(mailCheck));
             }}
           >
             Validate email
