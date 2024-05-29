@@ -7,29 +7,24 @@ namespace agile_dev.Repo;
 
 public class InitContext : DbContext{
     private readonly IConfiguration _configuration;
-
-    public InitContext(IConfiguration configuration)
-    {
+    
+    public DbSet<User> User { get; set; }
+    public DbSet<Profile> Profile { get; set; }
+    public DbSet<Allergy> Allergy { get; set; }
+    
+    public InitContext(IConfiguration configuration) {
         _configuration = configuration;
     }
-    public InitContext(DbContextOptions<InitContext> options, IConfiguration configuration) : base(options)
-    {
-        _configuration = configuration;
-    }   
-    
+    public InitContext() {
+        _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseMySQL(connectionString);
-            
+            optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;");
         }
         
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-    }
+  
 
-public DbSet<agile_dev.Models.Session> Session { get; set; } = default!;
-
-public DbSet<agile_dev.Models.SessionDateTime> SessionDateTime { get; set; } = default!;
 }

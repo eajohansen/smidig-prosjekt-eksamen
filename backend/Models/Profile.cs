@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
@@ -22,6 +23,7 @@ public class Profile {
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Profile Id")]
     public int ProfileId { get; set; }
     
@@ -40,12 +42,9 @@ public class Profile {
     [Display(Name = "Birthdate")]
     public DateTime Birthdate { get; set; }
     
-    [Required]
     [Display(Name = "Extra info")]
     [StringLength(1000)]
     public string ExtraInfo { get; set; }
-    
-    public virtual User User { get; set; }
     
     public virtual ICollection<ProfileAllergy> ProfileAllergies { get; set; }
 }
