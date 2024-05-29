@@ -6,3 +6,7 @@
 http://localhost:5173 for frontend  
 http://localhost:5500 for backend  
 http://localhost:3307 for databasen  
+
+for å endre database setup:
+- "dotnet ef migration add navnetPaaEndringene"
+- REBUILD prosjektet med step 3.
