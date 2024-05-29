@@ -8,3 +8,5 @@ export const validateEmail = (email) => {
     return false;
   }
 };
+
+// https://stackoverflow.com/questions/39356826/how-to-check-if-it-a-text-input-has-a-valid-email-format-in-reactjs
