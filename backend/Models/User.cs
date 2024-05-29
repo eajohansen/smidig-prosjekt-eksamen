@@ -4,12 +4,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace agile_dev.Models;
 
 public class User {
+    
+    /*
+       Data annotations
+
+       [KEY] = Data annotation for primary key of this model
+       [Required] = Data annotation for making it a necessary field for the row
+       [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
+       [StringLength(*number*)] = Data annotation for setting a max length on the field
+       [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
+
+    */
 
     public User() {
-        
+        // Initializing them to avoid NULL reference
+        Followers = new HashSet<Follower>();
+        Organisators = new HashSet<Organisator>();
+        UserEvents = new HashSet<UserEvent>();
     }
     
-    [Required]
     [Key]
     [Display(Name = "User Id")]
     public int UserId { get; set; }
@@ -33,29 +46,11 @@ public class User {
     public int ProfileId { get; set; }
     
     [ForeignKey("ProfileId")]
-    public Profile Profile { get; set; }
+    public virtual Profile Profile { get; set; }
     
-    // Still need to see the reason
-    [Required]
-    [Display(Name = "User Event id")]
-    public int UserEventId { get; set; }
+    public virtual ICollection<Follower> Followers { get; set; }
     
-    [ForeignKey("UserEventId")]
-    public UserEvent UserEvent { get; set; }
+    public virtual ICollection<Organisator> Organisators { get; set; }
     
-    // Think this is a many to many
-    [Required]
-    [Display(Name = "Organization id")]
-    public int OrganizationId { get; set; }
-    
-    [ForeignKey("OrganizationId")]
-    public Organization Organization { get; set; }
-    
-    // Think this is a many to many
-    [Required]
-    [Display(Name = "Follow organization id")]
-    public int FollowOrganizationId { get; set; }
-    
-    [ForeignKey("OrganizationId")]
-    public Organization FollowOrganization { get; set; }
+    public virtual ICollection<UserEvent> UserEvents { get; set; }
 }

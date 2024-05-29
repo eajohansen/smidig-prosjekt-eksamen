@@ -6,11 +6,12 @@ namespace agile_dev.Models;
 public class Event {
 
     public Event() {
-        
+        // Initializing them to avoid NULL reference
+        EventCustomFields = new HashSet<EventCustomField>();
+        UserEvents = new HashSet<UserEvent>();
     }
     
-    [Required]
-    [Key]
+    [Key] // Data annotation for primary key of this model
     [Display(Name = "Event Id")]
     public int EventId { get; set; }
     
@@ -21,57 +22,49 @@ public class Event {
     
     [Required]
     [Display(Name = "Description")]
-    [StringLength(200)]
+    [StringLength(2000)]
     public string Description { get; set; }
+    
+    [Required]
+    [Display(Name = "Published")]
+    public bool Published { get; set; }
     
     [Required]
     [Display(Name = "Event DateTime id")]
     public int EventDateTimeId { get; set; }
     
     [ForeignKey("EventDateTimeId")]
-    public EventDateTime EventDateTime { get; set; }
+    public virtual EventDateTime EventDateTime { get; set; }
     
     [Required]
     [Display(Name = "Capacity id")]
     public int CapacityId { get; set; }
     
     [ForeignKey("CapacityId")]
-    public Capacity Capacity { get; set; }
+    public virtual Capacity Capacity { get; set; }
     
     [Required]
     [Display(Name = "Place id")]
     public int PlaceId { get; set; }
     
     [ForeignKey("PlaceId")]
-    public Place Place { get; set; }
-    
-    // Still need to see the reason
-    [Required]
-    [Display(Name = "User Event id")]
-    public int UserEventId { get; set; }
-    
-    [ForeignKey("UserEventId")]
-    public UserEvent UserEvent { get; set; }
-    
-    // Still need to see the reason
-    [Required]
-    [Display(Name = "Event Custom field id")]
-    public int EventCustomFieldId { get; set; }
-    
-    [ForeignKey("EventCustomFileId")]
-    public EventCustomField EventCustomField { get; set; }
+    public virtual Place Place { get; set; }
     
     [Required]
     [Display(Name = "Image id")]
     public int ImageId { get; set; }
     
     [ForeignKey("ImageId")]
-    public Image Image { get; set; }
+    public virtual Image Image { get; set; }
     
     [Required]
     [Display(Name = "Contact person id")]
     public int ContactPersonId { get; set; }
     
     [ForeignKey("ContactPersonId")]
-    public ContactPerson ContactPerson { get; set; }
+    public virtual ContactPerson ContactPerson { get; set; }
+    
+    public virtual ICollection<EventCustomField> EventCustomFields { get; set; }
+    
+    public virtual ICollection<UserEvent> UserEvents { get; set; }
 }

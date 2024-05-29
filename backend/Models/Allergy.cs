@@ -1,16 +1,15 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
 public class Allergy {
 
      public Allergy() {
-          
+          // Initializing to avoid NULL reference
+          ProfileAllergies = new HashSet<ProfileAllergy>();
      }
      
-     [Required]
-     [Key]
+     [Key] // Data annotation for primary key of this model
      [Display(Name = "Allergy Id")]
      public int AllergyId { get; set; }
      
@@ -23,11 +22,5 @@ public class Allergy {
      [StringLength(1000)]
      public string Description { get; set; }
      
-     // Still need to see the reason
-     [Required]
-     [Display(Name = "Profile Allergy id")]
-     public int ProfileAllergyId { get; set; }
-    
-     [ForeignKey("ProfileAllergyId")]
-     public ProfileAllergy ProfileAllergy { get; set; }
+     public virtual ICollection<ProfileAllergy> ProfileAllergies { get; set; }
 }

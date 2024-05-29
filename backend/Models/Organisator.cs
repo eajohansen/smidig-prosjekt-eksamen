@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
-public class UserEvent {
+public class Organisator {
     
     /*
        Data annotations
@@ -11,32 +11,30 @@ public class UserEvent {
        [KEY] = Data annotation for primary key of this model
        [Required] = Data annotation for making it a necessary field for the row
        [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
+       [StringLength(*number*)] = Data annotation for setting a max length on the field
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
-
+       
     */
 
-    public UserEvent() {
+    public Organisator() {
         
     }
     
-    [Key]
-    [Display(Name = "User Event Id")]
-    public int UserEventId { get; set; }
+    [Key] // Data annotation for primary key of this model
+    [Display(Name = "Organisator Id")]
+    public int OrganisatorId { get; set; }
     
-    [Display(Name = "Queue Number")]
-    public int QueueNumber { get; set; }
+    [Required]
+    [Display(Name = "Organization id")]
+    public int OrganizationId { get; set; }
+    
+    [ForeignKey("OrganizationId")]
+    public virtual Organization Organization { get; set; }
     
     [Required]
     [Display(Name = "User id")]
     public int UserId { get; set; }
     
-    [ForeignKey("Userid")]
+    [ForeignKey("UserId")]
     public virtual User User { get; set; }
-    
-    [Required]
-    [Display(Name = "Event id")]
-    public int EventId { get; set; }
-    
-    [ForeignKey("EventId")]
-    public virtual Event Event { get; set; }
 }

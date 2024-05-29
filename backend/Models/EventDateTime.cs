@@ -8,8 +8,7 @@ public class EventDateTime {
         
     }
     
-    [Required]
-    [Key]
+    [Key] // Data annotation for primary key of this model
     [Display(Name = "Event DateTime Id")]
     public int EventDateTimeId { get; set; }
     
@@ -27,4 +26,6 @@ public class EventDateTime {
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [Display(Name = "End time")]
     public DateTime EndTime { get; set; }
+    
+    public virtual Event Event { get; set; }
 }

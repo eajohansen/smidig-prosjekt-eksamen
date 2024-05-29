@@ -1,16 +1,27 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
 public class Profile {
+    
+    /*
+       Data annotations
+
+       [KEY] = Data annotation for primary key of this model
+       [Required] = Data annotation for making it a necessary field for the row
+       [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
+       [StringLength(*number*)] = Data annotation for setting a max length on the field
+       [DataType(*Type*)] = Data annotation for specifying the type of data
+       [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
+       [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
+
+    */
 
     public Profile() {
-        
+        ProfileAllergies = new HashSet<ProfileAllergy>();
     }
     
-    [Required]
-    [Key]
+    [Key] // Data annotation for primary key of this model
     [Display(Name = "Profile Id")]
     public int ProfileId { get; set; }
     
@@ -29,11 +40,12 @@ public class Profile {
     [Display(Name = "Birthdate")]
     public DateTime Birthdate { get; set; }
     
-    // Still need to see the reason
     [Required]
-    [Display(Name = "Profile Allergy id")]
-    public int ProfileAllergyId { get; set; }
+    [Display(Name = "Extra info")]
+    [StringLength(1000)]
+    public string ExtraInfo { get; set; }
     
-    [ForeignKey("ProfileAllergyId")]
-    public ProfileAllergy ProfileAllergy { get; set; }
+    public virtual User User { get; set; }
+    
+    public virtual ICollection<ProfileAllergy> ProfileAllergies { get; set; }
 }

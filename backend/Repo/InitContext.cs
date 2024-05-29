@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using agile_dev.Models;
 
 namespace agile_dev.Repo;
 
@@ -27,4 +28,8 @@ public class InitContext : DbContext{
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
     }
+
+public DbSet<agile_dev.Models.Session> Session { get; set; } = default!;
+
+public DbSet<agile_dev.Models.SessionDateTime> SessionDateTime { get; set; } = default!;
 }

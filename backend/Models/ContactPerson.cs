@@ -3,12 +3,22 @@ using System.ComponentModel.DataAnnotations;
 namespace agile_dev.Models;
 
 public class ContactPerson {
+    
+    /*
+       Data annotations
+
+       [KEY] = Data annotation for primary key of this model
+       [Required] = Data annotation for making it a necessary field for the row
+       [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
+       [StringLength(*number*)] = Data annotation for setting a max length on the field
+       
+    */
 
     public ContactPerson() {
-        
+        // Initializing to avoid NULL reference
+        Events = new HashSet<Event>();
     }
     
-    [Required]
     [Key]
     [Display(Name = "Contact person Id")]
     public int ContactPersonId { get; set; }
@@ -25,6 +35,8 @@ public class ContactPerson {
     
     [Required]
     [Display(Name = "Phone number")]
-    [StringLength(200)]
-    public string Number { get; set; }
+    public int Number { get; set; }
+    
+    // 
+    public virtual ICollection<Event> Events { get; set; }
 }

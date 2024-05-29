@@ -9,8 +9,7 @@ public class EventCustomField {
         
     }
     
-    [Required]
-    [Key]
+    [Key] // Data annotation for primary key of this model
     [Display(Name = "Event Custom field id")]
     public int EventCustomFieldId { get; set; }
     
@@ -19,12 +18,12 @@ public class EventCustomField {
     public int CustomFieldId { get; set; }
     
     [ForeignKey("CustomFieldId")]
-    public CustomField CustomField { get; set; }
+    public virtual CustomField CustomField { get; set; }
     
     [Required]
     [Display(Name = "Event id")]
     public int EventId { get; set; }
     
     [ForeignKey("EventId")]
-    public Event Event { get; set; }
+    public virtual Event Event { get; set; }
 }
