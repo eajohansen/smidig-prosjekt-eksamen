@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <LoginPopup />
-      {/* <button onClick={() => testClick()}> Test </button> */}
+      <button onClick={() => testClick()}> Test </button>
     </>
   );
 }
