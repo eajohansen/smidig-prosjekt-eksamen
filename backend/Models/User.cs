@@ -60,4 +60,7 @@ public class User {
     
     // A HasSet of all UserEvents with this User 
     public virtual ICollection<UserEvent> UserEvents { get; set; }
+    
+    // A HasSet of all Notices with this User
+    public virtual ICollection<Notice> Notices { get; set; }
 }

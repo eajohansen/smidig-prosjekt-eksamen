@@ -23,6 +23,9 @@ public class UserEvent {
     [Display(Name = "User Event Id")]
     public int UserEventId { get; set; }
     
+    [Display(Name = "Used")]
+    public bool Used { get; set; }
+    
     [Display(Name = "Queue Number")]
     public int QueueNumber { get; set; }
     
