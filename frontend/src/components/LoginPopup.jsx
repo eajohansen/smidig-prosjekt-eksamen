@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect, SyntheticEvent } from "react";
 import { validateEmail } from "../validateEmail";
 const LoginPopup = () => {
   const [login, setLogin] = useState(true);
   const [mailCheck, setMailCheck] = useState("");
 
+  useEffect(() => {
+    setMailCheck(mailCheck);
+  }, [mailCheck]);
+
+  const handleChange = (e) => {
+    setMailCheck(e.currentTarget.value);
+  };
   const loginOrRegister = () => {
     if (login) {
       return (
@@ -19,16 +26,18 @@ const LoginPopup = () => {
             </button>
           </div>
           <label style={{ alignSelf: "flex-start" }}>Epost</label>
-          <input
-            type="email"
-            value={mailCheck}
-            onChange={() => setMailCheck(value)}
-          />
+          <input type="email" onChange={handleChange} />
           <label style={{ alignSelf: "flex-start" }}>Passord</label>
           <input type="password" />
 
           <button>Logg Inn</button>
-          <button onClick={() => {}}>Validate email</button>
+          <button
+            onClick={() => {
+              console.log(mailCheck);
+            }}
+          >
+            Validate email
+          </button>
         </div>
       );
     } else if (!login) {
