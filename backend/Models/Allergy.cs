@@ -32,5 +32,6 @@ public class Allergy {
      [StringLength(1000)]
      public string Description { get; set; }
      
+     // A HasSet of all ProfileAllergies with this Allergy
      public virtual ICollection<ProfileAllergy> ProfileAllergies { get; set; }
 }

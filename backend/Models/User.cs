@@ -18,8 +18,8 @@ public class User {
 
     public User() {
         // Initializing them to avoid NULL reference
-        Followers = new HashSet<Follower>();
-        Organisators = new HashSet<Organisator>();
+        FollowOrganization = new HashSet<Follower>();
+        OrganisatorOrganization = new HashSet<Organisator>();
         UserEvents = new HashSet<UserEvent>();
     }
     
@@ -48,9 +48,12 @@ public class User {
     [ForeignKey("ProfileId")]
     public virtual Profile Profile { get; set; }
     
-    public virtual ICollection<Follower> Followers { get; set; }
+    // A HasSet of all Organizations that this User follows
+    public virtual ICollection<Follower> FollowOrganization { get; set; }
     
-    public virtual ICollection<Organisator> Organisators { get; set; }
+    // A HasSet of all Organizations that this User can organize
+    public virtual ICollection<Organisator> OrganisatorOrganization { get; set; }
     
+    // A HasSet of all UserEvents with this User 
     public virtual ICollection<UserEvent> UserEvents { get; set; }
 }

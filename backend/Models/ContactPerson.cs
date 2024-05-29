@@ -37,5 +37,6 @@ public class ContactPerson {
     [Display(Name = "Phone number")]
     public int Number { get; set; }
     
+    // A HasSet of all Events with this ContactPerson
     public virtual ICollection<Event> Events { get; set; }
 }

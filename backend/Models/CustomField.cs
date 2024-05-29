@@ -32,5 +32,6 @@ public class CustomField {
     [Display(Name = "Value")]
     public bool Value { get; set; }
     
+    // A HasSet of all EventCustomFields with this CustomField
     public virtual ICollection<EventCustomField> EventCustomFields { get; set; }
 }

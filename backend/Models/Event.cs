@@ -75,7 +75,9 @@ public class Event {
     [ForeignKey("ContactPersonId")]
     public virtual ContactPerson ContactPerson { get; set; }
     
+    // A HasSet of all EventCustomFields with this Event
     public virtual ICollection<EventCustomField> EventCustomFields { get; set; }
     
+    // A HasSet of all UserEvents with this Event
     public virtual ICollection<UserEvent> UserEvents { get; set; }
 }

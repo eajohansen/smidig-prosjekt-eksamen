@@ -42,5 +42,6 @@ public class SessionDateTime {
     [Display(Name = "Updated at")]
     public DateTime UpdatedAt { get; set; }
     
+    // The Session connected to this SessionDateTime
     public virtual Session Session { get; set; }
 }

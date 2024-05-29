@@ -43,7 +43,9 @@ public class Organization {
     [ForeignKey("ImageId")]
     public virtual Image Image { get; set; }
     
+    // A HasSet of all Followers with this Organization
     public virtual ICollection<Follower> Followers { get; set; }
     
+    // A HasSet of all Organisators with this Organization
     public virtual ICollection<Organisator> Organisators { get; set; }
 }

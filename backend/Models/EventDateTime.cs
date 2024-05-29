@@ -41,5 +41,6 @@ public class EventDateTime {
     [Display(Name = "End time")]
     public DateTime EndTime { get; set; }
     
+    // The Event connected to this EventDateTime
     public virtual Event Event { get; set; }
 }
