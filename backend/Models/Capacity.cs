@@ -3,13 +3,22 @@ using System.ComponentModel.DataAnnotations;
 namespace agile_dev.Models;
 
 public class Capacity {
+    
+    /*
+       Data annotations
+
+       [KEY] = Data annotation for primary key of this model
+       [Required] = Data annotation for making it a necessary field for the row
+       [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
+
+    */
 
     public Capacity() {
         // Initializing to avoid NULL reference
         Events = new HashSet<Event>();
     }
     
-    [Key] // Data annotation for primary key of this model
+    [Key]
     [Display(Name = "Capacity id")]
     public int CapacityId { get; set; }
     

@@ -37,6 +37,5 @@ public class ContactPerson {
     [Display(Name = "Phone number")]
     public int Number { get; set; }
     
-    // 
     public virtual ICollection<Event> Events { get; set; }
 }

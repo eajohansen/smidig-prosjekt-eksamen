@@ -22,7 +22,7 @@ public class Organization {
         Organisators = new HashSet<Organisator>();
     }
     
-    [Key] // Data annotation for primary key of this model
+    [Key]
     [Display(Name = "Organization Id")]
     public int OrganizationId { get; set; }
     

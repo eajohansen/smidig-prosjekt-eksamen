@@ -20,7 +20,7 @@ public class Session {
         
     }
     
-    [Key] // Data annotation for primary key of this model
+    [Key]
     [Display(Name = "Session Id")]
     public int SessionId { get; set; }
     

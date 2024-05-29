@@ -21,7 +21,7 @@ public class Profile {
         ProfileAllergies = new HashSet<ProfileAllergy>();
     }
     
-    [Key] // Data annotation for primary key of this model
+    [Key]
     [Display(Name = "Profile Id")]
     public int ProfileId { get; set; }
     

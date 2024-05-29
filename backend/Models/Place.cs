@@ -19,7 +19,7 @@ public class Place {
         Events = new HashSet<Event>();
     }
     
-    [Key] // Data annotation for primary key of this model
+    [Key]
     [Display(Name = "Place Id")]
     public int PlaceId { get; set; }
     
