@@ -28,14 +28,13 @@ public class ContactPerson {
     [StringLength(200)]
     public string Name { get; set; }
     
-    [Required]
     [Display(Name = "Email")]
     [StringLength(200)]
-    public string Email { get; set; }
+    public string? Email { get; set; }
     
-    [Required]
     [Display(Name = "Phone number")]
-    public int Number { get; set; }
+    [StringLength(200)]
+    public string? Number { get; set; }
     
     // A HasSet of all Events with this ContactPerson
     public virtual ICollection<Event> Events { get; set; }

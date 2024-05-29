@@ -25,7 +25,7 @@ public class CustomField {
     
     [Required]
     [Display(Name = "Description")]
-    [StringLength(1000)]
+    [StringLength(200)]
     public string Description { get; set; }
     
     [Required]

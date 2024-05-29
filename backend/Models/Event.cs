@@ -33,7 +33,7 @@ public class Event {
     
     [Required]
     [Display(Name = "Description")]
-    [StringLength(2000)]
+    [StringLength(3000)]
     public string Description { get; set; }
     
     [Required]
