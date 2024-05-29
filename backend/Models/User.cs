@@ -13,6 +13,8 @@ public class User {
        [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
        [StringLength(*number*)] = Data annotation for setting a max length on the field
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
+       [DataType(*Type*)] = Data annotation for specifying the type of data
+       [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
 
     */
 
@@ -30,6 +32,8 @@ public class User {
     [Required]
     [Display(Name = "Email")]
     [StringLength(200)]
+    [DataType(DataType.EmailAddress)]
+    [EmailAddress(ErrorMessage = "Invalid Email Address")]
     public string Email { get; set; }
     
     [Required]
