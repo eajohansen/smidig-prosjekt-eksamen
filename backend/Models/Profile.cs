@@ -19,7 +19,7 @@ public class Profile {
     */
 
     public Profile() {
-        ProfileAllergies = new HashSet<ProfileAllergy>();
+        Allergies = new HashSet<Allergy>();
     }
     
     [Key]
@@ -46,5 +46,5 @@ public class Profile {
     [StringLength(1000)]
     public string ExtraInfo { get; set; }
     
-    public virtual ICollection<ProfileAllergy> ProfileAllergies { get; set; }
+    public virtual ICollection<Allergy> Allergies { get; set; }
 }
