@@ -1,17 +1,26 @@
 import { useState, useEffect, SyntheticEvent } from "react";
-import { validateEmail } from "../validateEmail";
+import { validateEmail, validatePword } from "../validation";
 import { ProfileForm } from "./ProfileForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 const LoginPopup = () => {
-  const [login, setLogin] = useState(1);
+  const [login, setLogin] = useState(2);
   const [mailCheck, setMailCheck] = useState("");
+  const [pCheck, setPCheck] = useState("");
 
   useEffect(() => {
     setMailCheck(mailCheck);
   }, [mailCheck]);
 
+  useEffect(() => {
+    setPCheck(pCheck);
+  }, [pCheck]);
+
   const handleChange = (e) => {
     setMailCheck(e.currentTarget.value);
+  };
+
+  const handlePChange = (e) => {
+    setPCheck(e.currentTarget.value);
   };
   const loginOrRegister = () => {
     switch (login) {

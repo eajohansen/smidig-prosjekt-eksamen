@@ -11,8 +11,8 @@ function App() {
 
   return (
     <>
-      {/* <LoginPopup /> */}
-      <ProfileForm userEmail={"Eksempel@epost.no"} />
+      <LoginPopup />
+      {/* <ProfileForm userEmail={"Eksempel@epost.no"} /> */}
       {/* <button onClick={() => testClick()}> Test </button> */}
     </>
   );
