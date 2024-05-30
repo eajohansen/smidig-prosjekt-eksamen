@@ -1,5 +1,6 @@
 using agile_dev.Repo;
 using agile_dev.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace agile_dev;
@@ -27,33 +28,23 @@ public class Program
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
         // Add services to the container.
         builder.Services.AddAuthorization();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+            .AddEntityFrameworkStores<InitContext>();
 
         var app = builder.Build();
         app.UseCors("AllowAnyOrigin");
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
+        
         //app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthorization();
 
         using (var scope = app.Services.CreateScope()) {
-            var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<InitContext>();
-            context.Database.Migrate();
+            IServiceProvider services = scope.ServiceProvider;
+            InitContext dbContext = services.GetRequiredService<InitContext>();
+            dbContext.Database.Migrate();
         }
 
-        app.UseEndpoints(endpoints =>
-        {
+        app.UseEndpoints(endpoints => {
             endpoints.MapControllers();
         });
         app.Run();
