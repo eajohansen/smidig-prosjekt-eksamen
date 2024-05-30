@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
@@ -18,10 +19,11 @@ public class Profile {
     */
 
     public Profile() {
-        ProfileAllergies = new HashSet<ProfileAllergy>();
+        Allergies = new HashSet<Allergy>();
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Profile Id")]
     public int ProfileId { get; set; }
     
@@ -40,14 +42,9 @@ public class Profile {
     [Display(Name = "Birthdate")]
     public DateTime Birthdate { get; set; }
     
-    [Required]
     [Display(Name = "Extra info")]
     [StringLength(1000)]
     public string ExtraInfo { get; set; }
     
-    // The User connected to this Profile
-    public virtual User User { get; set; }
-    
-    // A HasSet of all ProfileAllergies with this Profile
-    public virtual ICollection<ProfileAllergy> ProfileAllergies { get; set; }
+    public virtual ICollection<Allergy> Allergies { get; set; }
 }

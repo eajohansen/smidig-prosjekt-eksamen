@@ -26,6 +26,7 @@ public class User {
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "User Id")]
     public int UserId { get; set; }
     
@@ -48,9 +49,9 @@ public class User {
     [Required]
     [Display(Name = "Profile id")]
     public int ProfileId { get; set; }
-    
-    [ForeignKey("ProfileId")]
-    public virtual Profile Profile { get; set; }
+
+    [ForeignKey("ProfileId")] 
+    public virtual Profile? Profile { get; set; }
     
     // A HasSet of all Organizations that this User follows
     public virtual ICollection<Follower> FollowOrganization { get; set; }

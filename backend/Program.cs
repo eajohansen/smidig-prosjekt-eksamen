@@ -1,4 +1,5 @@
 using agile_dev.Repo;
+using agile_dev.Service;
 using Microsoft.EntityFrameworkCore;
 
 namespace agile_dev;
@@ -8,10 +9,9 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        // CHANGE THIS TO BE MORE SPECIFIC FOR CORS, WILL FAIL WITH AUTH AS IS
         builder.Services.AddCors(
-            options =>
-            {
+            options => {
                 options.AddPolicy("AllowAnyOrigin",
                 policies => policies
                 .AllowAnyOrigin()
@@ -20,6 +20,8 @@ public class Program
                 );
             }
         );
+        builder.Services.AddControllers();
+        builder.Services.AddScoped<UserService>();
 
         builder.Services.AddDbContext<InitContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,36 +43,19 @@ public class Program
         }
 
         //app.UseHttpsRedirection();
-
+        app.UseRouting();
         app.UseAuthorization();
 
-        using (var scope = app.Services.CreateScope())
-        {
+        using (var scope = app.Services.CreateScope()) {
             var services = scope.ServiceProvider;
-
             var context = services.GetRequiredService<InitContext>();
             context.Database.Migrate();
         }
 
-        var summaries = new[]
+        app.UseEndpoints(endpoints =>
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-        
-        app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-                {
-                    var forecast = Enumerable.Range(1, 5).Select(index =>
-                            new WeatherForecast
-                            {
-                                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                                TemperatureC = Random.Shared.Next(-20, 55),
-                                Summary = summaries[Random.Shared.Next(summaries.Length)]
-                            })
-                        .ToArray();
-                    return forecast;
-                })
-                .WithName("GetWeatherForecast")
-                .WithOpenApi();
+            endpoints.MapControllers();
+        });
         app.Run();
     }
 }
