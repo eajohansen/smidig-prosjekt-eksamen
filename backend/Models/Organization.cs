@@ -23,6 +23,7 @@ public class Organization {
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Organization Id")]
     public int OrganizationId { get; set; }
     

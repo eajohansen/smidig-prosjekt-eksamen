@@ -20,6 +20,7 @@ public class EventCustomField {
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Event Custom field id")]
     public int EventCustomFieldId { get; set; }
     

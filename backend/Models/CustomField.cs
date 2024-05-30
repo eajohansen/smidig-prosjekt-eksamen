@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
@@ -20,6 +21,7 @@ public class CustomField {
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Custom field Id")]
     public int CustomFieldId { get; set; }
     

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
@@ -21,6 +22,7 @@ public class EventDateTime {
     }
     
     [Key] // Data annotation for primary key of this model
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Event DateTime Id")]
     public int EventDateTimeId { get; set; }
     

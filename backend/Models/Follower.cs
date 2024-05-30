@@ -20,6 +20,7 @@ public class Follower {
     }
     
     [Key] // Data annotation for primary key of this model
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Follower Id")]
     public int FollowerId { get; set; }
     

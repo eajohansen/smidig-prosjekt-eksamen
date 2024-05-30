@@ -20,6 +20,7 @@ public class UserEvent {
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "User Event Id")]
     public int UserEventId { get; set; }
     

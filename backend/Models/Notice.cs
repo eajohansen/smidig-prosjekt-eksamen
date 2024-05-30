@@ -22,6 +22,7 @@ public class Notice {
     }
     
     [Key] // Data annotation for primary key of this model
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Notice Id")]
     public int NoticeId { get; set; }
     

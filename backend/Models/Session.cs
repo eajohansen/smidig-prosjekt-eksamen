@@ -21,6 +21,7 @@ public class Session {
     }
     
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Session Id")]
     public int SessionId { get; set; }
     

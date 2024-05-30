@@ -20,6 +20,7 @@ public class Allergy {
      }
      
      [Key]
+     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
      [Display(Name = "Allergy Id")]
      public int AllergyId { get; set; }
      

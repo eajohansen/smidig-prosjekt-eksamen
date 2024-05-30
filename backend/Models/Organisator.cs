@@ -21,6 +21,7 @@ public class Organisator {
     }
     
     [Key] // Data annotation for primary key of this model
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Organisator Id")]
     public int OrganisatorId { get; set; }
     
