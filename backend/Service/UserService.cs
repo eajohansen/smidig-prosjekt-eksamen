@@ -2,6 +2,7 @@
 using agile_dev.Repo;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace agile_dev.Service;
 
@@ -11,24 +12,12 @@ public class UserService {
     public UserService(InitContext context) {
         _dbCon = context;
     }
-    public async Task<IActionResult> AddUserToDatabase() {
-        var newProfile = new Profile {
-            FirstName = "John",
-            LastName = "Doe",
-            Birthdate = new DateTime(1990, 1, 1),
-            ExtraInfo = "Extra info",
-        };
-        await _dbCon.Profile.AddAsync(newProfile);
-        await _dbCon.SaveChangesAsync();
-        var newUser = new User {
-            Email = "test",
-            Password = "yaya",
-            ProfileId = newProfile.ProfileId,
-        };
-        await _dbCon.User.AddAsync(newUser);
+    public async Task<IActionResult> AddUserToDatabase(User user) {
+
+        await _dbCon.User.AddAsync(user);
         await _dbCon.SaveChangesAsync();
 
-        return new OkObjectResult(newUser);
+        return new OkObjectResult(user);
     }
 
     public async Task<IActionResult> AddProfileToDatabase(Profile profile, List<Allergy> allergies) {
@@ -43,5 +32,10 @@ public class UserService {
             await _dbCon.SaveChangesAsync();
         }
         return new OkObjectResult(profile);
+    }
+
+    public async Task<ICollection<User>> FetchAllUsers() {
+        ICollection<User> foundUser = await _dbCon.User.ToListAsync();
+        return foundUser;
     }
 }

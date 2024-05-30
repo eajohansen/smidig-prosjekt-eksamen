@@ -46,22 +46,21 @@ public class User {
     [Display(Name = "Admin rights")]
     public bool Admin { get; set; }
     
-    [Required]
     [Display(Name = "Profile id")]
-    public int ProfileId { get; set; }
+    public int? ProfileId { get; set; }
 
     [ForeignKey("ProfileId")] 
     public virtual Profile? Profile { get; set; }
     
     // A HasSet of all Organizations that this User follows
-    public virtual ICollection<Follower> FollowOrganization { get; set; }
+    public virtual ICollection<Follower>? FollowOrganization { get; set; }
     
     // A HasSet of all Organizations that this User can organize
-    public virtual ICollection<Organisator> OrganisatorOrganization { get; set; }
+    public virtual ICollection<Organisator>? OrganisatorOrganization { get; set; }
     
     // A HasSet of all UserEvents with this User 
-    public virtual ICollection<UserEvent> UserEvents { get; set; }
+    public virtual ICollection<UserEvent>? UserEvents { get; set; }
     
     // A HasSet of all Notices with this User
-    public virtual ICollection<Notice> Notices { get; set; }
+    public virtual ICollection<Notice>? Notices { get; set; }
 }
