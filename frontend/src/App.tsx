@@ -1,6 +1,7 @@
 import "./temp.css";
 import axios from "axios";
 import LoginPopup from "./components/LoginPopup";
+import { ProfileForm } from "./components/ProfileForm";
 
 function App() {
   async function testClick() {
@@ -10,7 +11,8 @@ function App() {
 
   return (
     <>
-      <LoginPopup />
+      {/* <LoginPopup /> */}
+      <ProfileForm userEmail={"Eksempel@epost.no"} />
       {/* <button onClick={() => testClick()}> Test </button> */}
     </>
   );
