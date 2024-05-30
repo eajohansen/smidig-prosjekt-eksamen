@@ -1,7 +1,11 @@
 import "./temp.css";
 import axios from "axios";
-import LoginPopup from "./components/LoginPopup";
-import { ProfileForm } from "./components/ProfileForm";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MainNav } from "./components/shared/MainNav";
+import { HomePage } from "./pages/HomePage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { TicketsPage } from "./pages/TicketsPage";
+import { EventsPage } from "./pages/EventsPage";
 
 function App() {
   async function testClick() {
@@ -11,9 +15,20 @@ function App() {
 
   return (
     <>
-      <LoginPopup />
-      {/* <ProfileForm userEmail={"Eksempel@epost.no"} /> */}
-      {/* <button onClick={() => testClick()}> Test </button> */}
+      <BrowserRouter>
+        <MainNav />
+        <main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="tickets" element={<TicketsPage />} />
+            <Route path="events" element={<EventsPage />} />
+          </Routes>
+
+          {/* <ProfileForm userEmail={"Eksempel@epost.no"} /> */}
+          {/* <button onClick={() => testClick()}> Test </button> */}
+        </main>
+      </BrowserRouter>
     </>
   );
 }
