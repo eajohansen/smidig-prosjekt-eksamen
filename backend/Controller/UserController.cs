@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace agile_dev.Controller {
+    
     [Route("/api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase {

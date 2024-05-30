@@ -30,4 +30,18 @@ public class UserService {
 
         return new OkObjectResult(newUser);
     }
+
+    public async Task<IActionResult> AddProfileToDatabase(Profile profile, List<Allergy> allergies) {
+        
+        await _dbCon.Profile.AddAsync(profile);
+        await _dbCon.SaveChangesAsync();
+        
+        foreach (Allergy allergy in allergies) {
+            allergy.ProfileId = profile.ProfileId;
+            allergy.Profile = profile;
+            await _dbCon.Allergy.AddAsync(allergy);
+            await _dbCon.SaveChangesAsync();
+        }
+        return new OkObjectResult(profile);
+    }
 }
