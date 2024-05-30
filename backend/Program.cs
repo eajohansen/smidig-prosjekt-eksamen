@@ -40,6 +40,7 @@ public class Program
         builder.Services.AddAuthorization();
         var app = builder.Build();
         app.UseCors("_frontendCorsPolicy");
+
         app.MapIdentityApi<IdentityUser>();
         
         //app.UseHttpsRedirection();
@@ -49,7 +50,7 @@ public class Program
             InitContext dbContext = services.GetRequiredService<InitContext>();
             dbContext.Database.Migrate();
         }
-
+        app.UseAuthorization();
         app.UseEndpoints(endpoints => {
             endpoints.MapControllers();
         });

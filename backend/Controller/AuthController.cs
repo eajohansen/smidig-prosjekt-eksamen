@@ -14,27 +14,6 @@ namespace agile_dev.Controller
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase {
-        private readonly IAntiforgery _antiforgery;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager; 
-        private readonly IConfiguration _configuration;
-
-        public AuthController(UserManager<User> userManager,
-            RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration,
-            IAntiforgery antiforgery) {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _antiforgery = antiforgery;
-        }
-        private void RefreshCSRFToken() {
-            var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
-            HttpContext.Response.Cookies.Append("XSRF-TOKEN",
-                tokens.RequestToken,
-                new CookieOptions() { HttpOnly = true });
-        }
         // GET: api/<AuthController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -52,17 +31,7 @@ namespace agile_dev.Controller
         // POST api/<AuthController>
         [HttpPost("login")]
         public async Task<IResult> AuthenticateUser([FromBody]User userModel) {
-            var user = await _userManager.FindByEmailAsync(userModel.Email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, userModel.Password)) {
-                var claimsPrincipal = new ClaimsPrincipal(
-                    new ClaimsIdentity(
-                        new[] { new Claim(ClaimTypes.Name, userModel.Email)},
-                        BearerTokenDefaults.AuthenticationScheme 
-                    )
-                );
-
-                return Results.SignIn(claimsPrincipal);
-            }
+        
 
             return null;
         }
