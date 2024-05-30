@@ -1,3 +1,4 @@
+using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +15,9 @@ namespace agile_dev.Controller {
         }
         // GET: api/User/fetchAll
         [HttpGet("fetchAll")]
-        public IEnumerable<string> Get() {
-            return new string[] { "value1", "value2" };
+        public async Task<ICollection<User>> FetchAllUsers() {
+            ICollection<User> result = await _userService.FetchAllUsers();
+            return result;
         }
 
         // GET api/User/fetch/5
@@ -26,8 +28,8 @@ namespace agile_dev.Controller {
 
         // POST api/User/create
         [HttpPost("create")]
-        public async Task<IActionResult> AddUser() {
-            var result = await _userService.AddUserToDatabase();
+        public async Task<IActionResult> AddUser(User user) {
+            var result = await _userService.AddUserToDatabase(user);
             return result;
         }
 
