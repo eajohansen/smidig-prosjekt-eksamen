@@ -41,18 +41,15 @@ public class Event {
     public bool Published { get; set; }
     
     [Required]
+    [Display(Name = "Capacity")]
+    public int Capacity { get; set; }
+    
+    [Required]
     [Display(Name = "Event DateTime id")]
     public int EventDateTimeId { get; set; }
     
     [ForeignKey("EventDateTimeId")]
     public virtual EventDateTime EventDateTime { get; set; }
-    
-    [Required]
-    [Display(Name = "Capacity id")]
-    public int CapacityId { get; set; }
-    
-    [ForeignKey("CapacityId")]
-    public virtual Capacity Capacity { get; set; }
     
     [Required]
     [Display(Name = "Place id")]
@@ -70,10 +67,10 @@ public class Event {
     
     [Required]
     [Display(Name = "Contact person id")]
-    public int ContactPersonId { get; set; }
+    public int ContactPersonId  { get; set; }
     
     [ForeignKey("ContactPersonId")]
-    public virtual ContactPerson ContactPerson { get; set; }
+    public virtual ContactPerson? ContactPerson { get; set; }
     
     public virtual ICollection<EventCustomField> EventCustomFields { get; set; }
     

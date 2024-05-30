@@ -30,7 +30,7 @@ public class UserEvent {
     [Display(Name = "User id")]
     public int UserId { get; set; }
     
-    [ForeignKey("Userid")]
+    [ForeignKey("UserId")]
     public virtual User User { get; set; }
     
     [Required]
