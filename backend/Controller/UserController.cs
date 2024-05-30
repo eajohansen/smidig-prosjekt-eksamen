@@ -19,25 +19,25 @@ namespace agile_dev.Controller {
         }
 
         // GET api/User/fetch/5
-        [HttpGet("/fetch/{id}")]
+        [HttpGet("fetch/{id}")]
         public string Get(int id) {
             return "value";
         }
 
         // POST api/User/create
-        [HttpPost("/create")]
+        [HttpPost("create")]
         public async Task<IActionResult> AddUser() {
             var result = await _userService.AddUserToDatabase();
             return result;
         }
 
         // PUT api/User/update/5
-        [HttpPut("/update/{id}")]
+        [HttpPut("update/{id}")]
         public void Put(int id, [FromBody] string value) {
         }
 
         // DELETE api/User/delete/5
-        [HttpDelete("/delete/{id}")]
+        [HttpDelete("delete/{id}")]
         public void Delete(int id) {
         }
     }
