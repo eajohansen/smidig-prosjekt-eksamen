@@ -3,16 +3,19 @@ services:
     image: mysql
     restart: always
     ports:
-      - '3307:3306'
+      - '9999:3306'
     networks:
       - sjekk-inn
     expose:
-      - '3306'
+      - '9999'
     volumes:
       - agile-database:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=agile-project
       - MYSQL_ROOT_PASSWORD=agileavengers
+      - MYSQL_PASSWORD=agileavengers
+      - MYSQL_ROOT_HOST=%
+
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
       interval: 5s
