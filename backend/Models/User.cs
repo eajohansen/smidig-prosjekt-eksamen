@@ -15,6 +15,7 @@ public class User {
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
        [DataType(*Type*)] = Data annotation for specifying the type of data
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
+       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
 
     */
 

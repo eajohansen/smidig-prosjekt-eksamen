@@ -15,6 +15,7 @@ public class Profile {
        [DataType(*Type*)] = Data annotation for specifying the type of data
        [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
+       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
 
     */
 
@@ -46,5 +47,6 @@ public class Profile {
     [StringLength(1000)]
     public string ExtraInfo { get; set; }
     
+    // A HasSet of all Allergies with this Profile
     public virtual ICollection<Allergy> Allergies { get; set; }
 }

@@ -13,6 +13,7 @@ public class Allergy {
        [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
        [StringLength(*number*)] = Data annotation for setting a max length on the field
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
+       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id 
 
     */
 
