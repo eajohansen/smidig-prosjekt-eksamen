@@ -1,11 +1,11 @@
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using agile_dev.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace agile_dev.Repo;
 
-public class InitContext : DbContext{
+public class InitContext : IdentityDbContext<IdentityUser>{
     private readonly IConfiguration _configuration;
     
 
