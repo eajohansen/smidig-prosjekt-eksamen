@@ -55,27 +55,35 @@ namespace agile_dev.Controller {
         // POST api/User/create
         [HttpPost("create")]
         public async Task<IActionResult> AddUser(User user) {
-            var result = await _userService.AddUserToDatabase(user);
-            return result;
+            try {
+                bool isAdded = await _userService.AddUserToDatabase(user);
+                if (!isAdded) {
+                    return NoContent();
+                }
+                return Ok(user);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
         }
 
         #endregion
 
         #region PUT
 
-        // PUT api/User/update/5
-        [HttpPut("update/{id}")]
-        public void Put(int id, [FromBody] string value) {
-        }
+        // // PUT api/User/update/5
+        // [HttpPut("update/{id}")]
+        // public void Put(int id, [FromBody] string value) {
+        // }
 
         #endregion
 
         #region DELETE
 
-        // DELETE api/User/delete/5
-        [HttpDelete("delete/{id}")]
-        public void Delete(int id) {
-        }
+        // // DELETE api/User/delete/5
+        // [HttpDelete("delete/{id}")]
+        // public void Delete(int id) {
+        // }
 
         #endregion
     }

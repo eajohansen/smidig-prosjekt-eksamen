@@ -13,26 +13,30 @@ public class UserService {
         _dbCon = context;
     }
 
-    public async Task<IActionResult> AddUserToDatabase(User user) {
-        await _dbCon.User.AddAsync(user);
-        await _dbCon.SaveChangesAsync();
-
-        return new OkObjectResult(user);
-    }
-
-    public async Task<IActionResult> AddProfileToDatabase(User user, List<Allergy> allergies) {
-        await _dbCon.User.AddAsync(user);
-        await _dbCon.SaveChangesAsync();
-    
-        foreach (Allergy allergy in allergies) {
-            allergy.UserId = user.UserId;
-            allergy.User = user;
-            await _dbCon.Allergy.AddAsync(allergy);
+    public async Task<bool> AddUserToDatabase(User user) {
+        try {
+            await _dbCon.User.AddAsync(user);
             await _dbCon.SaveChangesAsync();
+            return true;
         }
-    
-        return new OkObjectResult(user);
+        catch (Exception exception) {
+            throw new Exception("An error occurred while adding user to database.", exception);
+        }
     }
+
+    // public async Task<IActionResult> AddProfileToDatabase(User user, List<Allergy> allergies) {
+    //     await _dbCon.User.AddAsync(user);
+    //     await _dbCon.SaveChangesAsync();
+    //
+    //     foreach (Allergy allergy in allergies) {
+    //         allergy.UserId = user.UserId;
+    //         allergy.User = user;
+    //         await _dbCon.Allergy.AddAsync(allergy);
+    //         await _dbCon.SaveChangesAsync();
+    //     }
+    //
+    //     return new OkObjectResult(user);
+    // }
 
     public async Task<ICollection<User>> FetchAllUsers() {
         try {
