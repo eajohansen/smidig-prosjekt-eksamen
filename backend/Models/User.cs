@@ -17,7 +17,6 @@ public class User {
        [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
-
     */
 
     public User() {
@@ -26,6 +25,7 @@ public class User {
         OrganisatorOrganization = new HashSet<Organisator>();
         UserEvents = new HashSet<UserEvent>();
         Allergies = new HashSet<Allergy>();
+        Notices = new HashSet<Notice>();
     }
     
     [Key]
