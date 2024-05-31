@@ -19,13 +19,14 @@ body {
   align-items: center;
 }
 
+
 textarea,
 input {
   outline: none;
 }
 
 .loginContainer label {
-  padding-top: 1rem;
+  padding-top: 1.5rem;
   font-size: 0.7rem;
 }
 
@@ -39,8 +40,8 @@ input {
   padding: 2rem 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
-  height: 30rem;
-  width: 25rem;
+  height: 35rem;
+  width: 26rem;
 }
 .formContainer h2 {
   padding-bottom: 0.5rem;
@@ -90,6 +91,12 @@ input {
   color: white;
   border-radius: 0.4rem;
 }
+
+.InfoLink{
+  font-style: italic;
+  font-size: x-small;
+}
+
 .loginContainer .cntBtn:hover {
 }
 
