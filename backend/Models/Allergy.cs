@@ -34,9 +34,9 @@ public class Allergy {
      public string? Description { get; set; }
      
      [Required]
-     [Display(Name = "Profile id")]
-     public int ProfileId { get; set; }
+     [Display(Name = "User id")]
+     public int UserId { get; set; }
     
-     [ForeignKey("ProfileId")]
-     public virtual Profile Profile { get; set; }
+     [ForeignKey("UserId")]
+     public virtual User User { get; set; }
 }

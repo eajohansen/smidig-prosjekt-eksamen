@@ -31,6 +31,10 @@ public class Image {
     [StringLength(500)]
     public string Link { get; set; }
     
+    [Display(Name = "Image description")]
+    [StringLength(200)]
+    public string? ImageDescription { get; set; }
+    
     // A HasSet of all Organizations with this Image
     public virtual ICollection<Organization> Organizations { get; set; }
     

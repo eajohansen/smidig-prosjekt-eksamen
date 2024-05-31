@@ -17,7 +17,6 @@ public class InitContext : DbContext{
         _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
     }
     public DbSet<User> User { get; set; }
-    public DbSet<Profile> Profile { get; set; }
     public DbSet<Allergy> Allergy { get; set; }
     public DbSet<ContactPerson> ContactPerson { get; set; }
     public DbSet<Event> Event { get; set; }
