@@ -13,6 +13,18 @@ namespace agile_dev.Controller {
         public UserController(UserService userService) {
             _userService = userService;
         }
+        
+        /*
+            Using Async methods to avoid blocking the main thread.
+            This is important because the main thread is responsible for handling incoming requests.
+            
+            Exceptions are thrown when an error occurs.
+            This is important bacause we have to send the error code to the client.
+            
+            Task<> is used because we are using async methods.
+            
+            IActionResult is used because we are returning a response.
+         */
 
         #region GET
 
@@ -52,7 +64,7 @@ namespace agile_dev.Controller {
 
         #region POST
 
-        // POST api/User/create
+        // POST api/user/create
         [HttpPost("create")]
         public async Task<IActionResult> AddUser(User user) {
             try {
