@@ -2,15 +2,16 @@
   --main: #497d95;
   --secondary: #cb4353;
   --darkBkgrnd: #1e3742;
+  --mediumGreen: #34A853;
 }
 
 * {
   -webkit-appearance: none;
   appearance: none;
-
   margin: 0;
   padding: 0;
 }
+
 body {
   display: flex;
   height: 100vh;
@@ -22,9 +23,10 @@ textarea,
 input {
   outline: none;
 }
+
 .loginContainer label {
   padding-top: 1rem;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
 }
 
 .loginContainer {
@@ -37,19 +39,22 @@ input {
   padding: 2rem 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
+  height: 30rem;
+  width: 25rem;
 }
 .formContainer h2 {
   padding-bottom: 0.5rem;
 }
 .formContainer input {
   height: 2.5rem;
+  width: 17.5rem;
   border-radius: 0.2rem;
   box-shadow: none;
   background-color: transparent;
   border: 1px solid rgb(174, 174, 174);
   color: white;
-  padding: 0.5rem;
-  font-size: 0.8rem;
+  padding: 0.6rem;
+  font-size: 1rem;
 }
 .formContainer input:focus {
   border: 1px solid white;
@@ -67,7 +72,7 @@ input {
 
 .formContainer button {
   width: 60%;
-  font-size: 10px;
+  font-size: 12px;
   border: 1px solid black;
   height: 2rem;
 }
@@ -81,7 +86,7 @@ input {
   width: 100%;
   border: none;
   margin: 2rem;
-  background-color: var(--secondary);
+  background-color: var(--mediumGreen);
   color: white;
   border-radius: 0.4rem;
 }
