@@ -20,18 +20,18 @@ public class UserService {
         return new OkObjectResult(user);
     }
 
-    public async Task<IActionResult> AddProfileToDatabase(Profile profile, List<Allergy> allergies) {
+    public async Task<IActionResult> AddProfileToDatabase(User user, List<Allergy> allergies) {
         
-        await _dbCon.Profile.AddAsync(profile);
+        await _dbCon.User.AddAsync(user);
         await _dbCon.SaveChangesAsync();
         
         foreach (Allergy allergy in allergies) {
-            allergy.ProfileId = profile.ProfileId;
-            allergy.Profile = profile;
+            allergy.UserId = user.UserId;
+            allergy.User = user;
             await _dbCon.Allergy.AddAsync(allergy);
             await _dbCon.SaveChangesAsync();
         }
-        return new OkObjectResult(profile);
+        return new OkObjectResult(user);
     }
 
     public async Task<ICollection<User>> FetchAllUsers() {
