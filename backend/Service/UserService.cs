@@ -63,6 +63,32 @@ public class UserService {
     #endregion
 
     #region PUT
+    
+    public async Task<bool> UpdateUser(User user) {
+        try {
+            _dbCon.User.Update(user);
+            await _dbCon.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while updating user.", exception);
+        }
+    }
+    
+    public async Task<bool> UpdateUserFirstName(User user) {
+        try {
+            User? databaseUser = FetchUserById(user.UserId).Result;
+            if (databaseUser == null) {
+                return false;
+            }
+            databaseUser.FirstName = user.FirstName;
+            await _dbCon.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while updating user.", exception);
+        }
+    }
 
     #endregion
 
@@ -84,4 +110,5 @@ public class UserService {
     //
     //     return new OkObjectResult(user);
     // }
+
 }
