@@ -13,6 +13,16 @@ public class UserService {
         _dbCon = context;
     }
 
+    /*
+        Using Async methods to avoid blocking the main thread.
+        This is important because the main thread is responsible for handling incoming requests.
+
+        Exceptions are thrown when an error occurs.
+        This is important because it allows the caller to handle the error (Controller)
+        
+        Task<> is used because we are using async methods.
+    */
+
     #region GET
 
     public async Task<ICollection<User>> FetchAllUsers() {
@@ -54,13 +64,9 @@ public class UserService {
 
     #region PUT
 
-    
-
     #endregion
 
     #region DELETE
-
-    
 
     #endregion
 
