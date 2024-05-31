@@ -45,30 +45,26 @@ public class Event {
     [Display(Name = "Capacity")]
     public int Capacity { get; set; }
     
-    [Required]
     [Display(Name = "Event DateTime id")]
-    public int EventDateTimeId { get; set; }
+    public int? EventDateTimeId { get; set; }
     
     [ForeignKey("EventDateTimeId")]
-    public virtual EventDateTime EventDateTime { get; set; }
+    public virtual EventDateTime? EventDateTime { get; set; }
     
-    [Required]
     [Display(Name = "Place id")]
-    public int PlaceId { get; set; }
+    public int? PlaceId { get; set; }
     
     [ForeignKey("PlaceId")]
-    public virtual Place Place { get; set; }
+    public virtual Place? Place { get; set; }
     
-    [Required]
     [Display(Name = "Image id")]
-    public int ImageId { get; set; }
+    public int? ImageId { get; set; }
     
     [ForeignKey("ImageId")]
     public virtual Image Image { get; set; }
     
-    [Required]
     [Display(Name = "Contact person id")]
-    public int ContactPersonId  { get; set; }
+    public int? ContactPersonId  { get; set; }
     
     [ForeignKey("ContactPersonId")]
     public virtual ContactPerson? ContactPerson { get; set; }
