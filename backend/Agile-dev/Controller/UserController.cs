@@ -83,10 +83,20 @@ namespace agile_dev.Controller {
 
         #region PUT
 
-        // // PUT api/User/update/5
-        // [HttpPut("update/{id}")]
-        // public void Put(int id, [FromBody] string value) {
-        // }
+        // PUT api/User/update/5
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateUser(User user) {
+            try {
+                bool isAdded = await _userService.UpdateUser(user);
+                if (!isAdded) {
+                    return NoContent();
+                }
+                return Ok(user);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
 
         #endregion
 
