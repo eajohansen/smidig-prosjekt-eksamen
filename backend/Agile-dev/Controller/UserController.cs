@@ -24,7 +24,7 @@ namespace agile_dev.Controller {
                 if (result.Count == 0) {
                     return NoContent();
                 }
-
+        
                 return Ok(result);
             }
             catch (Exception exception) {
@@ -40,7 +40,7 @@ namespace agile_dev.Controller {
                 if (result == null) {
                     return NoContent();
                 }
-
+        
                 return Ok(result);
             }
             catch (Exception exception) {

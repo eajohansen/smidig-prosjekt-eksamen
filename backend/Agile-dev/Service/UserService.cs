@@ -23,14 +23,14 @@ public class UserService {
     public async Task<IActionResult> AddProfileToDatabase(User user, List<Allergy> allergies) {
         await _dbCon.User.AddAsync(user);
         await _dbCon.SaveChangesAsync();
-
+    
         foreach (Allergy allergy in allergies) {
             allergy.UserId = user.UserId;
             allergy.User = user;
             await _dbCon.Allergy.AddAsync(allergy);
             await _dbCon.SaveChangesAsync();
         }
-
+    
         return new OkObjectResult(user);
     }
 

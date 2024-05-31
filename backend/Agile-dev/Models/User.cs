@@ -27,6 +27,7 @@ public class User {
         OrganisatorOrganization = new HashSet<Organisator>();
         UserEvents = new HashSet<UserEvent>();
         Allergies = new HashSet<Allergy>();
+        Notices = new HashSet<Notice>();
     }
     
     [Key]
