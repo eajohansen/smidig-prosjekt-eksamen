@@ -13,30 +13,7 @@ public class UserService {
         _dbCon = context;
     }
 
-    public async Task<bool> AddUserToDatabase(User user) {
-        try {
-            await _dbCon.User.AddAsync(user);
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while adding user to database.", exception);
-        }
-    }
-
-    // public async Task<IActionResult> AddProfileToDatabase(User user, List<Allergy> allergies) {
-    //     await _dbCon.User.AddAsync(user);
-    //     await _dbCon.SaveChangesAsync();
-    //
-    //     foreach (Allergy allergy in allergies) {
-    //         allergy.UserId = user.UserId;
-    //         allergy.User = user;
-    //         await _dbCon.Allergy.AddAsync(allergy);
-    //         await _dbCon.SaveChangesAsync();
-    //     }
-    //
-    //     return new OkObjectResult(user);
-    // }
+    #region GET
 
     public async Task<ICollection<User>> FetchAllUsers() {
         try {
@@ -57,4 +34,48 @@ public class UserService {
             throw new Exception("An error occurred while fetching user.", exception);
         }
     }
+
+    #endregion
+
+    #region POST
+
+    public async Task<bool> AddUserToDatabase(User user) {
+        try {
+            await _dbCon.User.AddAsync(user);
+            await _dbCon.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while adding user to database.", exception);
+        }
+    }
+
+    #endregion
+
+    #region PUT
+
+    
+
+    #endregion
+
+    #region DELETE
+
+    
+
+    #endregion
+
+
+    // public async Task<IActionResult> AddProfileToDatabase(User user, List<Allergy> allergies) {
+    //     await _dbCon.User.AddAsync(user);
+    //     await _dbCon.SaveChangesAsync();
+    //
+    //     foreach (Allergy allergy in allergies) {
+    //         allergy.UserId = user.UserId;
+    //         allergy.User = user;
+    //         await _dbCon.Allergy.AddAsync(allergy);
+    //         await _dbCon.SaveChangesAsync();
+    //     }
+    //
+    //     return new OkObjectResult(user);
+    // }
 }
