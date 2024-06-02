@@ -70,7 +70,8 @@ namespace agile_dev.Controller {
             try {
                 bool isAdded = await _userService.AddUserToDatabase(user);
                 if (!isAdded) {
-                    return NoContent();
+                    // Could create user, because request is bad
+                    return BadRequest();
                 }
                 return Ok(user);
             }
@@ -90,6 +91,20 @@ namespace agile_dev.Controller {
                 bool isAdded = await _userService.UpdateUser(user);
                 if (!isAdded) {
                     return NoContent();
+                }
+                return Ok(user);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
+
+        [HttpPut("admin")]
+        public async Task<IActionResult> MakeUserAdmin(User adminUser, User user) {
+            try {
+                bool makeUserAdmin = await _userService.MakeUserAdmin(adminUser, user);
+                if (!makeUserAdmin) {
+                    return Unauthorized();
                 }
                 return Ok(user);
             }

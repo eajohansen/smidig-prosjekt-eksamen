@@ -19,7 +19,7 @@ public class UserService {
 
         Exceptions are thrown when an error occurs.
         This is important because it allows the caller to handle the error (Controller)
-        
+
         Task<> is used because we are using async methods.
     */
 
@@ -63,9 +63,17 @@ public class UserService {
     #endregion
 
     #region PUT
-    
+
     public async Task<bool> UpdateUser(User user) {
         try {
+            User? databaseUser = await FetchUserById(user.UserId);
+            if (databaseUser == null) {
+                return false;
+            }
+            // Check if databaseUser and user have the same autorization level
+            if (user.Admin != databaseUser.Admin) {
+                return false;
+            }
             _dbCon.User.Update(user);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -74,14 +82,38 @@ public class UserService {
             throw new Exception("An error occurred while updating user.", exception);
         }
     }
-    
+
     public async Task<bool> UpdateUserFirstName(User user) {
         try {
             User? databaseUser = FetchUserById(user.UserId).Result;
             if (databaseUser == null) {
                 return false;
             }
+
             databaseUser.FirstName = user.FirstName;
+            await _dbCon.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while updating user.", exception);
+        }
+    }
+
+    public async Task<bool> MakeUserAdmin(User adminUser, User user) {
+        try {
+            bool isUserAdmin = IsUserAdmin(adminUser).Result;
+            if (!isUserAdmin) {
+                return false;
+            }
+
+            User? databaseUser = FetchUserById(user.UserId).Result;
+            if (databaseUser == null) {
+                return false;
+            }
+            
+            databaseUser.Admin = true;
+
+            // databaseUser.Role = "admin";
             await _dbCon.SaveChangesAsync();
             return true;
         }
@@ -95,20 +127,19 @@ public class UserService {
     #region DELETE
 
     #endregion
+    
+    #region GENERAL
 
+    public async Task<bool> IsUserAdmin(User user) {
+        User? databaseAdminUser = FetchUserById(user.UserId).Result;
+        if (databaseAdminUser == null) {
+            return false;
+        }
 
-    // public async Task<IActionResult> AddProfileToDatabase(User user, List<Allergy> allergies) {
-    //     await _dbCon.User.AddAsync(user);
-    //     await _dbCon.SaveChangesAsync();
-    //
-    //     foreach (Allergy allergy in allergies) {
-    //         allergy.UserId = user.UserId;
-    //         allergy.User = user;
-    //         await _dbCon.Allergy.AddAsync(allergy);
-    //         await _dbCon.SaveChangesAsync();
-    //     }
-    //
-    //     return new OkObjectResult(user);
-    // }
-
+        return databaseAdminUser.Admin;
+    }
+    
+    #endregion
+    
+    
 }
