@@ -128,7 +128,7 @@ public class UserService {
 
     #endregion
     
-    #region GENERAL
+    #region MISCELLANEOUS
 
     public async Task<bool> IsUserAdmin(User user) {
         User? databaseAdminUser = FetchUserById(user.UserId).Result;
