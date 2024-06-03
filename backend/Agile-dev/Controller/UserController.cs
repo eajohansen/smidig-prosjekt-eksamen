@@ -90,7 +90,7 @@ namespace agile_dev.Controller {
             try {
                 bool isAdded = await _userService.UpdateUser(user);
                 if (!isAdded) {
-                    return NoContent();
+                    return BadRequest();
                 }
                 return Ok(user);
             }
