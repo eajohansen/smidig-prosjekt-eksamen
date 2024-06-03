@@ -82,7 +82,7 @@ const LoginPopup = () => {
             >
               Fortsett
             </button>
-            <p className="InfoLink">Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a> og <a href="#">personvernserklæring</a></p>
+            <p className="InfoLink">Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a> og <br/><a href="#">personvernserklæring</a></p>
           </div>
         );
       case 3:
