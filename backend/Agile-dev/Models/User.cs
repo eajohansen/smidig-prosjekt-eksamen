@@ -14,6 +14,8 @@ public class User {
        [StringLength(*number*)] = Data annotation for setting a max length on the field
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
        [DataType(*Type*)] = Data annotation for specifying the type of data
+       [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
+       [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
 
@@ -24,6 +26,8 @@ public class User {
         FollowOrganization = new HashSet<Follower>();
         OrganisatorOrganization = new HashSet<Organisator>();
         UserEvents = new HashSet<UserEvent>();
+        Allergies = new HashSet<Allergy>();
+        Notices = new HashSet<Notice>();
     }
     
     [Key]
@@ -39,30 +43,40 @@ public class User {
     public string Email { get; set; }
     
     [Required]
-    [Display(Name = "Password")]
-    [StringLength(200)]
-    public string Password { get; set; }
-    
-    [Required]
     [Display(Name = "Admin rights")]
     public bool Admin { get; set; }
     
     [Required]
-    [Display(Name = "Profile id")]
-    public int ProfileId { get; set; }
-
-    [ForeignKey("ProfileId")] 
-    public virtual Profile? Profile { get; set; }
+    [Display(Name = "First name")]
+    [StringLength(200)]
+    public string FirstName { get; set; }
+    
+    [Required]
+    [Display(Name = "Last name")]
+    [StringLength(200)]
+    public string LastName { get; set; }
+    
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Birthdate")]
+    public DateTime Birthdate { get; set; }
+    
+    [Display(Name = "Extra info")]
+    [StringLength(1000)]
+    public string? ExtraInfo { get; set; }
     
     // A HasSet of all Organizations that this User follows
-    public virtual ICollection<Follower> FollowOrganization { get; set; }
+    public virtual ICollection<Follower>? FollowOrganization { get; set; }
     
     // A HasSet of all Organizations that this User can organize
-    public virtual ICollection<Organisator> OrganisatorOrganization { get; set; }
+    public virtual ICollection<Organisator>? OrganisatorOrganization { get; set; }
     
     // A HasSet of all UserEvents with this User 
-    public virtual ICollection<UserEvent> UserEvents { get; set; }
+    public virtual ICollection<UserEvent>? UserEvents { get; set; }
     
     // A HasSet of all Notices with this User
-    public virtual ICollection<Notice> Notices { get; set; }
+    public virtual ICollection<Notice>? Notices { get; set; }
+    
+    // A HasSet of all Allergies with this User
+    public virtual ICollection<Allergy>? Allergies { get; set; }
 }

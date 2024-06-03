@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using agile_dev.Repo;
 
@@ -11,11 +10,9 @@ using agile_dev.Repo;
 namespace agile_dev.Migrations
 {
     [DbContext(typeof(InitContext))]
-    [Migration("20240530114131_controller1")]
-    partial class controller1
+    partial class InitContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,7 +26,6 @@ namespace agile_dev.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -38,28 +34,14 @@ namespace agile_dev.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("AllergyId");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Allergy");
-                });
-
-            modelBuilder.Entity("agile_dev.Models.Capacity", b =>
-                {
-                    b.Property<int>("CapacityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaxParticipants")
-                        .HasColumnType("int");
-
-                    b.HasKey("CapacityId");
-
-                    b.ToTable("Capacity");
                 });
 
             modelBuilder.Entity("agile_dev.Models.ContactPerson", b =>
@@ -69,7 +51,6 @@ namespace agile_dev.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -78,8 +59,9 @@ namespace agile_dev.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                    b.Property<string>("Number")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.HasKey("ContactPersonId");
 
@@ -94,8 +76,8 @@ namespace agile_dev.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<bool>("Value")
                         .HasColumnType("tinyint(1)");
@@ -111,7 +93,7 @@ namespace agile_dev.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CapacityId")
+                    b.Property<int>("Capacity")
                         .HasColumnType("int");
 
                     b.Property<int>("ContactPersonId")
@@ -119,8 +101,8 @@ namespace agile_dev.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("varchar(2000)");
+                        .HasMaxLength(3000)
+                        .HasColumnType("varchar(3000)");
 
                     b.Property<int>("EventDateTimeId")
                         .HasColumnType("int");
@@ -140,8 +122,6 @@ namespace agile_dev.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.HasKey("EventId");
-
-                    b.HasIndex("CapacityId");
 
                     b.HasIndex("ContactPersonId");
 
@@ -223,6 +203,10 @@ namespace agile_dev.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageDescription")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -231,6 +215,28 @@ namespace agile_dev.Migrations
                     b.HasKey("ImageId");
 
                     b.ToTable("Image");
+                });
+
+            modelBuilder.Entity("agile_dev.Models.Notice", b =>
+                {
+                    b.Property<int>("NoticeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Expire")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Valid")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("NoticeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notice");
                 });
 
             modelBuilder.Entity("agile_dev.Models.Organisator", b =>
@@ -301,17 +307,24 @@ namespace agile_dev.Migrations
                     b.ToTable("Place");
                 });
 
-            modelBuilder.Entity("agile_dev.Models.Profile", b =>
+            modelBuilder.Entity("agile_dev.Models.User", b =>
                 {
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<bool>("Admin")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ExtraInfo")
+                    b.Property<string>("Email")
                         .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("ExtraInfo")
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -325,36 +338,7 @@ namespace agile_dev.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.HasKey("ProfileId");
-
-                    b.ToTable("Profile");
-                });
-
-            modelBuilder.Entity("agile_dev.Models.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Admin")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
                     b.HasKey("UserId");
-
-                    b.HasIndex("ProfileId");
 
                     b.ToTable("User");
                 });
@@ -371,6 +355,9 @@ namespace agile_dev.Migrations
                     b.Property<int>("QueueNumber")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Used")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -385,23 +372,17 @@ namespace agile_dev.Migrations
 
             modelBuilder.Entity("agile_dev.Models.Allergy", b =>
                 {
-                    b.HasOne("agile_dev.Models.Profile", "Profile")
+                    b.HasOne("agile_dev.Models.User", "User")
                         .WithMany("Allergies")
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Profile");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("agile_dev.Models.Event", b =>
                 {
-                    b.HasOne("agile_dev.Models.Capacity", "Capacity")
-                        .WithMany("Events")
-                        .HasForeignKey("CapacityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("agile_dev.Models.ContactPerson", "ContactPerson")
                         .WithMany("Events")
                         .HasForeignKey("ContactPersonId")
@@ -425,8 +406,6 @@ namespace agile_dev.Migrations
                         .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Capacity");
 
                     b.Navigation("ContactPerson");
 
@@ -465,12 +444,23 @@ namespace agile_dev.Migrations
                         .IsRequired();
 
                     b.HasOne("agile_dev.Models.User", "User")
-                        .WithMany("Followers")
+                        .WithMany("FollowOrganization")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organization");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("agile_dev.Models.Notice", b =>
+                {
+                    b.HasOne("agile_dev.Models.User", "User")
+                        .WithMany("Notices")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -484,7 +474,7 @@ namespace agile_dev.Migrations
                         .IsRequired();
 
                     b.HasOne("agile_dev.Models.User", "User")
-                        .WithMany("Organisators")
+                        .WithMany("OrganisatorOrganization")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -505,17 +495,6 @@ namespace agile_dev.Migrations
                     b.Navigation("Image");
                 });
 
-            modelBuilder.Entity("agile_dev.Models.User", b =>
-                {
-                    b.HasOne("agile_dev.Models.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Profile");
-                });
-
             modelBuilder.Entity("agile_dev.Models.UserEvent", b =>
                 {
                     b.HasOne("agile_dev.Models.Event", "Event")
@@ -533,11 +512,6 @@ namespace agile_dev.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("agile_dev.Models.Capacity", b =>
-                {
-                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("agile_dev.Models.ContactPerson", b =>
@@ -582,16 +556,15 @@ namespace agile_dev.Migrations
                     b.Navigation("Events");
                 });
 
-            modelBuilder.Entity("agile_dev.Models.Profile", b =>
-                {
-                    b.Navigation("Allergies");
-                });
-
             modelBuilder.Entity("agile_dev.Models.User", b =>
                 {
-                    b.Navigation("Followers");
+                    b.Navigation("Allergies");
 
-                    b.Navigation("Organisators");
+                    b.Navigation("FollowOrganization");
+
+                    b.Navigation("Notices");
+
+                    b.Navigation("OrganisatorOrganization");
 
                     b.Navigation("UserEvents");
                 });
