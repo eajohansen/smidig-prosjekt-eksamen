@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "agile-dev", "agile-dev.csproj", "{D8D320D5-B2AD-406C-BE05-9712F097299C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile-dev", "Agile-dev\Agile-dev.csproj", "{F34738BD-3289-46B2-BC5F-6CBEED9B6AF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileDevTest", "AgileDevTest\AgileDevTest.csproj", "{EDB878F6-1FCC-4114-8DC6-8B8A4BBC3DB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +10,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D8D320D5-B2AD-406C-BE05-9712F097299C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8D320D5-B2AD-406C-BE05-9712F097299C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8D320D5-B2AD-406C-BE05-9712F097299C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8D320D5-B2AD-406C-BE05-9712F097299C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F34738BD-3289-46B2-BC5F-6CBEED9B6AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F34738BD-3289-46B2-BC5F-6CBEED9B6AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F34738BD-3289-46B2-BC5F-6CBEED9B6AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F34738BD-3289-46B2-BC5F-6CBEED9B6AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDB878F6-1FCC-4114-8DC6-8B8A4BBC3DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB878F6-1FCC-4114-8DC6-8B8A4BBC3DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDB878F6-1FCC-4114-8DC6-8B8A4BBC3DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDB878F6-1FCC-4114-8DC6-8B8A4BBC3DB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

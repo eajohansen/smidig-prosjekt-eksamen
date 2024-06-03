@@ -2,6 +2,7 @@ import { useState, useEffect, SyntheticEvent } from "react";
 import { validateEmail, validatePword } from "../validation";
 import { ProfileForm } from "./ProfileForm";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { sendRegister } from "../services/tempService";
 const LoginPopup = () => {
   const [login, setLogin] = useState(2);
   const [mailCheck, setMailCheck] = useState("");
@@ -23,6 +24,17 @@ const LoginPopup = () => {
   const handlePChange = (e) => {
     setPCheck(e.currentTarget.value);
   };
+  const handleRegister = async () => {
+      const result = await sendRegister(mailCheck, pCheck);
+      if (result === "Success!") {
+          setLogin(3);
+      } else {
+          for (const [key, value] of Object.entries(result)) {
+              console.log(value[0]);
+          }
+      }
+  }
+
   const loginOrRegister = () => {
     switch (login) {
       case 1:
@@ -69,6 +81,7 @@ const LoginPopup = () => {
             <input
               type="password"
               className="pwordInput"
+              onChange={handlePChange}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             />
@@ -89,7 +102,7 @@ const LoginPopup = () => {
                 console.log(validateEmail(mailCheck));
                 console.log(mailCheck);
                 if (validateEmail(mailCheck) == true) {
-                  setLogin(3);
+                    handleRegister();
                 }
               }}
             >

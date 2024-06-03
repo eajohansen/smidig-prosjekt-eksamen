@@ -1,8 +1,6 @@
 .idea/
-backend/Agile-dev/bin/
-backend/Agile-dev/obj/
-backend/AgileDevTest/bin/
-backend/AgileDevTest/obj/
+obj/
+bin/
 backend/Agile-dev/.vs/
 backend/Agile-dev/.config
 node_modules/

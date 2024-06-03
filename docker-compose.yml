@@ -24,7 +24,7 @@ services:
       start_period: 30s
   backend:
     build:
-      context: ./backend
+      context: ./backend/agile-dev
       dockerfile: Dockerfile
     restart: always
     ports:
