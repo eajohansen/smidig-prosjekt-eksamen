@@ -98,6 +98,7 @@ input {
 }
 
 .loginContainer .cntBtn:hover {
+  filter: brightness(90%);
 }
 
 .profileInfoContainer {
