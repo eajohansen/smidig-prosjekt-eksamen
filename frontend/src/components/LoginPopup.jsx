@@ -6,6 +6,7 @@ const LoginPopup = () => {
   const [login, setLogin] = useState(2);
   const [mailCheck, setMailCheck] = useState("");
   const [pCheck, setPCheck] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setMailCheck(mailCheck);
@@ -65,10 +66,23 @@ const LoginPopup = () => {
             <label style={{ alignSelf: "flex-start" }}>Epost</label>
             <input type="email" onChange={handleChange} />
             <label style={{ alignSelf: "flex-start" }}>Passord</label>
-            <input type="password" />
+            <input
+              type="password"
+              className="pwordInput"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            />
             <label style={{ alignSelf: "flex-start" }}>Gjenta Passord</label>
-            <input type="password" />
-
+            <input
+              type="password"
+              className="pwordInput"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            />
+            <div className={isHovered ? "pwordDetails" : "dNone"}>
+              password needs: 1 capital letter, 1 lowercase letter, 1 number, 8
+              characters long
+            </div>
             <button
               className="cntBtn"
               onClick={() => {
