@@ -1,7 +1,9 @@
 .idea/
-backend/bin/
-backend/obj/
-backend/.vs/
-backend/.config
+backend/Agile-dev/bin/
+backend/Agile-dev/obj/
+backend/AgileDevTest/bin/
+backend/AgileDevTest/obj/
+backend/Agile-dev/.vs/
+backend/Agile-dev/.config
 node_modules/
 .DS_Store
