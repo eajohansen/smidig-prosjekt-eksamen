@@ -25,7 +25,7 @@ public class InitContext : IdentityDbContext<IdentityUser> {
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseMySQL("ConnectionStrings");
+            optionsBuilder.UseMySQL("DefaultConnection");
         }
     }
 }
