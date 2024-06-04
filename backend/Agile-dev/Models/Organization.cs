@@ -13,12 +13,12 @@ public class Organization {
        [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
        [StringLength(*number*)] = Data annotation for setting a max length on the field
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
 
     */
 
-    public Organization() {
-        // Initializing them to avoid NULL reference
+    public Organization(string name, int imageId) {
+        Name = name;
+        ImageId = imageId;
         Followers = new HashSet<Follower>();
         Organisators = new HashSet<Organisator>();
     }
@@ -33,21 +33,20 @@ public class Organization {
     [StringLength(200)]
     public string Name { get; set; }
     
-    [Required]
     [Display(Name = "Description")]
     [StringLength(2000)]
-    public string Description { get; set; }
+    public string? Description { get; set; }
     
     [Required]
     [Display(Name = "Image id")]
     public int ImageId { get; set; }
     
     [ForeignKey("ImageId")]
-    public virtual Image Image { get; set; }
+    public Image Image { get; set; }
     
     // A HasSet of all Followers with this Organization
-    public virtual ICollection<Follower> Followers { get; set; }
+    public ICollection<Follower> Followers { get; set; }
     
     // A HasSet of all Organisators with this Organization
-    public virtual ICollection<Organisator> Organisators { get; set; }
+    public ICollection<Organisator> Organisators { get; set; }
 }

@@ -14,12 +14,11 @@ public class Notice {
        [DataType(*Type*)] = Data annotation for specifying the type of data
        [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
 
     */
 
-    public Notice() {
-        
+    public Notice(int userId) {
+        UserId = userId;
     }
     
     [Key]
@@ -33,13 +32,9 @@ public class Notice {
     public DateTime Expire { get; set; }
     
     [Required]
-    [Display(Name = "Valid")]
-    public bool Valid { get; set; }
-    
-    [Required]
     [Display(Name = "User id")]
     public int UserId { get; set; }
     
     [ForeignKey("UserId")]
-    public virtual User User { get; set; }
+    public User User { get; set; }
 }

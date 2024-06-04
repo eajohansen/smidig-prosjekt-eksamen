@@ -17,12 +17,12 @@ public class User {
        [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
-
     */
 
-    public User() {
-        // Initializing them to avoid NULL reference
+    public User(string email, string firstName, string lastName) {
+        Email = email;
+        FirstName = firstName;
+        LastName = lastName;
         FollowOrganization = new HashSet<Follower>();
         OrganisatorOrganization = new HashSet<Organisator>();
         UserEvents = new HashSet<UserEvent>();
@@ -59,24 +59,24 @@ public class User {
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     [Display(Name = "Birthdate")]
-    public DateTime Birthdate { get; set; }
+    public DateTime? Birthdate { get; set; }
     
     [Display(Name = "Extra info")]
     [StringLength(1000)]
     public string? ExtraInfo { get; set; }
     
     // A HasSet of all Organizations that this User follows
-    public virtual ICollection<Follower>? FollowOrganization { get; set; }
+    public ICollection<Follower> FollowOrganization { get; set; }
     
     // A HasSet of all Organizations that this User can organize
-    public virtual ICollection<Organisator>? OrganisatorOrganization { get; set; }
+    public ICollection<Organisator> OrganisatorOrganization { get; set; }
     
     // A HasSet of all UserEvents with this User 
-    public virtual ICollection<UserEvent>? UserEvents { get; set; }
+    public ICollection<UserEvent> UserEvents { get; set; }
     
     // A HasSet of all Notices with this User
-    public virtual ICollection<Notice>? Notices { get; set; }
+    public ICollection<Notice> Notices { get; set; }
     
     // A HasSet of all Allergies with this User
-    public virtual ICollection<Allergy>? Allergies { get; set; }
+    public ICollection<Allergy> Allergies { get; set; }
 }

@@ -14,12 +14,10 @@ public class EventDateTime {
        [DataType(*Type*)] = Data annotation for specifying the type of data
        [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
 
     */
 
     public EventDateTime() {
-        
     }
     
     [Key]
@@ -45,5 +43,5 @@ public class EventDateTime {
     public DateTime EndTime { get; set; }
     
     // The Event connected to this EventDateTime
-    public virtual Event Event { get; set; }
+    public Event Event { get; set; }
 }
