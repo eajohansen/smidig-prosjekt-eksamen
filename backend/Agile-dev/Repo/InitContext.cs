@@ -2,13 +2,13 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using agile_dev.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace agile_dev.Repo;
 
-public class InitContext : DbContext{
+public class InitContext : IdentityDbContext<IdentityUser> {
     private readonly IConfiguration _configuration;
-    
-
     
     public InitContext(IConfiguration configuration) {
         _configuration = configuration;
@@ -27,6 +27,5 @@ public class InitContext : DbContext{
         if (!optionsBuilder.IsConfigured) {
             optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;");
         }
-        
     }
 }
