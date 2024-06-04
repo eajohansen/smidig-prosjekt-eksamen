@@ -7,7 +7,10 @@ const LoginPopup = () => {
   const [login, setLogin] = useState(2);
   const [mailCheck, setMailCheck] = useState("");
   const [pCheck, setPCheck] = useState("");
+  const [confirmPword, setConfirmPword] = useState("");
   const [isHovered, setIsHovered] = useState(false);
+
+  const [pwordErr, setPwordErr] = useState([]);
 
   useEffect(() => {
     setMailCheck(mailCheck);
@@ -18,22 +21,51 @@ const LoginPopup = () => {
   }, [pCheck]);
 
   const handleChange = (e) => {
-    setMailCheck(e.currentTarget.value);
+    switch (e.currentTarget.name) {
+      case "mail":
+        setMailCheck(e.currentTarget.value);
+      case "pword":
+        setPCheck(e.currentTarget.value);
+      case "cpword":
+        setConfirmPword(e.currentTarget.value);
+    }
   };
 
-  const handlePChange = (e) => {
-    setPCheck(e.currentTarget.value);
-  };
-  const handleRegister = async () => {
+  const handleSubmit = async () => {
+    // console.log("validateEmail: " + validateEmail(mailCheck));
+    // console.log("mailCheck: " + mailCheck);
+    // console.log("pword: " + pCheck);
+    // console.log("cpword: " + confirmPword);
+
+    // if (validateEmail(mailCheck) === true && pCheck === confirmPword) {
+    //   console.log("frontEnd Validation successful");
+    //   setLogin(3);
+    // } else {
+    //   console.log("frontEnd validation unsuccessful");
+    //   let tempArray = [];
+    //   for (let i = 0; i < 5; i++) {
+    //     tempArray.push(`randomBS#${i}`);
+    //   }
+    //   setPwordErr(tempArray);
+    // }
+
+    if (validateEmail(mailCheck) === true && pCheck === confirmPword) {
+      console.log("frontEnd Validation successful");
       const result = await sendRegister(mailCheck, pCheck);
-      if (result === "Success!") {
-          setLogin(3);
+      if (result === true) {
+        setLogin(3);
       } else {
-          for (const [key, value] of Object.entries(result)) {
-              console.log(value[0]);
-          }
+        let tempArray = [];
+        for (const [key, value] of Object.entries(result)) {
+          console.log(value[0]);
+          tempArray.push(value[0]);
+        }
+        setPwordErr(tempArray);
       }
-  }
+    } else {
+      console.log("frontEnd validation unsuccessful");
+    }
+  };
 
   const loginOrRegister = () => {
     switch (login) {
@@ -53,12 +85,14 @@ const LoginPopup = () => {
               </button>
             </div>
             <label style={{ alignSelf: "flex-start" }}>Epost</label>
-            <input type="email" onChange={handleChange} />
+            <input type="email" />
             <label style={{ alignSelf: "flex-start" }}>Passord</label>
             <input type="password" />
 
             <button className="cntBtn">Logg Inn</button>
-            <p className="InfoLink"><a  href="#"> Glemt passord?</a></p>
+            <p className="InfoLink">
+              <a href="#"> Glemt passord?</a>
+            </p>
           </div>
         );
       case 2:
@@ -77,19 +111,22 @@ const LoginPopup = () => {
               </button>
             </div>
             <label style={{ alignSelf: "flex-start" }}>Epost</label>
-            <input type="email" onChange={handleChange} />
+            <input type="email" name="mail" onChange={handleChange} />
             <label style={{ alignSelf: "flex-start" }}>Passord</label>
             <input
               type="password"
+              name="pword"
               className="pwordInput"
-              onChange={handlePChange}
+              onChange={handleChange}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             />
             <label style={{ alignSelf: "flex-start" }}>Gjenta Passord</label>
             <input
               type="password"
+              name="cpword"
               className="pwordInput"
+              onChange={handleChange}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             />
@@ -97,19 +134,24 @@ const LoginPopup = () => {
               password needs: 1 capital letter, 1 lowercase letter, 1 number, 8
               characters long
             </div>
+            <div className="errorDisplay">
+              {pwordErr.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </div>
             <button
               className="cntBtn"
               onClick={() => {
-                console.log(validateEmail(mailCheck));
-                console.log(mailCheck);
-                if (validateEmail(mailCheck) == true) {
-                    handleRegister();
-                }
+                handleSubmit();
               }}
             >
               Fortsett
             </button>
-            <p className="InfoLink">Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a> og <br/><a href="#">personvernserklæring</a></p>
+            <p className="InfoLink">
+              Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a>{" "}
+              og <br />
+              <a href="#">personvernserklæring</a>
+            </p>
           </div>
         );
       case 3:

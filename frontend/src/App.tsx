@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <MainNav />
+        <MainNav version={"user"} />
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
