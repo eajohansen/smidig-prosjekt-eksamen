@@ -16,9 +16,9 @@ public class Allergy {
 
    */
 
-    public Allergy(string name, int userId) {
+    public Allergy(string name) {
         Name = name;
-        UserId = userId;
+        // UserId = userId;
     }
      
     [Key]
@@ -35,10 +35,8 @@ public class Allergy {
     [StringLength(1000)]
     public string? Description { get; set; }
      
-    [Required]
+    // [Required]
+    [ForeignKey("UserId")]
     [Display(Name = "User id")]
     public int UserId { get; set; }
-    
-    [ForeignKey("UserId")]
-    public User User { get; set; }
 }
