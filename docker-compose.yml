@@ -14,7 +14,7 @@ services:
       - MYSQL_DATABASE=agile-project
       - MYSQL_ROOT_PASSWORD=agileavengers
       - MYSQL_PASSWORD=agileavengers
-      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_HOST='%'
 
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
@@ -24,7 +24,7 @@ services:
       start_period: 30s
   backend:
     build:
-      context: ./backend/agile-dev
+      context: ./backend/Agile-dev
       dockerfile: Dockerfile
     restart: always
     ports:
