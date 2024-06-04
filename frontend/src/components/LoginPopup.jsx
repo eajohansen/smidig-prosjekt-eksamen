@@ -4,10 +4,15 @@ import { ProfileForm } from "./ProfileForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { sendRegister } from "../services/tempService";
 const LoginPopup = () => {
+  const [loginMail, setLoginMail] = useState("");
+  const [loginPword, setLoginPword] = useState("");
+
   const [login, setLogin] = useState(2);
+
   const [mailCheck, setMailCheck] = useState("");
   const [pCheck, setPCheck] = useState("");
   const [confirmPword, setConfirmPword] = useState("");
+
   const [isHovered, setIsHovered] = useState(false);
 
   const [pwordErr, setPwordErr] = useState([]);
@@ -32,23 +37,6 @@ const LoginPopup = () => {
   };
 
   const handleSubmit = async () => {
-    // console.log("validateEmail: " + validateEmail(mailCheck));
-    // console.log("mailCheck: " + mailCheck);
-    // console.log("pword: " + pCheck);
-    // console.log("cpword: " + confirmPword);
-
-    // if (validateEmail(mailCheck) === true && pCheck === confirmPword) {
-    //   console.log("frontEnd Validation successful");
-    //   setLogin(3);
-    // } else {
-    //   console.log("frontEnd validation unsuccessful");
-    //   let tempArray = [];
-    //   for (let i = 0; i < 5; i++) {
-    //     tempArray.push(`randomBS#${i}`);
-    //   }
-    //   setPwordErr(tempArray);
-    // }
-
     if (validateEmail(mailCheck) === true && pCheck === confirmPword) {
       console.log("frontEnd Validation successful");
       const result = await sendRegister(mailCheck, pCheck);

@@ -9,13 +9,14 @@ export const sendRegister = async (email, password) => {
     return err.response.data.errors;
   }
 };
-export const sendUser = async (user) => {
+export const sendUser = async (user, allergyList) => {
   try {
-    console.log(user);
+    console.log(user, allergyList);
     const result = await axiosInstance.post("api/user/create", {
       email: user.email,
       firstname: user.firstName,
       lastname: user.lastName,
+      allergyList,
     });
     return result.status === 200;
   } catch (err) {
