@@ -2,7 +2,7 @@
   --main: #497d95;
   --secondary: #cb4353;
   --darkBkgrnd: #1e3742;
-  --mediumGreen: #34A853;
+  --mediumGreen: #34a853;
 }
 
 * {
@@ -38,19 +38,19 @@ input {
   padding: 2rem 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
-    height: 35rem;
-    width: 26rem;
-    label {
-        padding-top: 1rem;
-        font-size: 0.5rem;
-    }
+  height: 35rem;
+  width: 26rem;
+  label {
+    padding-top: 1rem;
+    font-size: 0.5rem;
+  }
 }
 .formContainer h2 {
   padding-bottom: 0.5rem;
 }
 .formContainer input {
   height: 2.5rem;
-    width: 17.5rem;
+  width: 17.5rem;
   border-radius: 0.2rem;
   box-shadow: none;
   background-color: transparent;
@@ -65,32 +65,32 @@ input {
 .loginBtnContainer {
   width: 100%;
   display: flex;
-    .registerToggleBtn {
-        border-radius: 0 0.4rem 0.4rem 0;
-    }
-    .loginToggleBtn {
-        border-radius: 0.4rem 0 0 0.4rem;
-    }
-    button:hover {
-        border: 1px solid black;
-        color: white;
-        background-color: var(--main);
-    }
+  .registerToggleBtn {
+    border-radius: 0 0.4rem 0.4rem 0;
+  }
+  .loginToggleBtn {
+    border-radius: 0.4rem 0 0 0.4rem;
+  }
+  button:hover {
+    border: 1px solid black;
+    color: white;
+    background-color: var(--main);
+  }
 }
 .formContainer {
-    input {
-        height: 2.5rem;
-        border-radius: 0.2rem;
-        box-shadow: none;
-        background-color: transparent;
-        border: 1px solid rgb(174, 174, 174);
-        color: white;
-        padding: 0.5rem;
-        font-size: 0.8rem;
-    }
-    input:focus {
-        border: 1px solid white;
-    }
+  input {
+    height: 2.5rem;
+    border-radius: 0.2rem;
+    box-shadow: none;
+    background-color: transparent;
+    border: 1px solid rgb(174, 174, 174);
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  input:focus {
+    border: 1px solid white;
+  }
 }
 
 .formContainer button {
@@ -114,7 +114,7 @@ input {
   border-radius: 0.4rem;
 }
 
-.InfoLink{
+.InfoLink {
   font-style: italic;
   font-size: x-small;
 }
@@ -154,14 +154,13 @@ input {
   border: white 1px solid;
 }
 .btnDiv {
-    display: flex;
-    width: 100%;
-    button {
-        margin-right: 1rem;
-        border-radius: 0.5rem;
-    }
+  display: flex;
+  width: 100%;
+  button {
+    margin-right: 1rem;
+    border-radius: 0.5rem;
+  }
 }
-
 
 .allergyBtnDiv {
   display: flex;
