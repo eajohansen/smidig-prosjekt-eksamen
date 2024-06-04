@@ -44,8 +44,8 @@ namespace agile_dev.Controller {
             }
         }
 
-        // GET api/user/fetch/5
-        [HttpGet("fetch/{id}")]
+        // GET api/user/fetch/id/5
+        [HttpGet("fetch/id/{id}")]
         public async Task<IActionResult> FetchUserById(int id) {
             try {
                 User? result = await _userService.FetchUserById(id);
@@ -59,6 +59,23 @@ namespace agile_dev.Controller {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
             }
         }
+        
+        // GET api/user/fetch/email/gunnar@gunnarsen.no
+        [HttpGet("fetch/email/{email}")]
+        public async Task<IActionResult> FetchUserByEmail(string email) {
+            try {
+                User? result = await _userService.FetchUserByEmail(email);
+                if (result == null) {
+                    return NoContent();
+                }
+        
+                return Ok(result);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
+        
 
         #endregion
 

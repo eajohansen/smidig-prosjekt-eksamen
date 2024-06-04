@@ -1,4 +1,5 @@
-﻿using agile_dev.Models;
+﻿using System.Collections;
+using agile_dev.Models;
 using agile_dev.Repo;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,14 @@ public class UserService {
     public async Task<ICollection<User>> FetchAllUsers() {
         try {
             ICollection<User> foundUsers = await _dbCon.User.ToListAsync();
-            return foundUsers;
+            ICollection<User> newUsers = new List<User>();
+            foreach (User user in foundUsers) {
+                User? newUser = _dbCon.User.Include(u => u.Allergies).FirstOrDefault(u => u.UserId == user.UserId);
+                if (newUser != null) {
+                    newUsers.Add(newUser);
+                }
+            }
+            return newUsers;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching users.", exception);
@@ -44,14 +52,69 @@ public class UserService {
             throw new Exception("An error occurred while fetching user.", exception);
         }
     }
+    
+    public async Task<User?> FetchUserByEmail(string email) {
+        try {
+            User? user = await _dbCon.User.FirstOrDefaultAsync(u => u.Email == email);
+            return user;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while fetching user by email.", exception);
+        }
+    }
 
     #endregion
 
     #region POST
 
     public async Task<bool> AddUserToDatabase(User user) {
+        Console.WriteLine("Fuck off");
         try {
+            
+            
+            foreach (Allergy allergy in user.Allergies) {
+                allergy.UserId = 0;
+            }
+            
+            Console.WriteLine("Count of user allergies: " + user.Allergies.Count);
+
+
+            ICollection<Allergy> allergies = new List<Allergy>();
+
+            foreach (Allergy allergy in user.Allergies) {
+                allergies.Add(allergy);
+            }
+            
+            Console.WriteLine("Count: " + allergies.Count);
+            
+            user.Allergies.Clear();
+            
+            Console.WriteLine("Count 2: " + allergies.Count);
+            
             await _dbCon.User.AddAsync(user);
+            await _dbCon.SaveChangesAsync();
+
+            User? databaseUser;
+            try {
+                databaseUser = await FetchUserByEmail(user.Email);
+                if (databaseUser == null) {
+                    return false;
+                }
+            }
+            catch (Exception exception) {
+                throw new Exception("Cant find user by email", exception);
+            }
+            
+            Console.WriteLine("Count 3: " + allergies.Count);
+            
+            if (allergies.Count != 0) {
+                foreach (Allergy allergy in allergies) {
+                    allergy.UserId = databaseUser.UserId;
+                    Console.WriteLine(allergy.Name);
+                    await _dbCon.Allergy.AddAsync(allergy);
+                }
+            }
+            
             await _dbCon.SaveChangesAsync();
             return true;
         }
@@ -140,6 +203,4 @@ public class UserService {
     }
     
     #endregion
-    
-    
 }
