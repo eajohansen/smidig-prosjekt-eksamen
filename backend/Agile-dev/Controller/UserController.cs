@@ -100,7 +100,7 @@ namespace agile_dev.Controller {
         }
 
         [HttpPut("admin")]
-        public async Task<IActionResult> MakeUserAdmin(User adminUser, User user) {
+        public async Task<IActionResult> MakeUserAdmin([FromBody] User adminUser, [FromRoute] User user) {
             try {
                 bool makeUserAdmin = await _userService.MakeUserAdmin(adminUser, user);
                 if (!makeUserAdmin) {
