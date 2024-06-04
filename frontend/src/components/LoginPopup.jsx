@@ -58,6 +58,7 @@ const LoginPopup = () => {
             <input type="password" />
 
             <button className="cntBtn">Logg Inn</button>
+            <p className="InfoLink"><a  href="#"> Glemt passord?</a></p>
           </div>
         );
       case 2:
@@ -108,6 +109,7 @@ const LoginPopup = () => {
             >
               Fortsett
             </button>
+            <p className="InfoLink">Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a> og <br/><a href="#">personvernserklæring</a></p>
           </div>
         );
       case 3:
