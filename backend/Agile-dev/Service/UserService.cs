@@ -99,14 +99,14 @@ public class UserService {
         }
     }
 
-    public async Task<bool> MakeUserAdmin(User adminUser, User user) {
+    public async Task<bool> MakeUserAdmin(User adminUser, int id) {
         try {
             bool isUserAdmin = IsUserAdmin(adminUser).Result;
             if (!isUserAdmin) {
                 return false;
             }
 
-            User? databaseUser = FetchUserById(user.UserId).Result;
+            User? databaseUser = FetchUserById(id).Result;
             if (databaseUser == null) {
                 return false;
             }

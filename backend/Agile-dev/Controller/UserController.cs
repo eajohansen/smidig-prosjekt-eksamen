@@ -28,7 +28,7 @@ namespace agile_dev.Controller {
 
         #region GET
 
-        // GET: api/User/fetchAll
+        // GET: api/user/fetchAll
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllUsers() {
             try {
@@ -44,7 +44,7 @@ namespace agile_dev.Controller {
             }
         }
 
-        // GET api/User/fetch/5
+        // GET api/user/fetch/5
         [HttpGet("fetch/{id}")]
         public async Task<IActionResult> FetchUserById(int id) {
             try {
@@ -73,7 +73,7 @@ namespace agile_dev.Controller {
                     // Could create user, because request is bad
                     return BadRequest();
                 }
-                return Ok(user);
+                return Ok();
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
@@ -84,7 +84,7 @@ namespace agile_dev.Controller {
 
         #region PUT
 
-        // PUT api/User/update/5
+        // PUT api/user/update/5
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateUser(User user) {
             try {
@@ -92,21 +92,24 @@ namespace agile_dev.Controller {
                 if (!isAdded) {
                     return BadRequest();
                 }
-                return Ok(user);
+                return Ok();
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
 
-        [HttpPut("admin")]
-        public async Task<IActionResult> MakeUserAdmin([FromBody] User adminUser, [FromRoute] User user) {
+        // PUT api/user/admin/update/5
+        // "AdminUser" in this context is the user that is making the request
+        // "id" is the id of the user that is being made admin
+        [HttpPut("admin/update/{id}")]
+        public async Task<IActionResult> MakeUserAdmin([FromBody] User adminUser, [FromRoute] int id) {
             try {
-                bool makeUserAdmin = await _userService.MakeUserAdmin(adminUser, user);
+                bool makeUserAdmin = await _userService.MakeUserAdmin(adminUser, id);
                 if (!makeUserAdmin) {
                     return Unauthorized();
                 }
-                return Ok(user);
+                return Ok();
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
