@@ -1,4 +1,4 @@
-import {axiosInstance} from "../helper/axios.js";
+/*import {axiosInstance} from "../helper/axios.js";
 
 export const sendRegister = async (email, password) => {
   try {
@@ -11,4 +11,4 @@ export const sendRegister = async (email, password) => {
     return err.response.data.errors;
   }
 };
-
+*/
