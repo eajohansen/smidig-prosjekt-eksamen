@@ -78,7 +78,11 @@ export const ProfileForm = ({ userEmail }) => {
           onChange={handleChange}
         />
         <label htmlFor="dobInput">Fødselsdato</label>
+<<<<<<< HEAD
         <input type="date" id="dobInput" name="dob" onChange={handleChange} />
+=======
+        <input className="date" type="date" id="dobInput" />
+>>>>>>> d19ca3f (Fixed positions register form)
       </div>
       <div className="allergyContainer">
 
@@ -96,14 +100,20 @@ export const ProfileForm = ({ userEmail }) => {
             Legg til
           </button>
         </div>
-        <label>Dine allergier</label>
-        <label>Disclaimer...</label>
+        <label className="yourAllergies">Dine allergier</label>
         <div className="allergyOutput">
           <ul>
             {allergies.map((item, i) => (
               <li key={i}>{item}</li>
             ))}
           </ul>
+        </div>
+        <div className="disclaimerDiv">
+          <input className="checkBox" type="checkbox" />
+          <label className="disclaimer">
+            Ved å registrere brukerprofil, samtykker du til at denne
+            informasjonen kan deles med arrangør og eventuelle medarrangører.
+          </label>
         </div>
         <div className="btnDiv">
           <button className="canclBtn">Avbryt</button>
