@@ -60,6 +60,7 @@ export const ProfileForm = ({ userEmail }) => {
     <div className="profileInfoContainer formContainer">
       <div className="userInfoContainer">
         <h2>Opprett Bruker</h2>
+        <hr></hr>
         <label htmlFor="emailRegister">Epost</label>
         <input type="email" id="emailRegister" value={userEmail} readOnly />
         <label htmlFor="fNameInput">Fornavn</label>
@@ -80,10 +81,10 @@ export const ProfileForm = ({ userEmail }) => {
         <input type="date" id="dobInput" name="dob" onChange={handleChange} />
       </div>
       <div className="allergyContainer">
-        <h2>Opprett Bruker</h2>
 
-        <label htmlFor="allergyInput">Allergier</label>
-        <div className="allergyBtnDiv">
+          <label className="allergies" htmlFor="allergyInput">
+              Allergier
+          </label>        <div className="allergyBtnDiv">
           <input
             type="text"
             id="allergyInput"
@@ -91,7 +92,9 @@ export const ProfileForm = ({ userEmail }) => {
             onChange={handleChange}
             value={newAllergy}
           />
-          <button onClick={handleAllergy}>Legg til</button>
+          <button className="addBtn" onClick={handleAllergy}>
+            Legg til
+          </button>
         </div>
         <label>Dine allergier</label>
         <label>Disclaimer...</label>
@@ -103,14 +106,10 @@ export const ProfileForm = ({ userEmail }) => {
           </ul>
         </div>
         <div className="btnDiv">
-          <button>Avbryt</button>
-          <button
-            onClick={() => {
+          <button className="canclBtn">Avbryt</button>
+          <button className="createBtn"             onClick={() => {
               handleSubmit();
-            }}
-          >
-            Opprett
-          </button>
+          }}>Opprett</button>
         </div>
       </div>
     </div>

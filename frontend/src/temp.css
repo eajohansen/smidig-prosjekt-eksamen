@@ -77,9 +77,28 @@ input {
     background-color: var(--main);
   }
 }
+
+/* Registration form  */
 .formContainer {
+  h2 {
+    padding-bottom: 0.5rem;
+  }
+  button {
+    width: 60%;
+    font-size: 10px;
+    border: 1px;
+    height: 2rem;
+  }
+  .cntBtn {
+    width: 100%;
+    margin: 2rem;
+    background-color: var(--secondary);
+    color: white;
+    border-radius: 0.4rem;
+    border-color: black;
+  }
   input {
-    height: 2.5rem;
+    height: 1rem;
     border-radius: 0.2rem;
     box-shadow: none;
     background-color: transparent;
@@ -93,37 +112,17 @@ input {
   }
 }
 
-.formContainer button {
-  width: 60%;
-  font-size: 12px;
-  border: 1px solid black;
-  height: 2rem;
-}
-.loginBtnContainer button:hover {
-  border: 1px solid black;
-  color: white;
-  background-color: var(--main);
-}
-
-.formContainer .cntBtn {
-  width: 100%;
-  border: none;
-  margin: 2rem;
-  background-color: var(--mediumGreen);
-  color: white;
-  border-radius: 0.4rem;
-}
-
-.InfoLink {
-  font-style: italic;
-  font-size: x-small;
-}
-
-.loginContainer .cntBtn:hover {
-  filter: brightness(90%);
+hr {
+  width: 225%;
 }
 
 .profileInfoContainer {
+  h2 {
+    font-size: 1rem;
+    font-weight: normal;
+  }
+  width: 70%;
+  height: 100%;
   display: flex;
   border: 1px solid black;
   border-radius: 1rem;
@@ -133,14 +132,13 @@ input {
   div {
     padding: 1rem;
   }
+  font-family: "Inter", sans-serif;
+  font-size: 0.6rem;
 }
 
 .userInfoContainer {
   display: flex;
   flex-direction: column;
-}
-.profileInfoContainer div {
-  padding: 1rem;
 }
 
 .allergyContainer {
@@ -148,18 +146,48 @@ input {
   flex-direction: column;
 }
 
+#allergyInput {
+  margin-left: -1rem;
+  margin-top: 0.9rem;
+  width: 5rem;
+}
+
 .allergyOutput {
-  height: 50%;
-  width: 100%;
-  border: white 1px solid;
+  height: 100%;
+  width: 72%;
+  border: 1px solid rgb(174, 174, 174);
+  border-radius: 0.3rem;
 }
 .btnDiv {
   display: flex;
-  width: 100%;
+  flex-direction: row;
+  width: 10rem;
+  margin-left: -1rem;
+  margin-bottom: -1rem;
   button {
-    margin-right: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 0.3rem;
   }
+}
+
+.addBtn {
+  width: 100%;
+  background-color: #497d95;
+  color: white;
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+  justify-content: center;
+  margin-top: 0.9rem;
+  margin-left: 0.5rem;
+}
+
+.canclBtn {
+  border-color: black;
+  margin-right: 1rem;
+}
+
+.createBtn {
+  background-color: #497d95;
+  color: white;
 }
 
 .allergyBtnDiv {
