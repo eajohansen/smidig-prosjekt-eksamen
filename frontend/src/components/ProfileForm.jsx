@@ -8,6 +8,7 @@ export const ProfileForm = ({ userEmail }) => {
     firstName: "",
     lastName: "",
     email: userEmail,
+    // allergyList: allergies,
   });
 
   useEffect(() => {
@@ -43,8 +44,10 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   const handleSubmit = async () => {
-    const result = await sendUser(user);
-    console.log(result);
+    console.log(user);
+    console.log(allergies);
+    const result = await sendUser(user, allergies);
+    console.log("result: " + result);
   };
 
   return (
