@@ -2,7 +2,7 @@ import { useState, useEffect, SyntheticEvent } from "react";
 import { validateEmail, validatePword } from "../validation";
 import { ProfileForm } from "./ProfileForm";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { sendRegister } from "../services/tempService";
+import { sendLogin, sendRegister } from "../services/tempService";
 const LoginPopup = () => {
   const [loginMail, setLoginMail] = useState("");
   const [loginPword, setLoginPword] = useState("");
@@ -25,14 +25,32 @@ const LoginPopup = () => {
     setPCheck(pCheck);
   }, [pCheck]);
 
+  useEffect(() => {
+    setLoginMail(loginMail);
+  }, [loginMail]);
+
+  useEffect(() => {
+    setLoginPword(loginPword);
+  }, [loginPword]);
+
   const handleChange = (e) => {
+    const value = e.currentTarget.value;
     switch (e.currentTarget.name) {
       case "mail":
-        setMailCheck(e.currentTarget.value);
+        setMailCheck(value);
+        break;
       case "pword":
-        setPCheck(e.currentTarget.value);
+        setPCheck(value);
+        break;
       case "cpword":
-        setConfirmPword(e.currentTarget.value);
+        setConfirmPword(value);
+        break;
+      case "loginMailName":
+        setLoginMail(value);
+        break;
+      case "loginPwordName":
+        setLoginPword(value);
+        break;
     }
   };
 
@@ -55,6 +73,12 @@ const LoginPopup = () => {
     }
   };
 
+  const handleLogin = async () => {
+    console.log(loginMail, loginPword);
+    const result = await sendLogin(loginMail, loginPword);
+    console.log(result);
+  };
+
   const loginOrRegister = () => {
     switch (login) {
       case 1:
@@ -73,11 +97,17 @@ const LoginPopup = () => {
               </button>
             </div>
             <label style={{ alignSelf: "flex-start" }}>Epost</label>
-            <input type="email" />
+            <input type="email" name="loginMailName" onChange={handleChange} />
             <label style={{ alignSelf: "flex-start" }}>Passord</label>
-            <input type="password" />
+            <input
+              type="password"
+              name="loginPwordName"
+              onChange={handleChange}
+            />
 
-            <button className="cntBtn">Logg Inn</button>
+            <button className="cntBtn" onClick={handleLogin}>
+              Logg Inn
+            </button>
             <p className="InfoLink">
               <a href="#"> Glemt passord?</a>
             </p>
