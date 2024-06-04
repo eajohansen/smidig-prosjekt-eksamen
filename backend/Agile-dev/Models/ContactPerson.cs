@@ -14,12 +14,11 @@ public class ContactPerson {
        [StringLength(*number*)] = Data annotation for setting a max length on the field
        [DataType(*Type*)] = Data annotation for specifying the type of data
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)] = This specific data annotation gives this model a private counter for id
-       
+
     */
 
-    public ContactPerson() {
-        // Initializing to avoid NULL reference
+    public ContactPerson(string name) {
+        Name = name;
         Events = new HashSet<Event>();
     }
     
@@ -44,5 +43,5 @@ public class ContactPerson {
     public string? Number { get; set; }
     
     // A HasSet of all Events with this ContactPerson
-    public virtual ICollection<Event> Events { get; set; }
+    public ICollection<Event> Events { get; set; }
 }
