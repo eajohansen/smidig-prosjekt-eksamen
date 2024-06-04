@@ -30,7 +30,7 @@ input {
   flex-direction: column;
   border: 1px solid black;
   border-radius: 1rem;
-  padding: 2rem 3.5rem;
+  padding: 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
   label {
@@ -91,26 +91,26 @@ input {
 }
 
 hr {
-  width: 225%;
+  width: 237%;
 }
 
 .profileInfoContainer {
   h2 {
-    font-size: 1rem;
+    font-size: 2rem;
     font-weight: normal;
   }
-  width: 70%;
-  height: 100%;
+  width: 40rem;
+  height: 35rem;
   display: flex;
   border-radius: 1rem;
-  padding: 2rem 3.5rem;
+  padding: 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
   div {
-    padding: 1rem;
+    padding: 1.5rem;
   }
   font-family: "Inter", sans-serif;
-  font-size: 0.6rem;
+  font-size: 1rem;
 }
 
 .userInfoContainer {
@@ -118,48 +118,57 @@ hr {
   flex-direction: column;
 }
 
+.userInfoContainer {
+  input {
+    font-size: 1rem;
+    padding: 0.9rem;
+    width: 15rem;
+  }
+  label {
+    padding: 0.6rem;
+    padding-left: 0;
+  }
+  #dobInput {
+    filter: invert(100%);
+    color: black;
+  }
+}
+
 .allergyContainer {
   display: flex;
   flex-direction: column;
-}
-
-#allergyInput {
-  margin-left: -1rem;
-  margin-top: 0.9rem;
-  width: 5rem;
+  .allergies {
+    padding-top: 3.5rem;
+  }
+  .yourAllergies {
+    padding: 0.6rem;
+    padding-left: 0;
+    padding-top: 0;
+    margin-top: -0.95rem;
+  }
 }
 
 .allergyOutput {
-  height: 100%;
-  width: 72%;
+  height: 5.2rem;
+  width: 17rem;
   border: 1px solid rgb(174, 174, 174);
   border-radius: 0.3rem;
 }
 .btnDiv {
   display: flex;
   flex-direction: row;
-  width: 10rem;
-  margin-left: -1rem;
-  margin-bottom: -1rem;
   button {
     border-radius: 0.3rem;
+    font-size: 0.8rem;
+    height: 2.8rem;
+    width: 8rem;
+    margin-left: -1.5rem;
   }
-}
-
-.addBtn {
-  width: 100%;
-  background-color: #497d95;
-  color: white;
-  border-radius: 0.3rem;
-  padding: 0.5rem;
-  justify-content: center;
-  margin-top: 0.9rem;
-  margin-left: 0.5rem;
 }
 
 .canclBtn {
   border-color: black;
-  margin-right: 1rem;
+  margin-right: 5.7rem;
 }
 
 .createBtn {
@@ -169,6 +178,35 @@ hr {
 
 .allergyBtnDiv {
   display: flex;
+  margin-top: -0.9rem;
+  margin-left: -1.5rem;
+  .addBtn {
+    font-size: 0.8rem;
+    width: 5rem;
+    height: 3rem;
+    background-color: #497d95;
+    color: white;
+    border-radius: 0.3rem;
+    margin-left: 0.3rem;
+  }
+  #allergyInput {
+    width: 13rem;
+    padding: 0.9rem;
+  }
+}
+
+.disclaimerDiv {
+  display: flex;
+  .checkBox {
+    margin-top: 0.7rem;
+    margin-right: 0.8rem;
+    margin-left: -1.5rem;
+    background-color: white;
+  }
+  .disclaimer {
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
+  }
 }
 
 .navHeader {
