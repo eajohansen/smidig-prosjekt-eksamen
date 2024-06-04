@@ -25,7 +25,7 @@ public class InitContext : IdentityDbContext<IdentityUser> {
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;");
+            optionsBuilder.UseMySQL("ConnectionStrings");
         }
     }
 }
