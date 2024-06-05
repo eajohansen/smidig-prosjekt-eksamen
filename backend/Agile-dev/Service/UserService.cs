@@ -264,6 +264,17 @@ public class UserService {
     #endregion
 
     #region DELETE
+    public bool DeleteUser(User user) {
+        try {
+            User databaseUser = _dbCon.User.Find(user.UserId);
+            _dbCon.User.Remove(user);
+            _dbCon.SaveChanges();
+            return true;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while deleting user.", exception);
+        }
+    }
 
     #endregion
 
@@ -314,4 +325,6 @@ public class UserService {
     }
 
     #endregion
+
+
 }

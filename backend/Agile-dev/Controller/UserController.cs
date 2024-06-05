@@ -189,10 +189,21 @@ namespace agile_dev.Controller {
 
         #region DELETE
 
-        // // DELETE api/User/delete/5
-        // [HttpDelete("delete/{id}")]
-        // public void Delete(int id) {
-        // }
+        // DELETE api/User/delete
+        [HttpDelete("delete")]
+        public IActionResult Delete(User user) {
+            try {
+                bool isDeleted = _userService.DeleteUser(user);
+                if (!isDeleted) {
+                    // Could not delete user, because frontend is stoopid
+                    BadRequest();
+                }
+                return Ok();
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
 
         #endregion
     }
