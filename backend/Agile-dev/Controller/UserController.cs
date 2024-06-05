@@ -184,21 +184,6 @@ namespace agile_dev.Controller {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
-        
-        // PUT api/user/allergies/update
-        [HttpPut("allergies/update")]
-        public async Task<IActionResult> UpdateUserAllergies(User user) {
-            try {
-                bool isAdded = await _userService.UpdateUserAllergiesDb(user);
-                if (!isAdded) {
-                    return BadRequest();
-                }
-                return Ok();
-            }
-            catch (Exception exception) {
-                return StatusCode(500, "Internal server error: " + exception.Message);
-            }
-        }
 
         #endregion
 
