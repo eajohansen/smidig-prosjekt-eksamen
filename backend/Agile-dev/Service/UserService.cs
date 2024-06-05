@@ -74,10 +74,6 @@ public class UserService {
             if (!_dbCon.User.Any()) {
                 user.Admin = true;
             }
-            
-            foreach (Allergy allergy in user.Allergies) {
-                allergy.UserId = 0;
-            }
 
             ICollection<Allergy> allergies = user.Allergies.ToList();
 
