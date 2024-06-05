@@ -28,7 +28,15 @@ export const sendUser = async (user, allergyList) => {
 export const sendLogin = async (email, password) => {
   try {
     const result = await axiosInstance.post("login", { email, password });
-    return result.status === 200;
+    if (result.status === 200) {
+      console.log(result.data);
+      localStorage.setItem("accessToken", result.data.accessToken);
+      localStorage.setItem("refreshToken", result.data.refreshToken);
+      axiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${result.data.accessToken}`;
+    }
+    return;
   } catch (err) {
     console.log(err);
     return err;

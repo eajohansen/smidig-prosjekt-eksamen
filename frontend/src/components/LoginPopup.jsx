@@ -80,7 +80,6 @@ const LoginPopup = () => {
     if (result >= 400) {
       console.log("username and password doesnt match database");
     }
-    console.log(result);
   };
 
   const testClick = async () => {
