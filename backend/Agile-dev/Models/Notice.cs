@@ -33,8 +33,6 @@ public class Notice {
     
     [Required]
     [Display(Name = "User id")]
-    public int UserId { get; set; }
-    
     [ForeignKey("UserId")]
-    public User User { get; set; }
+    public int UserId { get; set; }
 }
