@@ -101,13 +101,45 @@ namespace agile_dev.Controller {
             }
         }
         
-        // POST api/user/organizer/create/5
+        // POST api/user/organizer/create/5/1
         [HttpPost("organizer/create/{loggedInUserId}/{organizationId}")]
         public async Task<IActionResult> AddOrganizer([FromRoute] int loggedInUserId, [FromBody] User user, [FromRoute] int organizationId) {
             try {
                 bool isAdded = await _userService.AddUserAsOrganizer(loggedInUserId, user, organizationId);
                 if (!isAdded) {
                     // Could not add user as organizer, because request is bad
+                    return BadRequest();
+                }
+                return Ok();
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
+        
+        // POST api/user/follower/create/1
+        [HttpPost("follower/create/{organizationId}")]
+        public async Task<IActionResult> AddFollower([FromBody] User user, [FromRoute] int organizationId) {
+            try {
+                bool isAdded = await _userService.AddUserAsFollower(user, organizationId);
+                if (!isAdded) {
+                    // Could not add user as follower, because request is bad
+                    return BadRequest();
+                }
+                return Ok();
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
+        
+        // POST api/user/event/add/3
+        [HttpPost("event/add/{eventId}")]
+        public async Task<IActionResult> AddUserEvent([FromBody] User user, [FromRoute] int eventId) {
+            try {
+                bool isAdded = await _userService.AddUserToEvent(user, eventId);
+                if (!isAdded) {
+                    // Could not add user to event, because request is bad
                     return BadRequest();
                 }
                 return Ok();
@@ -145,6 +177,21 @@ namespace agile_dev.Controller {
                 bool makeUserAdmin = await _userService.MakeUserAdmin(adminUser, id);
                 if (!makeUserAdmin) {
                     return Unauthorized();
+                }
+                return Ok();
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
+        
+        // PUT api/user/allergies/update
+        [HttpPut("allergies/update")]
+        public async Task<IActionResult> UpdateUserAllergies(User user) {
+            try {
+                bool isAdded = await _userService.UpdateUserAllergiesDb(user);
+                if (!isAdded) {
+                    return BadRequest();
                 }
                 return Ok();
             }

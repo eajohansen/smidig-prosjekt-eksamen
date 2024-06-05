@@ -131,6 +131,63 @@ public class UserService {
             throw new Exception("An error occurred while adding user as organizer.", exception);
         }
     }
+    
+    public async Task<bool> AddUserAsFollower(User user, int organizationId) {
+        try {
+            Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
+            
+            if (foundOrganization != null && !IsUserFollowingOrganization(user, foundOrganization).Result) {
+                return false;
+            }
+
+            Follower newFollower = new Follower(user.UserId, organizationId);
+            await _dbCon.Follower.AddAsync(newFollower);
+            await _dbCon.SaveChangesAsync();
+            return true;
+
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while adding user as follower.", exception);
+        }
+    }
+    
+    public async Task<bool> AddUserToEvent(User user, int eventId) {
+        try {
+            Event? foundEvent = await _dbCon.Event.FindAsync(eventId);
+            
+            if (foundEvent != null && !IsUserAttendingEvent(user, foundEvent).Result) {
+                return false;
+            }
+
+            UserEvent newUserEvent = new UserEvent(user.UserId, eventId) {
+                Used = false
+            };
+            await _dbCon.UserEvent.AddAsync(newUserEvent);
+            await _dbCon.SaveChangesAsync();
+            return true;
+
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while adding user to event.", exception);
+        }
+    }
+    
+    public async Task<bool> AddNoticeToUser(User user) {
+        try {
+
+            Notice newNotice = new Notice(user.UserId) {
+                Expire = DateTime.Now.AddDays(30)
+            };
+
+            await _dbCon.Notice.AddAsync(newNotice);
+            await _dbCon.SaveChangesAsync();
+            return true;
+
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while adding user to event.", exception);
+        }
+    }
 
     #endregion
 
@@ -194,6 +251,31 @@ public class UserService {
         }
     }
 
+    public async Task<bool> UpdateUserAllergiesDb(User user) {
+        try {
+            User? dbUser = await FetchUserById(user.UserId);
+
+            if (dbUser?.Allergies != null && dbUser?.Allergies.Count != 0) {
+                foreach (Allergy allergy in dbUser.Allergies) { _dbCon.Allergy.Remove(allergy); }
+
+                dbUser.Allergies.Clear();
+
+                if (user.Allergies.Count != 0) {
+                    foreach (Allergy allergy in user.Allergies) {
+                        allergy.UserId = user.UserId;
+                        await _dbCon.Allergy.AddAsync(allergy);
+                    }
+                }
+            }
+
+            await _dbCon.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while updating user allergies.", exception);
+        }
+    }
+
     #endregion
 
     #region DELETE
@@ -210,6 +292,16 @@ public class UserService {
     private async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
         User? databaseUser = await FetchUserById(user.UserId);
         return databaseUser != null && databaseUser.OrganizerOrganization.Any(organizations => organizations.OrganizationId.Equals(organization.OrganizationId));
+    }
+    
+    private async Task<bool> IsUserFollowingOrganization(User user, Organization organization) {
+        User? databaseUser = await FetchUserById(user.UserId);
+        return databaseUser != null && databaseUser.FollowOrganization.Any(organizations => organizations.OrganizationId.Equals(organization.OrganizationId));
+    }
+    
+    private async Task<bool> IsUserAttendingEvent(User user, Event eEvent) {
+        User? databaseUser = await FetchUserById(user.UserId);
+        return databaseUser != null && databaseUser.UserEvents.Any(userEvent => userEvent.EventId.Equals(eEvent.EventId));
     }
 
     private async Task<List<User>> AddRelationToUser(List<User> users) {
