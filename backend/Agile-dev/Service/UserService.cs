@@ -68,7 +68,6 @@ public class UserService {
     #region POST
 
     public async Task<bool> AddUserToDatabase(User user) {
-        Console.WriteLine("Fuck off");
         try {
             
             
@@ -84,12 +83,8 @@ public class UserService {
             foreach (Allergy allergy in user.Allergies) {
                 allergies.Add(allergy);
             }
-            
-            Console.WriteLine("Count: " + allergies.Count);
-            
+         
             user.Allergies.Clear();
-            
-            Console.WriteLine("Count 2: " + allergies.Count);
             
             await _dbCon.User.AddAsync(user);
             await _dbCon.SaveChangesAsync();
@@ -104,8 +99,6 @@ public class UserService {
             catch (Exception exception) {
                 throw new Exception("Cant find user by email", exception);
             }
-            
-            Console.WriteLine("Count 3: " + allergies.Count);
             
             if (allergies.Count != 0) {
                 foreach (Allergy allergy in allergies) {
