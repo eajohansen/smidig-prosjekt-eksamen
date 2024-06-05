@@ -76,6 +76,9 @@ const LoginPopup = () => {
   const handleLogin = async () => {
     console.log(loginMail, loginPword);
     const result = await sendLogin(loginMail, loginPword);
+    if (result >= 400) {
+      console.log("username and password doesnt match database");
+    }
     console.log(result);
   };
 
