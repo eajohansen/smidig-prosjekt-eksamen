@@ -16,6 +16,7 @@ export const sendUser = async (user, allergyList) => {
       email: user.email,
       firstname: user.firstName,
       lastname: user.lastName,
+      birthdate: user.birthdate,
       allergyList,
     });
     return result.status === 200;

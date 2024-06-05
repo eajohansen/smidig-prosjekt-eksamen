@@ -3,11 +3,13 @@ import { sendUser } from "../services/tempService";
 export const ProfileForm = ({ userEmail }) => {
   const [allergies, setAllergies] = useState([]);
   const [newAllergy, setNewAllergy] = useState("");
+  const [dob, setDob] = useState();
 
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     email: userEmail,
+    birthdate: "",
     // allergyList: allergies,
   });
 
@@ -24,13 +26,12 @@ export const ProfileForm = ({ userEmail }) => {
     switch (e.currentTarget.name) {
       case "fName":
         setUser({ ...user, firstName: value });
-        console.log(value);
         break;
       case "lName":
         setUser({ ...user, lastName: value });
-        console.log(value);
         break;
       case "dob":
+        setUser({ ...user, birthdate: value });
         break;
       case "allergies":
         setNewAllergy(value);
@@ -44,10 +45,15 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   const handleSubmit = async () => {
-    console.log(user);
-    console.log(allergies);
-    const result = await sendUser(user, allergies);
-    console.log("result: " + result);
+    console.log("frontendlog" + user);
+    console.log("frontendlog" + allergies);
+    console.log("frontendlog" + dob);
+    if (user.firstName != "" && user.lastName != "") {
+      const result = await sendUser(user, allergies);
+      console.log("result: " + result);
+    } else {
+      alert("First name and Last name are required fields");
+    }
   };
 
   return (
@@ -71,7 +77,7 @@ export const ProfileForm = ({ userEmail }) => {
           onChange={handleChange}
         />
         <label htmlFor="dobInput">Fødselsdato</label>
-        <input type="date" id="dobInput" name="dob" />
+        <input type="date" id="dobInput" name="dob" onChange={handleChange} />
       </div>
       <div className="allergyContainer">
         <h2>Opprett Bruker</h2>
