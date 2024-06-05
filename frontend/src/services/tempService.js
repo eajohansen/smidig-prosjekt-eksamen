@@ -1,14 +1,44 @@
-import {axiosInstance} from "../helper/axios.js";
+import { axiosInstance } from "./helpers";
 
 export const sendRegister = async (email, password) => {
   try {
-   await axiosInstance.post("register",
-       { email, password }
-   );
-    return "Success!"
+    const result = await axiosInstance.post("register", { email, password });
+    return result.status === 200;
   } catch (err) {
-    console.log(err.response.data.errors)
+    console.log(err.response.data.errors);
     return err.response.data.errors;
   }
 };
-
+export const sendUser = async (user, allergyList) => {
+  try {
+    console.log(user, allergyList);
+    const result = await axiosInstance.post("api/user/create", {
+      email: user.email,
+      firstname: user.firstName,
+      lastname: user.lastName,
+      birthdate: user.birthdate,
+      allergyList,
+    });
+    return result.status === 200;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+export const sendLogin = async (email, password) => {
+  try {
+    const result = await axiosInstance.post("login", { email, password });
+    if (result.status === 200) {
+      console.log(result.data);
+      localStorage.setItem("accessToken", result.data.accessToken);
+      localStorage.setItem("refreshToken", result.data.refreshToken);
+      axiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.getItem("accessToken")}`;
+    }
+    return;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
