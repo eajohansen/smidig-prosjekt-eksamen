@@ -39,10 +39,8 @@ public class Organization {
     
     [Required]
     [Display(Name = "Image id")]
-    public int ImageId { get; set; }
-    
     [ForeignKey("ImageId")]
-    public Image Image { get; set; }
+    public int ImageId { get; set; }
     
     // A HasSet of all Followers with this Organization
     public ICollection<Follower> Followers { get; set; }

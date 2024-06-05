@@ -46,29 +46,21 @@ public class Event {
     public int? Capacity { get; set; }
     
     [Display(Name = "Event DateTime id")]
+    [ForeignKey("EventDateTimeId")]
     public int? EventDateTimeId { get; set; }
     
-    [ForeignKey("EventDateTimeId")]
-    public EventDateTime? EventDateTime { get; set; }
-    
     [Display(Name = "Place id")]
-    public int? PlaceId { get; set; }
-    
     [ForeignKey("PlaceId")]
-    public Place? Place { get; set; }
+    public int? PlaceId { get; set; }
     
     [Required]
     [Display(Name = "Image id")]
+    [ForeignKey("ImageId")]
     public int ImageId { get; set; }
     
-    [ForeignKey("ImageId")]
-    public Image Image { get; set; }
-    
     [Display(Name = "Contact person id")]
-    public int? ContactPersonId  { get; set; }
-    
     [ForeignKey("ContactPersonId")]
-    public ContactPerson? ContactPerson { get; set; }
+    public int? ContactPersonId  { get; set; }
     
     // A HasSet of all EventCustomFields with this Event
     public ICollection<EventCustomField> EventCustomFields { get; set; }
