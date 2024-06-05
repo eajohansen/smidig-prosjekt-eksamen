@@ -264,11 +264,11 @@ public class UserService {
     #endregion
 
     #region DELETE
-    public bool DeleteUser(User user) {
+    public async Task<bool> DeleteUser(User user) {
         try {
-            User databaseUser = _dbCon.User.Find(user.UserId);
+            
             _dbCon.User.Remove(user);
-            _dbCon.SaveChanges();
+            await _dbCon.SaveChangesAsync();
             return true;
         }
         catch (Exception exception) {
