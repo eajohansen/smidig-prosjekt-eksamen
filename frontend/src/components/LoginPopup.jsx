@@ -1,4 +1,3 @@
-/*
 import { useState, useEffect, SyntheticEvent } from "react";
 import { validateEmail, validatePword } from "../validation";
 import { ProfileForm } from "./ProfileForm";
@@ -184,4 +183,3 @@ const LoginPopup = () => {
 };
 
 export default LoginPopup;
-*/

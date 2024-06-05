@@ -139,9 +139,6 @@ hr {
 .userInfoContainer {
   display: flex;
   flex-direction: column;
-}
-
-.userInfoContainer {
   input {
     font-size: 1rem;
     padding: 0.9rem;
@@ -151,9 +148,23 @@ hr {
     padding: 0.6rem;
     padding-left: 0;
   }
+  .emailContainer {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    .icon-inside {
+      margin-left: -2rem;
+      margin-top: 0.9rem;
+    }
+  }
   #dobInput {
     filter: invert(100%);
     color: black;
+    border-color: rgb(70, 70, 70);
+  }
+  #dobInput:focus {
+    border: 1px solid black;
   }
 }
 
