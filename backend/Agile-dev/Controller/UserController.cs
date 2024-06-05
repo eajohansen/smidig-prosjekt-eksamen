@@ -91,7 +91,7 @@ namespace agile_dev.Controller {
             try {
                 bool isAdded = await _userService.AddUserToDatabase(user);
                 if (!isAdded) {
-                    // Could create user, because request is bad
+                    // Could not create user, because request is bad
                     return BadRequest();
                 }
                 return Ok();
@@ -154,7 +154,7 @@ namespace agile_dev.Controller {
         #region PUT
 
         // PUT api/user/update/5
-        [HttpPut("update/{id}")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateUser(User user) {
             try {
                 bool isAdded = await _userService.UpdateUser(user);
