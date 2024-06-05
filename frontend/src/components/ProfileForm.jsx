@@ -1,4 +1,5 @@
 import { useState, useEffect, SyntheticEvent } from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { sendUser } from "../services/tempService";
 export const ProfileForm = ({ userEmail }) => {
   const [allergies, setAllergies] = useState([]);
@@ -40,8 +41,12 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   const handleAllergy = () => {
-    setAllergies([...allergies, newAllergy]);
-    setNewAllergy("");
+      if (allergies.length > 5) {
+          alert("Beklager! Du kan ikke legge til fler enn 6 allergier.");
+      } else {
+          setAllergies([...allergies, newAllergy]);
+          setNewAllergy("");
+      }
   };
 
   const handleSubmit = async () => {
@@ -106,7 +111,10 @@ export const ProfileForm = ({ userEmail }) => {
         <div className="allergyOutput">
           <ul>
             {allergies.map((item, i) => (
-              <li key={i}>{item}</li>
+              <li className="allergy" key={i}>
+                {item}
+                <i className="trash bi bi-trash3 "></i>
+              </li>
             ))}
           </ul>
         </div>
