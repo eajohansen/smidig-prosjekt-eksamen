@@ -34,7 +34,7 @@ export const sendLogin = async (email, password) => {
       localStorage.setItem("refreshToken", result.data.refreshToken);
       axiosInstance.defaults.headers.common[
         "Authorization"
-      ] = `Bearer ${result.data.accessToken}`;
+      ] = `Bearer ${localStorage.getItem("accessToken")}`;
     }
     return;
   } catch (err) {
