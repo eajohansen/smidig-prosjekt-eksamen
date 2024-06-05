@@ -22,7 +22,7 @@ public class InitContext : IdentityDbContext<IdentityUser> {
     public DbSet<Event> Event { get; set; }
     public DbSet<CustomField> CustomField { get; set; }
     public DbSet<Organization> Organization { get; set; }
-    
+    public DbSet<Organizer> Organizer { get; set; }    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;");

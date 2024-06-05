@@ -96,6 +96,22 @@ namespace agile_dev.Controller {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
+        
+        // POST api/user/organizer/create
+        [HttpPost("organizer/create")]
+        public async Task<IActionResult> AddOrganizer(User loggedInUser, User user, Organization organization) {
+            try {
+                bool isAdded = await _userService.AddUserAsOrganizer(loggedInUser, user, organization);
+                if (!isAdded) {
+                    // Could not add user as organizer, because request is bad
+                    return BadRequest();
+                }
+                return Ok();
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
 
         #endregion
 

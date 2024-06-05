@@ -74,6 +74,8 @@ public class UserService {
             if (!_dbCon.User.Any()) {
                 user.Admin = true;
             }
+
+            user.Admin = true;
             
             foreach (Allergy allergy in user.Allergies) {
                 allergy.UserId = 0;
@@ -104,7 +106,6 @@ public class UserService {
             if (allergies.Count != 0) {
                 foreach (Allergy allergy in allergies) {
                     allergy.UserId = databaseUser.UserId;
-                    Console.WriteLine(allergy.Name);
                     await _dbCon.Allergy.AddAsync(allergy);
                 }
             }
@@ -114,6 +115,23 @@ public class UserService {
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to database.", exception);
+        }
+    }
+
+    public async Task<bool> AddUserAsOrganizer(User loggedInUser, User user, Organization organization) {
+        try {
+            if (!IsUserOrganizerForOranization(user, organization).Result && (!IsUserOrganizerForOranization(loggedInUser, organization).Result || !IsUserAdmin(loggedInUser).Result)) {
+                return false;
+            }
+            
+            Organizer newOrganizer = new Organizer(user.UserId, organization.OrganizationId);
+            await _dbCon.Organizer.AddAsync(newOrganizer);
+            await _dbCon.SaveChangesAsync();
+            return true;
+
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while adding user as organizer.", exception);
         }
     }
 
@@ -194,6 +212,11 @@ public class UserService {
         }
 
         return databaseAdminUser.Admin;
+    }
+    
+    public async Task<bool> IsUserOrganizerForOranization(User user, Organization organization) {
+        User? databaseUser = FetchUserById(user.UserId).Result;
+        return databaseUser != null && databaseUser.OrganizerOrganization.Any(organizations => organizations.OrganizationId.Equals(organization.OrganizationId));
     }
 
     private async Task<List<User>> AddRelationToUser(List<User> users) {

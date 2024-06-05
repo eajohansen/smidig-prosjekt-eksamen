@@ -16,8 +16,9 @@ public class Organizer {
 
     */
 
-    public Organizer(int userId) {
+    public Organizer(int userId, int organizationId) {
         UserId = userId;
+        OrganizationId = organizationId;
     }
     
     [Key] // Data annotation for primary key of this model
@@ -28,7 +29,7 @@ public class Organizer {
     [Required]
     [Display(Name = "Organization id")]
     [ForeignKey("OrganizationId")]
-    public int? OrganizationId { get; set; }
+    public int OrganizationId { get; set; }
     
     [Required]
     [Display(Name = "User id")]
