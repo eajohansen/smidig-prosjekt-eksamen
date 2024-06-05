@@ -29,7 +29,7 @@ public class UserService {
     public async Task<ICollection<User>> FetchAllUsers() {
         try {
             ICollection<User> foundUsers = await _dbCon.User.ToListAsync();
-            ICollection<User> newUsers = AddRelationToUser(foundUsers.ToList()).Result;
+            ICollection<User> newUsers = await AddRelationToUser(foundUsers.ToList());
             
             return newUsers;
         }
@@ -43,7 +43,7 @@ public class UserService {
             User? user = await _dbCon.User.FindAsync(id);
             if (user != null) {
                 List<User> foundUser = [user];
-                foundUser = AddRelationToUser(foundUser).Result;
+                foundUser = await AddRelationToUser(foundUser);
                 return foundUser[0];
             } else {
                 return user;
@@ -280,12 +280,12 @@ public class UserService {
     
     #region MISCELLANEOUS
 
-    private async Task<bool> IsUserAdmin(User user) {
+    public async Task<bool> IsUserAdmin(User user) {
         User? databaseAdminUser = await FetchUserById(user.UserId);
         return databaseAdminUser is { Admin: true };
     }
 
-    private async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
+    public async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
         User? databaseUser = await FetchUserById(user.UserId);
         return databaseUser != null && databaseUser.OrganizerOrganization.Any(organizations => organizations.OrganizationId.Equals(organization.OrganizationId));
     }
