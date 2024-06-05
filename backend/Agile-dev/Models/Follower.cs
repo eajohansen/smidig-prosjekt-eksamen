@@ -27,15 +27,11 @@ public class Follower {
     
     [Required]
     [Display(Name = "Organization id")]
-    public int OrganizationId { get; set; }
-    
     [ForeignKey("OrganizationId")]
-    public Organization Organization { get; set; }
+    public int OrganizationId { get; set; }
     
     [Required]
     [Display(Name = "User id")]
-    public int UserId { get; set; }
-    
     [ForeignKey("UserId")]
-    public User User { get; set; }
+    public int UserId { get; set; }
 }

@@ -44,4 +44,5 @@ public class EventDateTime {
     
     // The Event connected to this EventDateTime
     public Event Event { get; set; }
+    // ^^ This may have to go
 }
