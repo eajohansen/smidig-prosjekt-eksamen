@@ -23,7 +23,7 @@ public class User {
         FirstName = firstName;
         LastName = lastName;
         FollowOrganization = new HashSet<Follower>();
-        OrganisatorOrganization = new HashSet<Organisator>();
+        OrganizerOrganization = new HashSet<Organizer>();
         UserEvents = new HashSet<UserEvent>();
         Allergies = new HashSet<Allergy>();
         Notices = new HashSet<Notice>();
@@ -68,7 +68,7 @@ public class User {
     public ICollection<Follower> FollowOrganization { get; set; }
     
     // A HasSet of all Organizations that this User can organize
-    public ICollection<Organisator> OrganisatorOrganization { get; set; }
+    public ICollection<Organizer> OrganizerOrganization { get; set; }
     
     // A HasSet of all UserEvents with this User 
     public ICollection<UserEvent> UserEvents { get; set; }

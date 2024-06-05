@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agile_dev.Models;
 
-public class Organisator {
+public class Organizer {
     
     /*
        Data annotations
@@ -16,14 +16,14 @@ public class Organisator {
 
     */
 
-    public Organisator(int userId) {
+    public Organizer(int userId) {
         UserId = userId;
     }
     
     [Key] // Data annotation for primary key of this model
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Display(Name = "Organisator Id")]
-    public int OrganisatorId { get; set; }
+    [Display(Name = "Organizer Id")]
+    public int OrganizerId { get; set; }
     
     [Required]
     [Display(Name = "Organization id")]
