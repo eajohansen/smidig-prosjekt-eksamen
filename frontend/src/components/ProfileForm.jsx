@@ -1,4 +1,5 @@
 import { useState, useEffect, SyntheticEvent } from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
 export const ProfileForm = ({ userEmail }) => {
   const [allergies, setAllergies] = useState([]);
   const [newAllergy, setNewAllergy] = useState("");
@@ -20,7 +21,12 @@ export const ProfileForm = ({ userEmail }) => {
         <h2>Opprett Bruker</h2>
         <hr></hr>
         <label htmlFor="emailRegister">Epost</label>
-        <input type="email" id="emailRegister" value={userEmail} readOnly />
+        <div className="emailContainer">
+          <input type="email" id="emailRegister" value={userEmail} readOnly />
+          <span className="icon-inside">
+            <i className="bi bi-lock"></i>
+          </span>
+        </div>
         <label htmlFor="fNameInput">Fornavn</label>
         <input type="text" id="fNameInput" />
         <label htmlFor="lNameInput">Etternavn</label>

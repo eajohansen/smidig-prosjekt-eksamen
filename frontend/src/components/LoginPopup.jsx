@@ -1,4 +1,3 @@
-/*
 import { useState, useEffect, SyntheticEvent } from "react";
 import { validateEmail, validatePword } from "../validation";
 import { ProfileForm } from "./ProfileForm";
@@ -26,15 +25,15 @@ const LoginPopup = () => {
     setPCheck(e.currentTarget.value);
   };
   const handleRegister = async () => {
-      const result = await sendRegister(mailCheck, pCheck);
-      if (result === "Success!") {
-          setLogin(3);
-      } else {
-          for (const [key, value] of Object.entries(result)) {
-              console.log(value[0]);
-          }
+    const result = await sendRegister(mailCheck, pCheck);
+    if (result === "Success!") {
+      setLogin(3);
+    } else {
+      for (const [key, value] of Object.entries(result)) {
+        console.log(value[0]);
       }
-  }
+    }
+  };
 
   const loginOrRegister = () => {
     switch (login) {
@@ -103,7 +102,7 @@ const LoginPopup = () => {
                 console.log(validateEmail(mailCheck));
                 console.log(mailCheck);
                 if (validateEmail(mailCheck) == true) {
-                    handleRegister();
+                  handleRegister();
                 }
               }}
             >
@@ -119,4 +118,3 @@ const LoginPopup = () => {
 };
 
 export default LoginPopup;
-*/
