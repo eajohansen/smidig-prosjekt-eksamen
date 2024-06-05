@@ -20,9 +20,10 @@ axiosInstance.interceptors.response.use(
         const resp = await axios.post("http://localhost:5500/refresh", {
           refreshToken: localStorage.getItem("refreshToken"),
         });
+
         if (resp.status === 200) {
-          localStorage.setItem("accessToken", result.data.accessToken);
-          localStorage.setItem("refreshToken", result.data.refreshToken);
+          localStorage.setItem("accessToken", resp.data.accessToken);
+          localStorage.setItem("refreshToken", resp.data.refreshToken);
           axiosInstance.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${localStorage.getItem("accessToken")}`;
