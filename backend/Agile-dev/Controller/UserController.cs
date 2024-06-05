@@ -97,11 +97,11 @@ namespace agile_dev.Controller {
             }
         }
         
-        // POST api/user/organizer/create
-        [HttpPost("organizer/create")]
-        public async Task<IActionResult> AddOrganizer(User loggedInUser, User user, Organization organization) {
+        // POST api/user/organizer/create/5
+        [HttpPost("organizer/create/{loggedInUserId}/{organizationId}")]
+        public async Task<IActionResult> AddOrganizer([FromRoute] int loggedInUserId, [FromBody] User user, [FromRoute] int organizationId) {
             try {
-                bool isAdded = await _userService.AddUserAsOrganizer(loggedInUser, user, organization);
+                bool isAdded = await _userService.AddUserAsOrganizer(loggedInUserId, user, organizationId);
                 if (!isAdded) {
                     // Could not add user as organizer, because request is bad
                     return BadRequest();
