@@ -28,9 +28,11 @@ namespace agile_dev.Controller {
          */
 
         #region GET
+        
 
 
         // GET: api/User/fetchAll
+        [Authorize]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllUsers() {
             try {
