@@ -160,11 +160,26 @@ hr {
 }
 
 .allergyOutput {
-  height: 5.2rem;
+  height: 15rem;
   width: 17rem;
   border: 1px solid rgb(174, 174, 174);
   border-radius: 0.3rem;
+  .allergy {
+    border: 1px solid white;
+    border-radius: 0.3rem;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    list-style-type: none;
+    margin-left: -0.8rem;
+    margin-top: -0.8rem;
+    margin-bottom: 1rem;
+  }
+  .trash {
+    color: #cb4353;
+    margin-left: 1rem;
+  }
 }
+
 .btnDiv {
   display: flex;
   flex-direction: row;
@@ -209,14 +224,14 @@ hr {
 .disclaimerDiv {
   display: flex;
   .checkBox {
-    margin-top: 0.7rem;
+    margin-top: -0.25rem;
     margin-right: 0.8rem;
     margin-left: -1.5rem;
     background-color: white;
   }
   .disclaimer {
     font-size: 0.8rem;
-    margin-top: 0.6rem;
+    margin-top: -0.3rem;
   }
 }
 

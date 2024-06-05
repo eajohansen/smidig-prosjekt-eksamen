@@ -12,8 +12,12 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   const handleClick = () => {
-    setAllergies([...allergies, newAllergy]);
-    setNewAllergy("");
+    if (allergies.length > 5) {
+      alert("Beklager! Du kan ikke legge til fler enn 6 allergier.");
+    } else {
+      setAllergies([...allergies, newAllergy]);
+      setNewAllergy("");
+    }
   };
   return (
     <div className="profileInfoContainer formContainer">
@@ -53,7 +57,10 @@ export const ProfileForm = ({ userEmail }) => {
         <div className="allergyOutput">
           <ul>
             {allergies.map((item, i) => (
-              <li key={i}>{item}</li>
+              <li className="allergy" key={i}>
+                {item}
+                <i className="trash bi bi-trash3 "></i>
+              </li>
             ))}
           </ul>
         </div>
