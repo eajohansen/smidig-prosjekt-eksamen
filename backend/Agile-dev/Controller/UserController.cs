@@ -1,5 +1,6 @@
 using agile_dev.Models;
 using agile_dev.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,12 @@ namespace agile_dev.Controller {
          */
 
         #region GET
+        [Authorize]
+        [HttpGet("test")]
+      
+        public async Task<ActionResult> Test() {
+            return Ok();
+        }
 
         // GET: api/User/fetchAll
         [HttpGet("fetchAll")]
