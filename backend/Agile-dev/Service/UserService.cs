@@ -29,8 +29,8 @@ public class UserService {
     public async Task<ICollection<User>> FetchAllUsers() {
         try {
             ICollection<User> foundUsers = await _dbCon.User.ToListAsync();
-            ICollection<User> newUsers = await AddRelationToUser(foundUsers.ToList());
-            
+            ICollection<User> newUsers = AddRelationToUser(foundUsers.ToList()).Result;
+
             return newUsers;
         }
         catch (Exception exception) {
@@ -43,7 +43,7 @@ public class UserService {
             User? user = await _dbCon.User.FindAsync(id);
             if (user != null) {
                 List<User> foundUser = [user];
-                foundUser = await AddRelationToUser(foundUser);
+                foundUser = AddRelationToUser(foundUser).Result;
                 return foundUser[0];
             } else {
                 return user;
@@ -53,7 +53,7 @@ public class UserService {
             throw new Exception("An error occurred while fetching user.", exception);
         }
     }
-    
+
     public async Task<User?> FetchUserByEmail(string email) {
         try {
             User? user = await _dbCon.User.FirstOrDefaultAsync(u => u.Email == email);
@@ -70,15 +70,20 @@ public class UserService {
 
     public async Task<bool> AddUserToDatabase(User user) {
         try {
-            
             if (!_dbCon.User.Any()) {
                 user.Admin = true;
+            }
+
+            User? userExists = await FetchUserByEmail(user.Email);
+
+            if (userExists != null) {
+                return false;
             }
 
             ICollection<Allergy> allergies = user.Allergies.ToList();
 
             user.Allergies.Clear();
-            
+
             await _dbCon.User.AddAsync(user);
             await _dbCon.SaveChangesAsync();
 
@@ -92,14 +97,14 @@ public class UserService {
             catch (Exception exception) {
                 throw new Exception("Cant find user by email", exception);
             }
-            
+
             if (allergies.Count != 0) {
                 foreach (Allergy allergy in allergies) {
                     allergy.UserId = databaseUser.UserId;
                     await _dbCon.Allergy.AddAsync(allergy);
                 }
             }
-            
+
             await _dbCon.SaveChangesAsync();
             return true;
         }
@@ -112,73 +117,77 @@ public class UserService {
         try {
             User? foundUser = await _dbCon.User.FindAsync(loggedInUserId);
             Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
-            
-            if (foundUser != null && foundOrganization != null && !IsUserOrganizerForOrganization(user, foundOrganization).Result && (!IsUserOrganizerForOrganization(foundUser, foundOrganization).Result || !IsUserAdmin(foundUser).Result)) {
+
+            if (foundUser == null || foundOrganization == null) {
                 return false;
             }
             
-            Organizer newOrganizer = new Organizer(user.UserId, organizationId);
+            bool isUserAdmin = IsUserAdmin(foundUser).Result;
+            bool isLoggedInUserOrganizer = IsUserOrganizerForOrganization(foundUser, foundOrganization).Result;
+            bool isUserAlreadyOrganizerForOrganization = IsUserOrganizerForOrganization(user, foundOrganization).Result;
+
+            if (!isUserAlreadyOrganizerForOrganization && (!isLoggedInUserOrganizer || !isUserAdmin)) {
+                return false;
+            }
+
+            Organizer newOrganizer = new (user.UserId, organizationId);
             await _dbCon.Organizer.AddAsync(newOrganizer);
             await _dbCon.SaveChangesAsync();
             return true;
-
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user as organizer.", exception);
         }
     }
-    
+
     public async Task<bool> AddUserAsFollower(User user, int organizationId) {
         try {
             Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
-            
-            if (foundOrganization != null && !IsUserFollowingOrganization(user, foundOrganization).Result) {
+
+            if (foundOrganization == null || !IsUserFollowingOrganization(user, foundOrganization).Result) {
                 return false;
             }
 
-            Follower newFollower = new Follower(user.UserId, organizationId);
+            Follower newFollower = new (user.UserId, organizationId);
             await _dbCon.Follower.AddAsync(newFollower);
             await _dbCon.SaveChangesAsync();
             return true;
-
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user as follower.", exception);
         }
     }
-    
+
     public async Task<bool> AddUserToEvent(User user, int eventId) {
         try {
             Event? foundEvent = await _dbCon.Event.FindAsync(eventId);
-            
+
             if (foundEvent != null && !IsUserAttendingEvent(user, foundEvent).Result) {
                 return false;
             }
 
-            UserEvent newUserEvent = new UserEvent(user.UserId, eventId) {
+            UserEvent newUserEvent = new (user.UserId, eventId) {
                 Used = false
             };
+            
             await _dbCon.UserEvent.AddAsync(newUserEvent);
             await _dbCon.SaveChangesAsync();
             return true;
-
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to event.", exception);
         }
     }
-    
+
     public async Task<bool> AddNoticeToUser(User user) {
         try {
-
-            Notice newNotice = new Notice(user.UserId) {
+            Notice newNotice = new (user.UserId) {
                 Expire = DateTime.Now.AddDays(30)
             };
 
             await _dbCon.Notice.AddAsync(newNotice);
             await _dbCon.SaveChangesAsync();
             return true;
-
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to event.", exception);
@@ -195,27 +204,31 @@ public class UserService {
             if (databaseUser == null) {
                 return false;
             }
+
             // Check if databaseUser and user have the same autorization level
             if (user.Admin != databaseUser.Admin) {
                 return false;
             }
-            _dbCon.User.Update(user);
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while updating user.", exception);
-        }
-    }
+            
+            // Handle allergies
 
-    public async Task<bool> UpdateUserFirstName(User user) {
-        try {
-            User? databaseUser = FetchUserById(user.UserId).Result;
-            if (databaseUser == null) {
-                return false;
+            if (databaseUser.Allergies.Count != 0) {
+                foreach (Allergy allergy in databaseUser.Allergies) {
+                    _dbCon.Allergy.Remove(allergy);
+                }
+
+                databaseUser.Allergies.Clear();
+                
+            }
+            
+            if (user.Allergies.Count != 0) {
+                foreach (Allergy allergy in user.Allergies) {
+                    allergy.UserId = user.UserId;
+                    await _dbCon.Allergy.AddAsync(allergy);
+                }
             }
 
-            databaseUser.FirstName = user.FirstName;
+            _dbCon.User.Update(user);
             await _dbCon.SaveChangesAsync();
             return true;
         }
@@ -235,7 +248,7 @@ public class UserService {
             if (databaseUser == null) {
                 return false;
             }
-            
+
             databaseUser.Admin = true;
 
             // databaseUser.Role = "admin";
@@ -247,37 +260,23 @@ public class UserService {
         }
     }
 
-    public async Task<bool> UpdateUserAllergiesDb(User user) {
+    #endregion
+
+    #region DELETE
+    public async Task<bool> DeleteUser(User user) {
         try {
-            User? dbUser = await FetchUserById(user.UserId);
-
-            if (dbUser?.Allergies != null && dbUser?.Allergies.Count != 0) {
-                foreach (Allergy allergy in dbUser.Allergies) { _dbCon.Allergy.Remove(allergy); }
-
-                dbUser.Allergies.Clear();
-
-                if (user.Allergies.Count != 0) {
-                    foreach (Allergy allergy in user.Allergies) {
-                        allergy.UserId = user.UserId;
-                        await _dbCon.Allergy.AddAsync(allergy);
-                    }
-                }
-            }
-
+            
+            _dbCon.User.Remove(user);
             await _dbCon.SaveChangesAsync();
             return true;
         }
         catch (Exception exception) {
-            throw new Exception("An error occurred while updating user allergies.", exception);
+            throw new Exception("An error occurred while deleting user.", exception);
         }
     }
 
     #endregion
 
-    #region DELETE
-
-    #endregion
-    
     #region MISCELLANEOUS
 
     public async Task<bool> IsUserAdmin(User user) {
@@ -287,34 +286,42 @@ public class UserService {
 
     public async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
         User? databaseUser = await FetchUserById(user.UserId);
-        return databaseUser != null && databaseUser.OrganizerOrganization.Any(organizations => organizations.OrganizationId.Equals(organization.OrganizationId));
+        
+        // Loops through all the organizations the user is an organizer for, and returns true if we find the id of the organization we are looking for
+        return databaseUser != null && databaseUser.OrganizerOrganization.Any(organizations =>
+            organizations.OrganizationId.Equals(organization.OrganizationId));
     }
-    
+
     private async Task<bool> IsUserFollowingOrganization(User user, Organization organization) {
         User? databaseUser = await FetchUserById(user.UserId);
-        return databaseUser != null && databaseUser.FollowOrganization.Any(organizations => organizations.OrganizationId.Equals(organization.OrganizationId));
+        
+        // Loops through all the organizations the user is following, and returns true if we find the id of the organization we are looking for
+        return databaseUser != null && databaseUser.FollowOrganization.Any(organizations =>
+            organizations.OrganizationId.Equals(organization.OrganizationId));
     }
-    
+
     private async Task<bool> IsUserAttendingEvent(User user, Event eEvent) {
         User? databaseUser = await FetchUserById(user.UserId);
-        return databaseUser != null && databaseUser.UserEvents.Any(userEvent => userEvent.EventId.Equals(eEvent.EventId));
+        
+        // Loops through all the events the user is attending, and returns true if we find the id of the event we are looking for
+        return databaseUser != null &&
+               databaseUser.UserEvents.Any(userEvent => userEvent.EventId.Equals(eEvent.EventId));
     }
 
     private async Task<List<User>> AddRelationToUser(List<User> users) {
-        List<int> userIds = users.Select(u => u.UserId).ToList();
-    
+        List<int> userIds = users.Select(user => user.UserId).ToList();
+
         List<User> newUsers = await _dbCon.User
-            .Where(u => userIds.Contains(u.UserId))
-            .Include(u => u.Allergies)
-            .Include(u => u.Notices)
-            .Include(u => u.UserEvents)
-            .Include(u => u.OrganizerOrganization)
-            .Include(u => u.FollowOrganization)
+            .Where(user => userIds.Contains(user.UserId))
+            .Include(user => user.Allergies)
+            .Include(user => user.Notices)
+            .Include(user => user.UserEvents)
+            .Include(user => user.OrganizerOrganization)
+            .Include(user => user.FollowOrganization)
             .ToListAsync();
 
         return newUsers;
     }
 
-    
     #endregion
 }
