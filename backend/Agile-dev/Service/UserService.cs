@@ -74,19 +74,13 @@ public class UserService {
             if (!_dbCon.User.Any()) {
                 user.Admin = true;
             }
-
-            user.Admin = true;
             
             foreach (Allergy allergy in user.Allergies) {
                 allergy.UserId = 0;
             }
 
-            ICollection<Allergy> allergies = new List<Allergy>();
+            ICollection<Allergy> allergies = user.Allergies.ToList();
 
-            foreach (Allergy allergy in user.Allergies) {
-                allergies.Add(allergy);
-            }
-         
             user.Allergies.Clear();
             
             await _dbCon.User.AddAsync(user);
@@ -118,13 +112,16 @@ public class UserService {
         }
     }
 
-    public async Task<bool> AddUserAsOrganizer(User loggedInUser, User user, Organization organization) {
+    public async Task<bool> AddUserAsOrganizer(int loggedInUserId, User user, int organizationId) {
         try {
-            if (!IsUserOrganizerForOranization(user, organization).Result && (!IsUserOrganizerForOranization(loggedInUser, organization).Result || !IsUserAdmin(loggedInUser).Result)) {
+            User? foundUser = await _dbCon.User.FindAsync(loggedInUserId);
+            Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
+            
+            if (foundUser != null && foundOrganization != null && !IsUserOrganizerForOrganization(user, foundOrganization).Result && (!IsUserOrganizerForOrganization(foundUser, foundOrganization).Result || !IsUserAdmin(foundUser).Result)) {
                 return false;
             }
             
-            Organizer newOrganizer = new Organizer(user.UserId, organization.OrganizationId);
+            Organizer newOrganizer = new Organizer(user.UserId, organizationId);
             await _dbCon.Organizer.AddAsync(newOrganizer);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -205,17 +202,13 @@ public class UserService {
     
     #region MISCELLANEOUS
 
-    public async Task<bool> IsUserAdmin(User user) {
-        User? databaseAdminUser = FetchUserById(user.UserId).Result;
-        if (databaseAdminUser == null) {
-            return false;
-        }
-
-        return databaseAdminUser.Admin;
+    private async Task<bool> IsUserAdmin(User user) {
+        User? databaseAdminUser = await FetchUserById(user.UserId);
+        return databaseAdminUser is { Admin: true };
     }
-    
-    public async Task<bool> IsUserOrganizerForOranization(User user, Organization organization) {
-        User? databaseUser = FetchUserById(user.UserId).Result;
+
+    private async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
+        User? databaseUser = await FetchUserById(user.UserId);
         return databaseUser != null && databaseUser.OrganizerOrganization.Any(organizations => organizations.OrganizationId.Equals(organization.OrganizationId));
     }
 
