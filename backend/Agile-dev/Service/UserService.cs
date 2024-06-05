@@ -29,13 +29,8 @@ public class UserService {
     public async Task<ICollection<User>> FetchAllUsers() {
         try {
             ICollection<User> foundUsers = await _dbCon.User.ToListAsync();
-            ICollection<User> newUsers = new List<User>();
-            foreach (User user in foundUsers) {
-                User? newUser = _dbCon.User.Include(u => u.Allergies).FirstOrDefault(u => u.UserId == user.UserId);
-                if (newUser != null) {
-                    newUsers.Add(newUser);
-                }
-            }
+            ICollection<User> newUsers = AddRelationToUser(foundUsers.ToList()).Result;
+            
             return newUsers;
         }
         catch (Exception exception) {
@@ -46,7 +41,13 @@ public class UserService {
     public async Task<User?> FetchUserById(int id) {
         try {
             User? user = await _dbCon.User.FindAsync(id);
-            return user;
+            if (user != null) {
+                List<User> foundUser = [user];
+                foundUser = AddRelationToUser(foundUser).Result;
+                return foundUser[0];
+            } else {
+                return user;
+            }
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching user.", exception);
@@ -70,6 +71,9 @@ public class UserService {
     public async Task<bool> AddUserToDatabase(User user) {
         try {
             
+            if (!_dbCon.User.Any()) {
+                user.Admin = true;
+            }
             
             foreach (Allergy allergy in user.Allergies) {
                 allergy.UserId = 0;
@@ -191,6 +195,22 @@ public class UserService {
 
         return databaseAdminUser.Admin;
     }
+
+    private async Task<List<User>> AddRelationToUser(List<User> users) {
+        List<int> userIds = users.Select(u => u.UserId).ToList();
+    
+        List<User> newUsers = await _dbCon.User
+            .Where(u => userIds.Contains(u.UserId))
+            .Include(u => u.Allergies)
+            .Include(u => u.Notices)
+            .Include(u => u.UserEvents)
+            .Include(u => u.OrganizerOrganization)
+            .Include(u => u.FollowOrganization)
+            .ToListAsync();
+
+        return newUsers;
+    }
+
     
     #endregion
 }
