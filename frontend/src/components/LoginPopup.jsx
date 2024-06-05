@@ -3,6 +3,7 @@ import { validateEmail, validatePword } from "../validation";
 import { ProfileForm } from "./ProfileForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { sendLogin, sendRegister } from "../services/tempService";
+import { axiosInstance } from "../services/helpers";
 const LoginPopup = () => {
   const [loginMail, setLoginMail] = useState("");
   const [loginPword, setLoginPword] = useState("");
@@ -82,6 +83,11 @@ const LoginPopup = () => {
     console.log(result);
   };
 
+  const testClick = async () => {
+    const result = await axiosInstance.get("api/user/test");
+    console.log(result);
+  };
+
   const loginOrRegister = () => {
     switch (login) {
       case 1:
@@ -114,6 +120,9 @@ const LoginPopup = () => {
             <p className="InfoLink">
               <a href="#"> Glemt passord?</a>
             </p>
+            <button className="testBtn" onClick={testClick}>
+              Klikk meg
+            </button>
           </div>
         );
       case 2:
