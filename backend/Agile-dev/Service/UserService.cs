@@ -74,9 +74,6 @@ public class UserService {
             foreach (Allergy allergy in user.Allergies) {
                 allergy.UserId = 0;
             }
-            
-            Console.WriteLine("Count of user allergies: " + user.Allergies.Count);
-
 
             ICollection<Allergy> allergies = new List<Allergy>();
 
