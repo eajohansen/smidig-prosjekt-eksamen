@@ -88,9 +88,7 @@ export const ProfileForm = ({ userEmail }) => {
           onChange={handleChange}
         />
         <label htmlFor="dobInput">Fødselsdato</label>
-        <input type="date" id="dobInput" name="dob" onChange={handleChange} />
-
-        <input className="date" type="date" id="dobInput" />
+        <input className="date" type="date" id="dobInput" name="dob" onChange={handleChange} />
       </div>
       <div className="allergyContainer">
           <label className="allergies" htmlFor="allergyInput">

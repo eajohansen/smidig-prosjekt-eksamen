@@ -117,22 +117,22 @@ hr {
 }
 
 .profileInfoContainer {
+    width: 40rem;
+    height: 35rem;
+    display: flex;
+    border-radius: 1rem;
+    padding: 3.5rem;
+    background-color: var(--darkBkgrnd);
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-size: 1rem;
   h2 {
     font-size: 2rem;
     font-weight: normal;
   }
-  width: 40rem;
-  height: 35rem;
-  display: flex;
-  border-radius: 1rem;
-  padding: 3.5rem;
-  background-color: var(--darkBkgrnd);
-  color: white;
   div {
     padding: 1.5rem;
   }
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
 }
 
 .userInfoContainer {
@@ -245,16 +245,16 @@ hr {
 
 .disclaimerDiv {
   display: flex;
-  .checkBox {
+  /* .checkBox {
     margin-top: -0.25rem;
     margin-right: 0.8rem;
     margin-left: -1.5rem;
     background-color: white;
-  }
-  .disclaimer {
+  } */
+  /* .disclaimer {
     font-size: 0.8rem;
     margin-top: -0.3rem;
-  }
+  } */
 }
 
 .navHeader {
