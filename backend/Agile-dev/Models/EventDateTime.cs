@@ -47,8 +47,4 @@ public class EventDateTime {
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [Display(Name = "End time")]
     public DateTime? EndTime { get; set; }
-    
-    // The Event connected to this EventDateTime
-    public Event Event { get; set; }
-    // ^^ This may have to go
 }
