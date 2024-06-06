@@ -37,50 +37,49 @@ input {
   color: white;
   label {
     padding-top: 1.5rem;
-      font-size: 0.9rem;
+    font-size: 0.9rem;
   }
-    h2 {
-      padding-bottom: 0.5rem;
-    }
-    input {
-          height: 3rem;
-          width: 100%;
-          border-radius: 0.2rem;
-          box-shadow: none;
-          background-color: transparent;
-          border: 1px solid rgb(174, 174, 174);
-          color: white;
-          padding: 0.6rem;
-          font-size: 1rem;
-          align-self: flex-start;
-        }
-    label{
-      align-self: flex-start;
-    }
-    .InfoLink{
-      font-size: x-small;
-      margin-top: 0.5rem;
-    }
-        .cntBtn {
-          width: 100%;
-          padding: 0.5rem;
-          background-color: var(--mediumGreen);
-          color: white;
-          border-radius: 0.4rem;
-          border-color: black;
-        }
-        .logInBtn{
-          margin-top: 1rem;
-        }
+  h2 {
+    padding-bottom: 0.5rem;
+  }
+  input {
+    height: 3rem;
+    width: 100%;
+    border-radius: 0.2rem;
+    box-shadow: none;
+    background-color: transparent;
+    border: 1px solid rgb(174, 174, 174);
+    color: white;
+    padding: 0.6rem;
+    font-size: 1rem;
+    align-self: flex-start;
+  }
+  label {
+    align-self: flex-start;
+  }
+  .InfoLink {
+    font-size: x-small;
+    margin-top: 0.5rem;
+  }
+  .cntBtn {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: var(--mediumGreen);
+    color: white;
+    border-radius: 0.4rem;
+    border-color: black;
+  }
+  .logInBtn {
+    margin-top: 1rem;
+  }
 }
 .loginBtnContainer {
   width: 100%;
   display: flex;
   justify-content: center;
-  
+
   .registerToggleBtn {
     border-radius: 0 0.4rem 0.4rem 0;
-   
   }
   .loginToggleBtn {
     border-radius: 0.4rem 0 0 0.4rem;
@@ -90,32 +89,30 @@ input {
     padding-left: 2.5rem;
     height: 3rem;
     width: 80%;
-
-    }
+  }
   button:hover {
     border: 1px solid black;
     color: white;
     background-color: var(--main);
   }
 }
-.inputHover input:focus{
-border: 1px solid white;
+.inputHover input:focus {
+  border: 1px solid white;
 }
 
 /* Registration form  */
-.registerContainer{
+.registerContainer {
   display: flex;
   flex-direction: column;
   margin-left: 15%;
-    width: 75%;
-    border-radius: 1rem;
-      padding: 3.5rem;
-      background-color: var(--darkBkgrnd);
-      color: white;
-      font-family: "Inter", sans-serif;
-      font-size: 1rem;
-      display: flex;
-
+  width: 75%;
+  border-radius: 1rem;
+  padding: 3.5rem;
+  background-color: var(--darkBkgrnd);
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  display: flex;
 }
 .headerDiv {
   display: flex;
@@ -125,9 +122,9 @@ border: 1px solid white;
     font-weight: normal;
     padding-bottom: 0.5rem;
   }
-    hr {
-      width: 237%;
-    }
+  hr {
+    width: 237%;
+  }
 }
 .profileInfoContainer {
   display: flex;
@@ -150,9 +147,9 @@ border: 1px solid white;
   input:focus {
     border: 1px solid white;
   }
-    div {
-      padding: 1.5rem;
-    }
+  div {
+    padding: 1.5rem;
+  }
 }
 .userInfoContainer {
   width: 50%;
@@ -265,7 +262,7 @@ border: 1px solid white;
 .disclaimerDiv {
   display: flex;
   .checkBox {
-    height:1rem;
+    height: 1rem;
     margin-top: -0.25rem;
     margin-right: 0.8rem;
     margin-left: -1.5rem;
@@ -285,8 +282,12 @@ border: 1px solid white;
   height: 100%;
   top: 0;
   left: 0;
+  p {
+    display: inline;
+    margin-left: 1rem;
+  }
   .navItem {
-    padding: 1rem;
+    padding: 2rem;
     text-decoration: none;
     color: black;
   }
