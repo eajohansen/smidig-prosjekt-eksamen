@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace agile_dev.Controller {
         #region GET
 
         // GET: api/user/fetchAll
+        [Authorize]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllUsers() {
             try {
@@ -46,6 +48,7 @@ namespace agile_dev.Controller {
         }
 
         // GET api/user/fetch/id
+        [Authorize]
         [HttpGet("fetch/{id}")]
         public async Task<IActionResult> FetchUserById(int id) {
 
@@ -70,6 +73,7 @@ namespace agile_dev.Controller {
         }
 
         // GET api/user/fetch/email/gunnar@gunnarsen.no
+        [Authorize]
         [HttpGet("fetch/email/{email}")]
         public async Task<IActionResult> FetchUserByEmail(string? email) {
             if (email == null) {
@@ -121,6 +125,7 @@ namespace agile_dev.Controller {
         }
 
         // POST api/user/organizer/create/5/1
+        [Authorize]
         [HttpPost("organizer/create/{loggedInUserId}")]
         public async Task<IActionResult> AddOrganizer([FromRoute] int loggedInUserId, [FromBody] User? user) {
             int organizationId = 1;
@@ -142,6 +147,7 @@ namespace agile_dev.Controller {
         }
 
         // POST api/user/follower/create/1
+        [Authorize]
         [HttpPost("follower/create/{organizationId}")]
         public async Task<IActionResult> AddFollower([FromBody] User? user, [FromRoute] int organizationId) {
             if (user == null) {
@@ -162,6 +168,7 @@ namespace agile_dev.Controller {
         }
 
         // POST api/user/event/add/3
+        [Authorize]
         [HttpPost("event/add/{eventId}")]
         public async Task<IActionResult> AddUserEvent([FromBody] User? user, [FromRoute] int eventId) {
             if (user == null) {
@@ -186,6 +193,7 @@ namespace agile_dev.Controller {
         #region PUT
 
         // PUT api/user/update
+        [Authorize]
         [HttpPut("update")]
         public async Task<IActionResult> UpdateUser(User? user) {
             if (user == null) {
@@ -214,6 +222,7 @@ namespace agile_dev.Controller {
         // PUT api/user/admin/update/5
         // "AdminUser" in this context is the user that is making the request
         // "id" is the id of the user that is being made admin
+        [Authorize]
         [HttpPut("admin/update/{id}")]
         public async Task<IActionResult> MakeUserAdmin([FromBody] User? adminUser, [FromRoute] int id) {
             if (adminUser == null) {
@@ -237,6 +246,7 @@ namespace agile_dev.Controller {
         #region DELETE
 
         // DELETE api/User/delete
+        [Authorize]
         [HttpDelete("delete")]
         public IActionResult Delete(User? user) {
             if (user == null) {
