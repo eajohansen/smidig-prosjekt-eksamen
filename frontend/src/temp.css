@@ -48,7 +48,7 @@ input {
 .formContainer h2 {
   padding-bottom: 0.5rem;
 }
-.formContainer input {
+/* .formContainer input {
   height: 2.5rem;
   width: 17.5rem;
   border-radius: 0.2rem;
@@ -58,7 +58,7 @@ input {
   color: white;
   padding: 0.6rem;
   font-size: 1rem;
-}
+} */
 .formContainer input:focus {
   border: 1px solid white;
 }
@@ -98,7 +98,7 @@ input {
     border-color: black;
   }
   input {
-    height: 1rem;
+    height: 3rem;
     border-radius: 0.2rem;
     box-shadow: none;
     background-color: transparent;
@@ -117,15 +117,15 @@ hr {
 }
 
 .profileInfoContainer {
-    width: 40rem;
-    height: 35rem;
-    display: flex;
-    border-radius: 1rem;
-    padding: 3.5rem;
-    background-color: var(--darkBkgrnd);
-    color: white;
-    font-family: "Inter", sans-serif;
-    font-size: 1rem;
+  width: 40rem;
+  height: 35rem;
+  display: flex;
+  border-radius: 1rem;
+  padding: 3.5rem;
+  background-color: var(--darkBkgrnd);
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
   h2 {
     font-size: 2rem;
     font-weight: normal;
@@ -152,21 +152,21 @@ hr {
     padding: 0;
     display: flex;
     flex-direction: row;
-    .icon-inside {
-      margin-left: -2rem;
-      margin-top: 0.9rem;
-    }
   }
-  #dobInput {
+
+  /* #dobInput {
     filter: invert(100%);
     color: black;
     border-color: rgb(70, 70, 70);
   }
   #dobInput:focus {
     border: 1px solid black;
-  }
+  } */
 }
-
+.icon-inside {
+  margin-left: -2rem;
+  margin-top: 0.9rem;
+}
 .allergyContainer {
   display: flex;
   flex-direction: column;
@@ -245,16 +245,16 @@ hr {
 
 .disclaimerDiv {
   display: flex;
-  /* .checkBox {
+  .checkBox {
     margin-top: -0.25rem;
     margin-right: 0.8rem;
     margin-left: -1.5rem;
     background-color: white;
-  } */
-  /* .disclaimer {
+  }
+  .disclaimer {
     font-size: 0.8rem;
     margin-top: -0.3rem;
-  } */
+  }
 }
 
 .navHeader {
