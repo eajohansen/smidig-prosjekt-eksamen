@@ -46,8 +46,13 @@ public class OrganizationService {
 
     #region POST
 
-    public async Task<bool> AddOrganization(Organization organization) {
+    public async Task<bool> AddOrganization(int userId, Organization organization) {
         try {
+            User? user = await _userService.FetchUserById(userId);
+            if (user == null || !_userService.IsUserAdmin(user).Result) {
+                return false;
+            }
+            
             await _dbCon.Organization.AddAsync(organization);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -63,21 +68,12 @@ public class OrganizationService {
 
     public async Task<bool> UpdateOrganization(int userId, Organization organization) {
         try {
-            User? user = await _userService.FetchUserById(userId);
-            
-            if (user == null) {
+            if (!CheckValidation(userId, organization.OrganizationId).Result) {
                 return false;
             }
             
-            bool userAdmin = await _userService.IsUserAdmin(user);
-            bool organizer = await _userService.IsUserOrganizerForOrganization(user, organization);
-
-            if (!userAdmin && !organizer) {
-                return false;
-            }
-            
-            Organization? dbOrganization = await FetchOrganizationById(organization.OrganizationId);
-            if (dbOrganization == null) {
+            Organization? databaseOrganization = await FetchOrganizationById(organization.OrganizationId);
+            if (databaseOrganization == null) {
                 return false;
             }
 
@@ -94,8 +90,12 @@ public class OrganizationService {
 
     #region DELETE
 
-    public async Task<bool> DeleteOrganization(Organization organization) {
+    public async Task<bool> DeleteOrganization(int userId, Organization organization) {
         try {
+            if (!CheckValidation(userId, organization.OrganizationId).Result) {
+                return false;
+            }
+            
             _dbCon.Organization.Remove(organization);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -104,7 +104,6 @@ public class OrganizationService {
             throw new Exception("An error occurred while trying to delete organization.", exception);
         }
     }
-    
 
     #endregion
 
@@ -122,6 +121,22 @@ public class OrganizationService {
         return newOrganizations;
     }
     
+    public async Task<bool> CheckValidation(int userId, int organizationId) {
+        User? user = await _userService.FetchUserById(userId);
+        Organization? organization = await FetchOrganizationById(organizationId);
+
+        if (user == null || organization == null) {
+            return false;
+        }
+            
+        bool isAdmin = await _userService.IsUserAdmin(user);
+        bool isOrganizer = await _userService.IsUserOrganizerForOrganization(user, organization);
+        if (!isAdmin && !isOrganizer) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     #endregion
 }

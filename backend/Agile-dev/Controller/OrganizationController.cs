@@ -45,11 +45,11 @@ namespace Agile_dev.Controller {
 
         #region POST
         
-        // POST api/organization/create
-        [HttpPost("create")]
-        public async Task<IActionResult> AddOrganization([FromBody] Organization organization) {
+        // POST api/organization/create/5
+        [HttpPost("create/{userId}")]
+        public async Task<IActionResult> AddOrganization([FromRoute] int userId , [FromBody] Organization organization) {
             try {
-                bool isAdded = await _organizationService.AddOrganization(organization);
+                bool isAdded = await _organizationService.AddOrganization(userId, organization);
                 if (!isAdded) {
                     // Could not create organization, because request is bad
                     return BadRequest();
@@ -86,15 +86,15 @@ namespace Agile_dev.Controller {
 
         #region DELETE
 
-        // DELETE api/organization/delete
-        [HttpDelete("delete")]
-        public IActionResult Delete(Organization? organization) {
+        // DELETE api/organization/delete/5
+        [HttpDelete("delete/{userId}")]
+        public async Task<IActionResult> DeleteOrganization([FromRoute] int userId, [FromBody] Organization? organization) {
             if (organization == null) {
                 return BadRequest("User is null");
             }
 
             try {
-                bool isDeleted = _organizationService.DeleteOrganization(organization).Result;
+                bool isDeleted = _organizationService.DeleteOrganization(userId, organization).Result;
                 if (!isDeleted) {
                     // Could not delete user, because request is bad
                     BadRequest();
