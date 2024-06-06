@@ -22,11 +22,6 @@ public class User {
         Email = email;
         FirstName = firstName;
         LastName = lastName;
-        FollowOrganization = new HashSet<Follower>();
-        OrganizerOrganization = new HashSet<Organizer>();
-        UserEvents = new HashSet<UserEvent>();
-        Allergies = new HashSet<Allergy>();
-        Notices = new HashSet<Notice>();
     }
     
     [Key]
@@ -65,17 +60,17 @@ public class User {
     public string? ExtraInfo { get; set; }
     
     // A HasSet of all Organizations that this User follows
-    public ICollection<Follower> FollowOrganization { get; set; }
+    public ICollection<Follower>? FollowOrganization { get; set; }
     
     // A HasSet of all Organizations that this User can organize
-    public ICollection<Organizer> OrganizerOrganization { get; set; }
+    public ICollection<Organizer>? OrganizerOrganization { get; set; }
     
     // A HasSet of all UserEvents with this User 
-    public ICollection<UserEvent> UserEvents { get; set; }
+    public ICollection<UserEvent>? UserEvents { get; set; }
     
     // A HasSet of all Notices with this User
-    public ICollection<Notice> Notices { get; set; }
+    public ICollection<Notice>? Notices { get; set; }
     
     // A HasSet of all Allergies with this User
-    public ICollection<Allergy> Allergies { get; set; }
+    public ICollection<Allergy>? Allergies { get; set; }
 }

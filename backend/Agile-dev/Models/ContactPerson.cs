@@ -19,7 +19,6 @@ public class ContactPerson {
 
     public ContactPerson(string name) {
         Name = name;
-        Events = new HashSet<Event>();
     }
     
     [Key]
@@ -43,5 +42,5 @@ public class ContactPerson {
     public string? Number { get; set; }
     
     // A HasSet of all Events with this ContactPerson
-    public ICollection<Event> Events { get; set; }
+    public ICollection<Event>? Events { get; set; }
 }

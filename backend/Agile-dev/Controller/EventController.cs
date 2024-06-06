@@ -9,6 +9,10 @@ namespace Agile_dev.Controller {
     public class EventController : ControllerBase {
         private readonly EventService _eventService;
 
+        public EventController(EventService eventService) {
+            _eventService = eventService;
+        }
+
         #region GET
         
         // GET: api/event/fetchAll

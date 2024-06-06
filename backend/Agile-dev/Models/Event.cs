@@ -16,11 +16,8 @@ public class Event {
 
     */
 
-    public Event(string title, int imageId) {
+    public Event(string title) {
         Title = title;
-        ImageId = imageId;
-        EventCustomFields = new HashSet<EventCustomField>();
-        UserEvents = new HashSet<UserEvent>();
     }
     
     [Key]
@@ -59,8 +56,8 @@ public class Event {
     public int? ContactPersonId  { get; set; }
     
     // A HasSet of all EventCustomFields with this Event
-    public ICollection<EventCustomField> EventCustomFields { get; set; }
+    public ICollection<EventCustomField>? EventCustomFields { get; set; }
     
     // A HasSet of all UserEvents with this Event
-    public ICollection<UserEvent> UserEvents { get; set; }
+    public ICollection<UserEvent>? UserEvents { get; set; }
 }

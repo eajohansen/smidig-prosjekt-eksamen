@@ -17,7 +17,6 @@ public class Place {
 
     public Place(string location) {
         Location = location;
-        Events = new HashSet<Event>();
     }
     
     [Key]
@@ -35,5 +34,5 @@ public class Place {
     public string? Url { get; set; }
     
     // A HasSet of all Events with this Place
-    public ICollection<Event> Events { get; set; }
+    public ICollection<Event>? Events { get; set; }
 }

@@ -1,5 +1,6 @@
 using agile_dev.Models;
 using agile_dev.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,10 @@ namespace Agile_dev.Controller {
     [ApiController]
     public class OrganizationController : ControllerBase {
         private readonly OrganizationService _organizationService;
+
+        public OrganizationController(OrganizationService organizationService) {
+            _organizationService = organizationService;
+        }
 
         #region GET
         
@@ -46,6 +51,7 @@ namespace Agile_dev.Controller {
         #region POST
         
         // POST api/organization/create/5
+        [Authorize]
         [HttpPost("create/{userId}")]
         public async Task<IActionResult> AddOrganization([FromRoute] int userId , [FromBody] Organization organization) {
             try {
@@ -67,6 +73,7 @@ namespace Agile_dev.Controller {
         #region PUT
 
         // PUT api/organization/update/5
+        [Authorize]
         [HttpPut("update/{userId}")]
         public async Task<IActionResult> UpdateOrganization([FromRoute] int userId, [FromBody] Organization organization) {
             try {
@@ -87,6 +94,7 @@ namespace Agile_dev.Controller {
         #region DELETE
 
         // DELETE api/organization/delete/5
+        [Authorize]
         [HttpDelete("delete/{userId}")]
         public async Task<IActionResult> DeleteOrganization([FromRoute] int userId, [FromBody] Organization? organization) {
             if (organization == null) {

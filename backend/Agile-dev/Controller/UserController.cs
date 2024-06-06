@@ -105,6 +105,7 @@ namespace agile_dev.Controller {
         #region POST
 
         // POST api/user/create
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> AddUser(User? user) {
             if (user == null) {
@@ -206,6 +207,7 @@ namespace agile_dev.Controller {
             if (!isLoggedInUser) {
                 return Unauthorized();
             }
+            
             try {
                 bool isAdded = await _userService.UpdateUser(user);
                 if (!isAdded) {
