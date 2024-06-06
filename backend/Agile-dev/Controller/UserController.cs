@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Http;
@@ -171,6 +172,17 @@ namespace agile_dev.Controller {
         // PUT api/user/update/5
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateUser(User? user) {
+            string? userName = User.FindFirstValue(ClaimTypes.Name);
+            bool isLoggedInUser = user.Email.Equals(userName);
+            
+            Console.WriteLine(userName);
+            Console.WriteLine(user.Email);
+            Console.WriteLine(isLoggedInUser);
+
+            if (!isLoggedInUser) {
+                return Unauthorized();
+            }
+            
             if (user == null) {
                 return BadRequest("User is null");
             }
