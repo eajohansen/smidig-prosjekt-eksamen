@@ -218,9 +218,6 @@ public class UserService {
                 foreach (Allergy allergy in databaseUser.Allergies) {
                     _dbCon.Allergy.Remove(allergy);
                 }
-
-                databaseUser.Allergies.Clear();
-                
             }
             
             if (user.Allergies.Count != 0) {
@@ -230,8 +227,22 @@ public class UserService {
                 }
             }
 
-            _dbCon.User.Update(user);
+            databaseUser.Email = user.Email;
+            databaseUser.Birthdate = user.Birthdate;
+            databaseUser.ExtraInfo = user.ExtraInfo;
+            databaseUser.FirstName = user.FirstName;
+            databaseUser.LastName = user.LastName;
+
+            try {
+                _dbCon.User.Update(databaseUser);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             await _dbCon.SaveChangesAsync();
+            
             return true;
         }
         catch (Exception exception) {

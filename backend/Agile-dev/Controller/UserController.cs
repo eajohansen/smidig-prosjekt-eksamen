@@ -45,13 +45,21 @@ namespace agile_dev.Controller {
             }
         }
 
-        // GET api/user/fetch/id/5
-        [HttpGet("fetch/id/{id}")]
+        // GET api/user/fetch/id
+        [HttpGet("fetch/{id}")]
         public async Task<IActionResult> FetchUserById(int id) {
+
             try {
                 User? result = await _userService.FetchUserById(id);
                 if (result == null) {
                     return NoContent();
+                }
+                
+                string? userName = User.FindFirstValue(ClaimTypes.Name);
+                bool isLoggedInUser = result.Email.Equals(userName);
+
+                if (!isLoggedInUser) {
+                    return Unauthorized();
                 }
 
                 return Ok(result);
@@ -67,6 +75,14 @@ namespace agile_dev.Controller {
             if (email == null) {
                 return BadRequest("Email is null");
             }
+            
+            string? userName = User.FindFirstValue(ClaimTypes.Name);
+            bool isLoggedInUser = email.Equals(userName);
+
+            if (!isLoggedInUser) {
+                return Unauthorized();
+            }
+            
             try {
                 User? result = await _userService.FetchUserByEmail(email);
                 if (result == null) {
@@ -169,22 +185,18 @@ namespace agile_dev.Controller {
 
         #region PUT
 
-        // PUT api/user/update/5
-        [HttpPut("update/{id}")]
+        // PUT api/user/update
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateUser(User? user) {
+            if (user == null) {
+                return BadRequest("User is null");
+            }
+
             string? userName = User.FindFirstValue(ClaimTypes.Name);
             bool isLoggedInUser = user.Email.Equals(userName);
-            
-            Console.WriteLine(userName);
-            Console.WriteLine(user.Email);
-            Console.WriteLine(isLoggedInUser);
 
             if (!isLoggedInUser) {
                 return Unauthorized();
-            }
-            
-            if (user == null) {
-                return BadRequest("User is null");
             }
             try {
                 bool isAdded = await _userService.UpdateUser(user);
@@ -229,6 +241,13 @@ namespace agile_dev.Controller {
         public IActionResult Delete(User? user) {
             if (user == null) {
                 return BadRequest("User is null");
+            }
+            
+            string? userName = User.FindFirstValue(ClaimTypes.Name);
+            bool isLoggedInUser = user.Email.Equals(userName);
+
+            if (!isLoggedInUser) {
+                return Unauthorized();
             }
 
             try {
