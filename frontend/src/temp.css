@@ -4,12 +4,19 @@
   --darkBkgrnd: #1e3742;
   --mediumGreen: #34a853;
 }
+button {
+  border: 1px solid transparent;
+}
+button:hover {
+  border: 1px solid transparent;
+}
 
 * {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -26,6 +33,7 @@ input {
 
 .loginContainer {
   height: 60vh;
+  min-height: 25rem;
   display: flex;
   justify-content: center;
   align-items: center;
