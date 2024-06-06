@@ -24,6 +24,7 @@ body {
   height: 100vh;
   justify-content: center;
   align-items: center;
+  padding-left: 15rem;
 }
 
 textarea,
@@ -33,7 +34,8 @@ input {
 
 .loginContainer {
   height: 60vh;
-  min-height: 25rem;
+  margin-right: 15rem;
+  min-height: 35rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -112,7 +114,7 @@ input {
 .registerContainer {
   display: flex;
   flex-direction: column;
-  margin-left: 15%;
+  margin-left: 5%;
   width: 75%;
   border-radius: 1rem;
   padding: 3.5rem;
@@ -288,6 +290,7 @@ input {
   flex-direction: column;
   background-color: #d6d5d5;
   height: 100%;
+  width: 15rem;
   top: 0;
   left: 0;
   p {

@@ -32,20 +32,31 @@ export const MainNav = ({ version }) => {
         <header>
           <div className="navHeader">
             <Link to="/" className="navItem">
-              Hjem / TEST
+              <i className="bi bi-house"></i> <p>Hjem / TEST</p>
             </Link>
 
             <Link to="profile" className="navItem">
-              Min Profil
+              <i className="bi bi-person"></i> <p>Min Profil</p>
             </Link>
 
             <Link to="events" className="navItem">
-              Arrangementer
+              <i className="bi bi-calendar-event"></i> <p>Arrangementer</p>
+            </Link>
+            <Link to="/" className="navItem">
+              <i class="bi bi-box-arrow-left"></i> <p>Logg ut</p>
             </Link>
           </div>
         </header>
       );
     case "dummy":
-      return <header></header>;
+      return (
+        <header>
+          <div className="navHeader">
+            <Link to="/" className="navItem">
+              <i class="bi bi-box-arrow-right"></i> <p>Logg inn</p>
+            </Link>
+          </div>
+        </header>
+      );
   }
 };
