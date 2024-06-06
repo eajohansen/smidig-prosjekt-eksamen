@@ -118,6 +118,54 @@ namespace Agile_dev.Controller {
             }
         }
         
+        // PUT api/event/datetime/update/5/6/3
+        [HttpPut("update/datetime/{userId}/{organizationId}/{eventId}")]
+        public async Task<IActionResult> UpdateEventDateTime([FromRoute] int userId, [FromRoute] int organizationId, [FromRoute] int eventId, [FromBody] EventDateTime eventDateTime) {
+            try {
+                bool isAdded = await _eventService.UpdateEventDateTime(userId, organizationId, eventId, eventDateTime);
+                if (!isAdded) {
+                    return BadRequest();
+                }
+
+                return Ok();
+            }
+            catch (Exception exception) {
+                throw new Exception("An error occurred while updating eventDateTime.", exception);
+            }
+        }
+        
+        // PUT api/event/place/update/5/6/3
+        [HttpPut("update/place/{userId}/{organizationId}/{eventId}")]
+        public async Task<IActionResult> UpdatePlace([FromRoute] int userId, [FromRoute] int organizationId, [FromRoute] int eventId, [FromBody] Place place) {
+            try {
+                bool isAdded = await _eventService.UpdatePlace(userId, organizationId, eventId, place);
+                if (!isAdded) {
+                    return BadRequest();
+                }
+
+                return Ok();
+            }
+            catch (Exception exception) {
+                throw new Exception("An error occurred while updating eventDateTime.", exception);
+            }
+        }
+        
+        // PUT api/event/contactperson/update/5/6/3
+        [HttpPut("update/place/{userId}/{organizationId}/{eventId}")]
+        public async Task<IActionResult> UpdateContactPerson([FromRoute] int userId, [FromRoute] int organizationId, [FromRoute] int eventId, [FromBody] ContactPerson contactPerson) {
+            try {
+                bool isAdded = await _eventService.UpdateContactPerson(userId, organizationId, eventId, contactPerson);
+                if (!isAdded) {
+                    return BadRequest();
+                }
+
+                return Ok();
+            }
+            catch (Exception exception) {
+                throw new Exception("An error occurred while updating eventDateTime.", exception);
+            }
+        }
+        
         #endregion
 
         #region DELETE
