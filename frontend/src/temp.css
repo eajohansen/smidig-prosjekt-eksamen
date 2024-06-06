@@ -117,8 +117,8 @@ hr {
 }
 
 .profileInfoContainer {
-  width: 40rem;
-  height: 35rem;
+  margin-left: 15%;
+  width: 75%;
   display: flex;
   border-radius: 1rem;
   padding: 3.5rem;
@@ -136,8 +136,10 @@ hr {
 }
 
 .userInfoContainer {
+  width: 50%;
   display: flex;
   flex-direction: column;
+  width: 50%;
   input {
     font-size: 1rem;
     padding: 0.9rem;
@@ -168,10 +170,11 @@ hr {
   margin-top: 0.9rem;
 }
 .allergyContainer {
+  width: 50%;
   display: flex;
   flex-direction: column;
   .allergies {
-    padding-top: 3.5rem;
+    padding-top: 6rem;
   }
   .yourAllergies {
     padding: 0.6rem;
@@ -246,6 +249,7 @@ hr {
 .disclaimerDiv {
   display: flex;
   .checkBox {
+    height:1rem;
     margin-top: -0.25rem;
     margin-right: 0.8rem;
     margin-left: -1.5rem;
