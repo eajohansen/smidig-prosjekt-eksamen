@@ -62,7 +62,7 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   return (
-    <div className="profileInfoContainer formContainer">
+    <div className="profileInfoContainer inputHover">
       <div className="userInfoContainer">
         <h2>Opprett Bruker</h2>
         <hr></hr>

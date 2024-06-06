@@ -85,7 +85,7 @@ const LoginPopup = () => {
     switch (login) {
       case 1:
         return (
-          <div className="loginContainer formContainer">
+          <div className="loginContainer formContainer inputHover">
             <h2>Logg inn</h2>
             <div className="loginBtnContainer">
               <button
@@ -117,7 +117,7 @@ const LoginPopup = () => {
         );
       case 2:
         return (
-          <div className="loginContainer formContainer">
+          <div className="loginContainer formContainer inputHover">
             <h2>Opprett Profil</h2>
             <div className="loginBtnContainer">
               <button className="loginToggleBtn" onClick={() => setLogin(1)}>
@@ -159,6 +159,11 @@ const LoginPopup = () => {
                 <li key={index}>{item}</li>
               ))}
             </div>
+            <p className="InfoLink">
+              Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a>{" "}
+              og <br />
+              <a href="#">personvernserklæring</a>
+            </p>
             <button
               className="cntBtn"
               onClick={() => {
@@ -167,11 +172,7 @@ const LoginPopup = () => {
             >
               Fortsett
             </button>
-            <p className="InfoLink">
-              Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a>{" "}
-              og <br />
-              <a href="#">personvernserklæring</a>
-            </p>
+            
           </div>
         );
       case 3:

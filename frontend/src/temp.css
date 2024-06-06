@@ -29,6 +29,7 @@ input {
 }
 
 .loginContainer {
+  height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,16 +39,31 @@ input {
   padding: 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
-  height: 35rem;
-  width: 26rem;
   label {
     padding-top: 1rem;
-    font-size: 0.5rem;
+    font-size: 0.9rem;
   }
+  
 }
-.formContainer h2 {
-  padding-bottom: 0.5rem;
-}
+.formContainer{
+  h2 {
+      padding-bottom: 0.5rem;
+  }
+  
+  input {
+        height: 3rem;
+        border-radius: 0.2rem;
+        box-shadow: none;
+        background-color: transparent;
+        border: 1px solid rgb(174, 174, 174);
+        color: white;
+        padding: 0.5rem;
+        font-size: 0.8rem;
+  
+      }
+    
+
+} 
 /* .formContainer input {
   height: 2.5rem;
   width: 17.5rem;
@@ -59,9 +75,6 @@ input {
   padding: 0.6rem;
   font-size: 1rem;
 } */
-.formContainer input:focus {
-  border: 1px solid white;
-}
 .loginBtnContainer {
   width: 100%;
   display: flex;
@@ -77,9 +90,12 @@ input {
     background-color: var(--main);
   }
 }
+.inputHover input:focus{
+border: 1px solid white;
+}
 
 /* Registration form  */
-.formContainer {
+.profileInfoContainer {
   h2 {
     padding-bottom: 0.5rem;
   }
