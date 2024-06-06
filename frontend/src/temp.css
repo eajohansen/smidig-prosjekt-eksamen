@@ -25,7 +25,7 @@ input {
 }
 
 .loginContainer {
-  height: 50%;
+  height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,51 +36,62 @@ input {
   background-color: var(--darkBkgrnd);
   color: white;
   label {
-    
     padding-top: 1.5rem;
       font-size: 0.9rem;
   }
-  
-}
-.formContainer{
-  h2 {
+    h2 {
       padding-bottom: 0.5rem;
-  }
-  
-  input {
-        height: 3rem;
-        border-radius: 0.2rem;
-        box-shadow: none;
-        background-color: transparent;
-        border: 1px solid rgb(174, 174, 174);
-        color: white;
-        padding: 0.5rem;
-        font-size: 0.8rem;
-  
-      }
-    
-
-} 
-/* .formContainer input {
-  height: 2.5rem;
-  width: 17.5rem;
-  border-radius: 0.2rem;
-  box-shadow: none;
-  background-color: transparent;
-  border: 1px solid rgb(174, 174, 174);
-  color: white;
-  padding: 0.6rem;
-  font-size: 1rem;
-} */
+    }
+    input {
+          height: 3rem;
+          width: 100%;
+          border-radius: 0.2rem;
+          box-shadow: none;
+          background-color: transparent;
+          border: 1px solid rgb(174, 174, 174);
+          color: white;
+          padding: 0.6rem;
+          font-size: 1rem;
+          align-self: flex-start;
+        }
+    label{
+      align-self: flex-start;
+    }
+    .InfoLink{
+      font-size: x-small;
+      margin-top: 0.5rem;
+    }
+        .cntBtn {
+          width: 100%;
+          padding: 0.5rem;
+          background-color: var(--mediumGreen);
+          color: white;
+          border-radius: 0.4rem;
+          border-color: black;
+        }
+        .logInBtn{
+          margin-top: 1rem;
+        }
+}
 .loginBtnContainer {
   width: 100%;
   display: flex;
+  justify-content: center;
+  
   .registerToggleBtn {
     border-radius: 0 0.4rem 0.4rem 0;
+   
   }
   .loginToggleBtn {
     border-radius: 0.4rem 0 0 0.4rem;
   }
+  button {
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+    height: 3rem;
+    width: 80%;
+
+    }
   button:hover {
     border: 1px solid black;
     color: white;
@@ -106,8 +117,6 @@ border: 1px solid white;
       display: flex;
 
 }
-
-
 .headerDiv {
   display: flex;
   width: 100%;
@@ -128,14 +137,6 @@ border: 1px solid white;
     border: 1px;
     height: 2rem;
   }
-  .cntBtn {
-    width: 100%;
-    margin: 2rem;
-    background-color: var(--secondary);
-    color: white;
-    border-radius: 0.4rem;
-    border-color: black;
-  }
   input {
     height: 3rem;
     border-radius: 0.2rem;
@@ -153,9 +154,6 @@ border: 1px solid white;
       padding: 1.5rem;
     }
 }
-
-
-
 .userInfoContainer {
   width: 50%;
   display: flex;

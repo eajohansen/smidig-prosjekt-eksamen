@@ -98,16 +98,16 @@ const LoginPopup = () => {
                 Opprett Profil
               </button>
             </div>
-            <label style={{ alignSelf: "flex-start" }}>Epost</label>
+            <label>Epost</label>
             <input type="email" name="loginMailName" onChange={handleChange} />
-            <label style={{ alignSelf: "flex-start" }}>Passord</label>
+            <label>Passord</label>
             <input
               type="password"
               name="loginPwordName"
               onChange={handleChange}
             />
 
-            <button className="cntBtn" onClick={handleLogin}>
+            <button className="cntBtn logInBtn" onClick={handleLogin}>
               Logg Inn
             </button>
             <p className="InfoLink">
@@ -130,9 +130,9 @@ const LoginPopup = () => {
                 Opprett Profil
               </button>
             </div>
-            <label style={{ alignSelf: "flex-start" }}>Epost</label>
+            <label>Epost</label>
             <input type="email" name="mail" onChange={handleChange} />
-            <label style={{ alignSelf: "flex-start" }}>Passord</label>
+            <label>Passord</label>
             <input
               type="password"
               name="pword"
@@ -141,7 +141,7 @@ const LoginPopup = () => {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             />
-            <label style={{ alignSelf: "flex-start" }}>Gjenta Passord</label>
+            <label>Gjenta Passord</label>
             <input
               type="password"
               name="cpword"
