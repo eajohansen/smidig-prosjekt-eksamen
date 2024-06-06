@@ -125,7 +125,7 @@ namespace agile_dev.Controller {
             }
         }
 
-        // POST api/user/organizer/create/5/1
+        // POST api/user/organizer/create/5
         [Authorize]
         [HttpPost("organizer/create/{loggedInUserId}")]
         public async Task<IActionResult> AddOrganizer([FromRoute] int loggedInUserId, [FromBody] User? user) {

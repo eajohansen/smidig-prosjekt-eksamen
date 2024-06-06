@@ -1,5 +1,6 @@
 using agile_dev.Models;
 using agile_dev.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace Agile_dev.Controller {
         
         // GET: api/event/fetchAll
         [HttpGet("fetchAll")]
-        public async Task<ActionResult> FetchAllUsers() {
+        public async Task<ActionResult> FetchAllEvents() {
             try {
                 ICollection<Event> result = await _eventService.FetchAllEvents();
                 if (result.Count == 0) {
@@ -33,7 +34,7 @@ namespace Agile_dev.Controller {
 
         // GET api/event/fetch/id/5
         [HttpGet("fetch/id/{id}")]
-        public async Task<IActionResult> FetchUserById(int id) {
+        public async Task<IActionResult> FetchEventById(int id) {
             try {
                 Event? result = await _eventService.FetchEventById(id);
                 if (result == null) {
