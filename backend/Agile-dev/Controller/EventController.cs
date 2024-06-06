@@ -81,23 +81,6 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // POST api/event/datetime/create/5/6
-        [HttpPost("datetime/create/{userId}/{organizationId}")]
-        public async Task<IActionResult> AddEventDateTime([FromRoute] int userId, [FromBody] EventDateTime eventDateTime,
-            [FromRoute] int organizationId) {
-            try {
-                int isAdded = await _eventService.AddEventDateTime(userId, eventDateTime, organizationId);
-                if (isAdded == 0) {
-                    return BadRequest();
-                }
-
-                return Ok(isAdded);
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while adding eventDateTime to database.", exception);
-            }
-        }
-        
         // POST api/event/place/create/5/6
         [HttpPost("place/create/{userId}/{organizationId}")]
         public async Task<IActionResult> AddPlace([FromRoute] int userId, [FromBody] Place place,
@@ -163,22 +146,6 @@ namespace Agile_dev.Controller {
             }
             catch (Exception exception) {
                 throw new Exception("An error occurred while updating event.", exception);
-            }
-        }
-        
-        // PUT api/event/datetime/update/5/6/3
-        [HttpPut("update/datetime/{userId}/{organizationId}/{eventId}")]
-        public async Task<IActionResult> UpdateEventDateTime([FromRoute] int userId, [FromRoute] int organizationId, [FromRoute] int eventId, [FromBody] EventDateTime eventDateTime) {
-            try {
-                bool isAdded = await _eventService.UpdateEventDateTime(userId, organizationId, eventId, eventDateTime);
-                if (!isAdded) {
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while updating eventDateTime.", exception);
             }
         }
         

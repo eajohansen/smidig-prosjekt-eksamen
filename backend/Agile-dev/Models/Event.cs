@@ -55,6 +55,29 @@ public class Event {
     [ForeignKey("ContactPersonId")]
     public int? ContactPersonId  { get; set; }
     
+    [Required]
+    [DataType(DataType.DateTime)]
+    [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Created at")]
+    public DateTime CreatedAt { get; set; }
+    
+    [Required]
+    [DataType(DataType.DateTime)]
+    [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Published at")]
+    public DateTime? PublishedAt { get; set; }
+    
+    [Required]
+    [DataType(DataType.DateTime)]
+    [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Start time")]
+    public DateTime? StartTime { get; set; }
+    
+    [DataType(DataType.DateTime)]
+    [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
+    [Display(Name = "End time")]
+    public DateTime? EndTime { get; set; }
+    
     // A HasSet of all EventCustomFields with this Event
     public ICollection<EventCustomField>? EventCustomFields { get; set; }
     

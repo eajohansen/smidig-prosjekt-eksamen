@@ -87,21 +87,6 @@ public class EventService {
             throw new Exception("An error occurred while adding event to database.", exception);
         }
     }
-
-    public async Task<int> AddEventDateTime(int userId, EventDateTime eventDateTime, int organizationId) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return 0;
-            }
-
-            await _dbCon.EventDateTime.AddAsync(eventDateTime);
-            await _dbCon.SaveChangesAsync();
-            return _dbCon.EventDateTime.LastAsync().Result.EventDateTimeId;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while adding eventDateTime to database.", exception);
-        }
-    }
     
     public async Task<int> AddPlace(int userId, Place place, int organizationId) {
         try {
@@ -179,32 +164,6 @@ public class EventService {
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while updating event.", exception);
-        }
-    }
-
-    public async Task<bool> UpdateEventDateTime(int userId, int organizationId, int eventId, EventDateTime eventDateTime) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
-
-            Event? eEvent = await _dbCon.Event.FindAsync(eventId);
-
-            if (eEvent == null) {
-                return false;
-            }
-            
-            EventDateTime? databaseEventDateTime = await _dbCon.EventDateTime.FindAsync(eEvent.EventDateTimeId);
-            if (databaseEventDateTime == null) {
-                return false;
-            }
-
-            _dbCon.EventDateTime.Update(eventDateTime);
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while updating eventDateTime.", exception);
         }
     }
     
