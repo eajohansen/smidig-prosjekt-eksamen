@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +10,15 @@ namespace Agile_dev.Controller {
     [ApiController]
     public class ImageController : ControllerBase {
         private readonly ImageService _imageService;
+        
+        public ImageController(ImageService imageService) {
+            _imageService = imageService;
+        }
 
         #region GET
         
         // GET: api/image/fetchAll
+        [Authorize]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllImages() {
             try {
@@ -28,7 +35,8 @@ namespace Agile_dev.Controller {
         }
 
         // GET api/image/fetch/id/5
-        [HttpGet("/fetch/id/{id}")]
+        [Authorize]
+        [HttpGet("fetch/id/{id}")]
         public async Task<IActionResult> Get(int id) {
             try {
                 Image? result = await _imageService.FetchImageById(id);
@@ -48,10 +56,11 @@ namespace Agile_dev.Controller {
         #region POST
 
         // POST api/image/create/5/6
-        [HttpPost("create/{userId}/{organizationId}")]
-        public async Task<IActionResult> AddImage([FromRoute] int userId, [FromBody] Image image, [FromRoute] int organizationId) {
+        [Authorize]
+        [HttpPost("create")]
+        public async Task<IActionResult> AddImage(Image image) {
             try {
-                bool isAdded = await _imageService.AddImage(userId, organizationId, image);
+                bool isAdded = await _imageService.AddImage(image);
                 if (!isAdded) {
                     // Could not create image, because request is bad
                     return BadRequest();
@@ -60,27 +69,7 @@ namespace Agile_dev.Controller {
                 return Ok();
             }
             catch (Exception exception) {
-                throw new Exception("An error occurred while adding organization to database.", exception);
-            }
-        }
-        
-        #endregion
-
-        #region PUT
-
-        // PUT api/image/update/5/6
-        [HttpPut("update/{userId}/{organizationId}")]
-        public async Task<IActionResult> UpdateEvent([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] Image image) {
-            try {
-                bool isAdded = await _imageService.UpdateImage(userId, organizationId, image);
-                if (!isAdded) {
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while updating event.", exception);
+                throw new Exception("An error occurred while adding image to database.", exception);
             }
         }
         
@@ -89,6 +78,7 @@ namespace Agile_dev.Controller {
         #region DELETE
 
         // DELETE api/image/delete/5/6
+        [Authorize]
         [HttpDelete("delete/{userId}/{organizationId}")]
         public async Task<IActionResult> DeleteImage([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] Image image) {
             try {

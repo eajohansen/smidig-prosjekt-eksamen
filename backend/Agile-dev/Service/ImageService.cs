@@ -6,7 +6,7 @@ namespace agile_dev.Service;
 
 public class ImageService {
     private readonly InitContext _dbCon;
-    private readonly OrganizationService _organizationService;
+    //private readonly OrganizationService _organizationService;
 
     public ImageService(InitContext context) {
         _dbCon = context;
@@ -46,11 +46,11 @@ public class ImageService {
     
     #region POST
 
-    public async Task<bool> AddImage(int userId, int organizationId, Image image) {
+    public async Task<bool> AddImage(Image image) {
         try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
+            // if (!_organizationService.CheckValidation(userId, organizationId).Result) {
+            //     return false;
+            // }
 
             await _dbCon.Image.AddAsync(image);
             await _dbCon.SaveChangesAsync();
@@ -63,37 +63,13 @@ public class ImageService {
 
     #endregion
     
-    #region PUT
-
-    public async Task<bool> UpdateImage(int userId, int organizationId, Image image) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
-
-            Image? databaseImage = await FetchImageById(image.ImageId);
-            if (databaseImage == null) {
-                return false;
-            }
-            
-            _dbCon.Image.Update(image);
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while updating image.", exception);
-        }
-    }
-
-    #endregion
-    
     #region DELETE
 
     public async Task<bool> DeleteImage(int userId, int organizationId, Image image) {
         try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
+            // if (!_organizationService.CheckValidation(userId, organizationId).Result) {
+            //     return false;
+            // }
             
             _dbCon.Image.Remove(image);
             await _dbCon.SaveChangesAsync();

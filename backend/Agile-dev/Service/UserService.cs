@@ -214,6 +214,12 @@ public class UserService {
             
             // Handle allergies
 
+            // databaseUser.UserEvents = new List<UserEvent>();
+            // databaseUser.Allergies = new List<Allergy>();
+            // databaseUser.FollowOrganization = new List<Follower>();
+            // databaseUser.OrganizerOrganization = new List<Organizer>();
+            // databaseUser.Notices = new List<Notice>();
+            
             if (databaseUser.Allergies.Count != 0) {
                 foreach (Allergy allergy in databaseUser.Allergies) {
                     _dbCon.Allergy.Remove(allergy);
@@ -226,21 +232,15 @@ public class UserService {
                     await _dbCon.Allergy.AddAsync(allergy);
                 }
             }
-
+            
             databaseUser.Email = user.Email;
             databaseUser.Birthdate = user.Birthdate;
             databaseUser.ExtraInfo = user.ExtraInfo;
             databaseUser.FirstName = user.FirstName;
             databaseUser.LastName = user.LastName;
-
-            try {
-                _dbCon.User.Update(databaseUser);
-            }
-            catch (Exception e) {
-                Console.WriteLine(e);
-                throw;
-            }
             
+                _dbCon.User.Update(databaseUser);
+                
             await _dbCon.SaveChangesAsync();
             
             return true;

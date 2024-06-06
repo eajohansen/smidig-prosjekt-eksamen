@@ -16,11 +16,8 @@ public class Organization {
 
     */
 
-    public Organization(string name, int imageId) {
+    public Organization(string name) {
         Name = name;
-        ImageId = imageId;
-        Followers = new HashSet<Follower>();
-        Organizers = new HashSet<Organizer>();
     }
     
     [Key]
@@ -43,8 +40,8 @@ public class Organization {
     public int ImageId { get; set; }
     
     // A HasSet of all Followers with this Organization
-    public ICollection<Follower> Followers { get; set; }
+    public ICollection<Follower>? Followers { get; set; }
     
     // A HasSet of all Organizers with this Organization
-    public ICollection<Organizer> Organizers { get; set; }
+    public ICollection<Organizer>? Organizers { get; set; }
 }

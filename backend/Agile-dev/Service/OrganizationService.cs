@@ -53,8 +53,11 @@ public class OrganizationService {
                 return false;
             }
             
+            
             await _dbCon.Organization.AddAsync(organization);
             await _dbCon.SaveChangesAsync();
+            
+            
             return true;
         }
         catch (Exception exception) {
