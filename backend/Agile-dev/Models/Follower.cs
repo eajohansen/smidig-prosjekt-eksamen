@@ -15,9 +15,9 @@ public class Follower {
 
     */
 
-    public Follower(int organizationId, int userId) {
-        OrganizationId = organizationId;
+    public Follower(int userId, int organizationId) {
         UserId = userId;
+        OrganizationId = organizationId;
     }
     
     [Key]
@@ -26,16 +26,12 @@ public class Follower {
     public int FollowerId { get; set; }
     
     [Required]
-    [Display(Name = "Organization id")]
-    public int OrganizationId { get; set; }
-    
-    [ForeignKey("OrganizationId")]
-    public Organization Organization { get; set; }
-    
-    [Required]
     [Display(Name = "User id")]
+    [ForeignKey("UserId")]
     public int UserId { get; set; }
     
-    [ForeignKey("UserId")]
-    public User User { get; set; }
+    [Required]
+    [Display(Name = "Organization id")]
+    [ForeignKey("OrganizationId")]
+    public int OrganizationId { get; set; }
 }

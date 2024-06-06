@@ -12,7 +12,6 @@ public class User {
        [Required] = Data annotation for making it a necessary field for the row
        [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
        [StringLength(*number*)] = Data annotation for setting a max length on the field
-       [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
        [DataType(*Type*)] = Data annotation for specifying the type of data
        [DisplayFormat(*format*)] = Data annotation for specifying the format of the data when displayed
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
@@ -24,7 +23,7 @@ public class User {
         FirstName = firstName;
         LastName = lastName;
         FollowOrganization = new HashSet<Follower>();
-        OrganisatorOrganization = new HashSet<Organisator>();
+        OrganizerOrganization = new HashSet<Organizer>();
         UserEvents = new HashSet<UserEvent>();
         Allergies = new HashSet<Allergy>();
         Notices = new HashSet<Notice>();
@@ -69,7 +68,7 @@ public class User {
     public ICollection<Follower> FollowOrganization { get; set; }
     
     // A HasSet of all Organizations that this User can organize
-    public ICollection<Organisator> OrganisatorOrganization { get; set; }
+    public ICollection<Organizer> OrganizerOrganization { get; set; }
     
     // A HasSet of all UserEvents with this User 
     public ICollection<UserEvent> UserEvents { get; set; }

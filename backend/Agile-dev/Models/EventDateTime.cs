@@ -33,15 +33,18 @@ public class EventDateTime {
     
     [Required]
     [DataType(DataType.DateTime)]
+    [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Published at")]
+    public DateTime? PublishedAt { get; set; }
+    
+    [Required]
+    [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [Display(Name = "Start time")]
-    public DateTime StartTime { get; set; }
+    public DateTime? StartTime { get; set; }
     
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [Display(Name = "End time")]
-    public DateTime EndTime { get; set; }
-    
-    // The Event connected to this EventDateTime
-    public Event Event { get; set; }
+    public DateTime? EndTime { get; set; }
 }

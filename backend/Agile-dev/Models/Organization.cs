@@ -20,7 +20,7 @@ public class Organization {
         Name = name;
         ImageId = imageId;
         Followers = new HashSet<Follower>();
-        Organisators = new HashSet<Organisator>();
+        Organizers = new HashSet<Organizer>();
     }
     
     [Key]
@@ -39,14 +39,12 @@ public class Organization {
     
     [Required]
     [Display(Name = "Image id")]
-    public int ImageId { get; set; }
-    
     [ForeignKey("ImageId")]
-    public Image Image { get; set; }
+    public int ImageId { get; set; }
     
     // A HasSet of all Followers with this Organization
     public ICollection<Follower> Followers { get; set; }
     
-    // A HasSet of all Organisators with this Organization
-    public ICollection<Organisator> Organisators { get; set; }
+    // A HasSet of all Organizers with this Organization
+    public ICollection<Organizer> Organizers { get; set; }
 }
