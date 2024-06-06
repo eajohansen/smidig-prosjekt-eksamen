@@ -280,12 +280,12 @@ public class UserService {
 
     #region MISCELLANEOUS
 
-    private async Task<bool> IsUserAdmin(User user) {
+    public async Task<bool> IsUserAdmin(User user) {
         User? databaseAdminUser = await FetchUserById(user.UserId);
         return databaseAdminUser is { Admin: true };
     }
 
-    private async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
+    public async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
         User? databaseUser = await FetchUserById(user.UserId);
         
         // Loops through all the organizations the user is an organizer for, and returns true if we find the id of the organization we are looking for
