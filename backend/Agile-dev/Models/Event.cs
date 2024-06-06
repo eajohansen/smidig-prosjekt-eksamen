@@ -40,11 +40,7 @@ public class Event {
     [Required]
     [Display(Name = "Published")]
     public bool Published { get; set; }
-    
-    [Required]
-    [Display(Name = "Capacity")]
-    public int? Capacity { get; set; }
-    
+     
     [Display(Name = "Event DateTime id")]
     [ForeignKey("EventDateTimeId")]
     public int? EventDateTimeId { get; set; }
