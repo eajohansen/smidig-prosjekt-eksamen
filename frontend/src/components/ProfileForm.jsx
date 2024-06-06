@@ -78,14 +78,11 @@ export const ProfileForm = ({ userEmail }) => {
           onChange={handleChange}
         />
         <label htmlFor="dobInput">Fødselsdato</label>
-<<<<<<< HEAD
         <input type="date" id="dobInput" name="dob" onChange={handleChange} />
-=======
+
         <input className="date" type="date" id="dobInput" />
->>>>>>> d19ca3f (Fixed positions register form)
       </div>
       <div className="allergyContainer">
-
           <label className="allergies" htmlFor="allergyInput">
               Allergier
           </label>        <div className="allergyBtnDiv">
