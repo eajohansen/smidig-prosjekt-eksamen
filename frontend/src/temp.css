@@ -23,10 +23,6 @@ textarea,
 input {
   outline: none;
 }
-.loginContainer label {
-  padding-top: 1.5rem;
-  font-size: 0.7rem;
-}
 
 .loginContainer {
   height: 50%;
@@ -40,8 +36,9 @@ input {
   background-color: var(--darkBkgrnd);
   color: white;
   label {
-    padding-top: 1rem;
-    font-size: 0.9rem;
+    
+    padding-top: 1.5rem;
+      font-size: 0.9rem;
   }
   
 }
@@ -95,10 +92,36 @@ border: 1px solid white;
 }
 
 /* Registration form  */
-.profileInfoContainer {
+.registerContainer{
+  display: flex;
+  flex-direction: column;
+  margin-left: 15%;
+    width: 75%;
+    border-radius: 1rem;
+      padding: 3.5rem;
+      background-color: var(--darkBkgrnd);
+      color: white;
+      font-family: "Inter", sans-serif;
+      font-size: 1rem;
+      display: flex;
+
+}
+
+
+.headerDiv {
+  display: flex;
+  width: 100%;
   h2 {
+    font-size: 2rem;
+    font-weight: normal;
     padding-bottom: 0.5rem;
   }
+    hr {
+      width: 237%;
+    }
+}
+.profileInfoContainer {
+  display: flex;
   button {
     width: 60%;
     font-size: 10px;
@@ -126,30 +149,12 @@ border: 1px solid white;
   input:focus {
     border: 1px solid white;
   }
+    div {
+      padding: 1.5rem;
+    }
 }
 
-hr {
-  width: 237%;
-}
 
-.profileInfoContainer {
-  margin-left: 15%;
-  width: 75%;
-  display: flex;
-  border-radius: 1rem;
-  padding: 3.5rem;
-  background-color: var(--darkBkgrnd);
-  color: white;
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
-  h2 {
-    font-size: 2rem;
-    font-weight: normal;
-  }
-  div {
-    padding: 1.5rem;
-  }
-}
 
 .userInfoContainer {
   width: 50%;
@@ -172,14 +177,14 @@ hr {
     flex-direction: row;
   }
 
-  /* #dobInput {
+  #dobInput {
     filter: invert(100%);
     color: black;
     border-color: rgb(70, 70, 70);
   }
   #dobInput:focus {
     border: 1px solid black;
-  } */
+  }
 }
 .icon-inside {
   margin-left: -2rem;
@@ -189,9 +194,6 @@ hr {
   width: 50%;
   display: flex;
   flex-direction: column;
-  .allergies {
-    padding-top: 6rem;
-  }
   .yourAllergies {
     padding: 0.6rem;
     padding-left: 0;

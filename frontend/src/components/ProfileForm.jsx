@@ -62,10 +62,13 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   return (
-    <div className="profileInfoContainer inputHover">
-      <div className="userInfoContainer">
+    <div className="registerContainer">
+    <div className="headderDiv">
         <h2>Opprett Bruker</h2>
         <hr></hr>
+        </div>
+    <div className="profileInfoContainer inputHover">
+      <div className="userInfoContainer">
         <label htmlFor="emailRegister">Epost</label>
         <div className="emailContainer">
           <input type="email" id="emailRegister" value={userEmail} readOnly />
@@ -79,14 +82,14 @@ export const ProfileForm = ({ userEmail }) => {
           id="fNameInput"
           name="fName"
           onChange={handleChange}
-        />
+          />
         <label htmlFor="lNameInput">Etternavn</label>
         <input
           type="text"
           id="lNameInput"
           name="lName"
           onChange={handleChange}
-        />
+          />
         <label htmlFor="dobInput">Fødselsdato</label>
         <input className="date" type="date" id="dobInput" name="dob" onChange={handleChange} />
       </div>
@@ -100,7 +103,7 @@ export const ProfileForm = ({ userEmail }) => {
             name="allergies"
             onChange={handleChange}
             value={newAllergy}
-          />
+            />
           <button className="addBtn" onClick={handleAllergy}>
             Legg til
           </button>
@@ -126,10 +129,11 @@ export const ProfileForm = ({ userEmail }) => {
         <div className="btnDiv">
           <button className="canclBtn">Avbryt</button>
           <button className="createBtn"             onClick={() => {
-              handleSubmit();
+            handleSubmit();
           }}>Opprett</button>
         </div>
       </div>
     </div>
+  </div>
   );
 };
