@@ -43,6 +43,19 @@ namespace Agile_dev.Controller {
             }
         }
         
+        // GET: api/event/customfield/fetchAll
+        [HttpGet("customfield/fetchAll/{eventId}")]
+        public async Task<ActionResult> FetchAllCustomFields(int eventId) {
+            try {
+                ICollection<CustomField?> result = await _eventService.FetchAllCustomFields(eventId);
+
+                return Ok(result);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
+        
         #endregion
 
         #region POST
@@ -90,6 +103,37 @@ namespace Agile_dev.Controller {
                 if (isAdded == 0) {
                     return BadRequest();
                 }
+
+                return Ok(isAdded);
+            }
+            catch (Exception exception) {
+                throw new Exception("An error occurred while adding eventDateTime to database.", exception);
+            }
+        }
+        
+        // POST api/event/contactperson/create/5/6
+        [HttpPost("contactperson/create/{userId}/{organizationId}")]
+        public async Task<IActionResult> AddContactPerson([FromRoute] int userId, [FromBody] ContactPerson contactPerson,
+            [FromRoute] int organizationId) {
+            try {
+                int isAdded = await _eventService.AddContactPerson(userId, contactPerson, organizationId);
+                if (isAdded == 0) {
+                    return BadRequest();
+                }
+
+                return Ok(isAdded);
+            }
+            catch (Exception exception) {
+                throw new Exception("An error occurred while adding eventDateTime to database.", exception);
+            }
+        }
+        
+        // POST api/event/customfield/create/5/6
+        [HttpPost("customfield/create/{userId}/{organizationId}")]
+        public async Task<IActionResult> AddCustomFields([FromRoute] int userId, [FromBody] List<CustomField> customFields,
+            [FromRoute] int organizationId) {
+            try {
+                List<EventCustomField> isAdded = await _eventService.AddCustomFields(userId, organizationId, customFields);
 
                 return Ok(isAdded);
             }
@@ -151,10 +195,26 @@ namespace Agile_dev.Controller {
         }
         
         // PUT api/event/contactperson/update/5/6/3
-        [HttpPut("update/place/{userId}/{organizationId}/{eventId}")]
+        [HttpPut("update/contactperson/{userId}/{organizationId}/{eventId}")]
         public async Task<IActionResult> UpdateContactPerson([FromRoute] int userId, [FromRoute] int organizationId, [FromRoute] int eventId, [FromBody] ContactPerson contactPerson) {
             try {
                 bool isAdded = await _eventService.UpdateContactPerson(userId, organizationId, eventId, contactPerson);
+                if (!isAdded) {
+                    return BadRequest();
+                }
+
+                return Ok();
+            }
+            catch (Exception exception) {
+                throw new Exception("An error occurred while updating eventDateTime.", exception);
+            }
+        }
+        
+        // PUT api/event/customfield/update/5/6/3
+        [HttpPut("update/customfield/{userId}/{organizationId}/{eventId}")]
+        public async Task<IActionResult> UpdateCustomField([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
+            try {
+                bool isAdded = await _eventService.UpdateCustomField(userId, organizationId, customFields);
                 if (!isAdded) {
                     return BadRequest();
                 }
