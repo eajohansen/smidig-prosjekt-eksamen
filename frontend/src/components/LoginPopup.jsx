@@ -85,7 +85,7 @@ const LoginPopup = () => {
     switch (login) {
       case 1:
         return (
-          <div className="loginContainer formContainer">
+          <div className="loginContainer formContainer inputHover">
             <h2>Logg inn</h2>
             <div className="loginBtnContainer">
               <button
@@ -98,16 +98,16 @@ const LoginPopup = () => {
                 Opprett Profil
               </button>
             </div>
-            <label style={{ alignSelf: "flex-start" }}>Epost</label>
+            <label>Epost</label>
             <input type="email" name="loginMailName" onChange={handleChange} />
-            <label style={{ alignSelf: "flex-start" }}>Passord</label>
+            <label>Passord</label>
             <input
               type="password"
               name="loginPwordName"
               onChange={handleChange}
             />
 
-            <button className="cntBtn" onClick={handleLogin}>
+            <button className="cntBtn logInBtn" onClick={handleLogin}>
               Logg Inn
             </button>
             <p className="InfoLink">
@@ -117,7 +117,7 @@ const LoginPopup = () => {
         );
       case 2:
         return (
-          <div className="loginContainer formContainer">
+          <div className="loginContainer formContainer inputHover">
             <h2>Opprett Profil</h2>
             <div className="loginBtnContainer">
               <button className="loginToggleBtn" onClick={() => setLogin(1)}>
@@ -130,9 +130,9 @@ const LoginPopup = () => {
                 Opprett Profil
               </button>
             </div>
-            <label style={{ alignSelf: "flex-start" }}>Epost</label>
+            <label>Epost</label>
             <input type="email" name="mail" onChange={handleChange} />
-            <label style={{ alignSelf: "flex-start" }}>Passord</label>
+            <label>Passord</label>
             <input
               type="password"
               name="pword"
@@ -141,7 +141,7 @@ const LoginPopup = () => {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             />
-            <label style={{ alignSelf: "flex-start" }}>Gjenta Passord</label>
+            <label>Gjenta Passord</label>
             <input
               type="password"
               name="cpword"
@@ -159,6 +159,11 @@ const LoginPopup = () => {
                 <li key={index}>{item}</li>
               ))}
             </div>
+            <p className="InfoLink">
+              Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a>{" "}
+              og <br />
+              <a href="#">personvernserklæring</a>
+            </p>
             <button
               className="cntBtn"
               onClick={() => {
@@ -167,11 +172,7 @@ const LoginPopup = () => {
             >
               Fortsett
             </button>
-            <p className="InfoLink">
-              Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a>{" "}
-              og <br />
-              <a href="#">personvernserklæring</a>
-            </p>
+            
           </div>
         );
       case 3:
