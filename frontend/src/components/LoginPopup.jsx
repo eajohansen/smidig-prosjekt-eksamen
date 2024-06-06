@@ -9,7 +9,6 @@ const LoginPopup = () => {
   const [loginPword, setLoginPword] = useState("");
 
   const [login, setLogin] = useState(2);
-
   const [mailCheck, setMailCheck] = useState("");
   const [pCheck, setPCheck] = useState("");
   const [confirmPword, setConfirmPword] = useState("");

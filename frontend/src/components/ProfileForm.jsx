@@ -1,4 +1,5 @@
 import { useState, useEffect, SyntheticEvent } from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { sendUser } from "../services/tempService";
 export const ProfileForm = ({ userEmail }) => {
   const [allergies, setAllergies] = useState([]);
@@ -40,8 +41,12 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   const handleAllergy = () => {
-    setAllergies([...allergies, newAllergy]);
-    setNewAllergy("");
+      if (allergies.length > 5) {
+          alert("Beklager! Du kan ikke legge til fler enn 6 allergier.");
+      } else {
+          setAllergies([...allergies, newAllergy]);
+          setNewAllergy("");
+      }
   };
 
   const handleSubmit = async () => {
@@ -60,8 +65,14 @@ export const ProfileForm = ({ userEmail }) => {
     <div className="profileInfoContainer formContainer">
       <div className="userInfoContainer">
         <h2>Opprett Bruker</h2>
+        <hr></hr>
         <label htmlFor="emailRegister">Epost</label>
-        <input type="email" id="emailRegister" value={userEmail} readOnly />
+        <div className="emailContainer">
+          <input type="email" id="emailRegister" value={userEmail} readOnly />
+          <span className="icon-inside">
+            <i className="bi bi-lock"></i>
+          </span>
+        </div>
         <label htmlFor="fNameInput">Fornavn</label>
         <input
           type="text"
@@ -78,12 +89,13 @@ export const ProfileForm = ({ userEmail }) => {
         />
         <label htmlFor="dobInput">Fødselsdato</label>
         <input type="date" id="dobInput" name="dob" onChange={handleChange} />
+
+        <input className="date" type="date" id="dobInput" />
       </div>
       <div className="allergyContainer">
-        <h2>Opprett Bruker</h2>
-
-        <label htmlFor="allergyInput">Allergier</label>
-        <div className="allergyBtnDiv">
+          <label className="allergies" htmlFor="allergyInput">
+              Allergier
+          </label>        <div className="allergyBtnDiv">
           <input
             type="text"
             id="allergyInput"
@@ -91,26 +103,33 @@ export const ProfileForm = ({ userEmail }) => {
             onChange={handleChange}
             value={newAllergy}
           />
-          <button onClick={handleAllergy}>Legg til</button>
+          <button className="addBtn" onClick={handleAllergy}>
+            Legg til
+          </button>
         </div>
-        <label>Dine allergier</label>
-        <label>Disclaimer...</label>
+        <label className="yourAllergies">Dine allergier</label>
         <div className="allergyOutput">
           <ul>
             {allergies.map((item, i) => (
-              <li key={i}>{item}</li>
+              <li className="allergy" key={i}>
+                {item}
+                <i className="trash bi bi-trash3 "></i>
+              </li>
             ))}
           </ul>
         </div>
+        <div className="disclaimerDiv">
+          <input className="checkBox" type="checkbox" />
+          <label className="disclaimer">
+            Ved å registrere brukerprofil, samtykker du til at denne
+            informasjonen kan deles med arrangør og eventuelle medarrangører.
+          </label>
+        </div>
         <div className="btnDiv">
-          <button>Avbryt</button>
-          <button
-            onClick={() => {
+          <button className="canclBtn">Avbryt</button>
+          <button className="createBtn"             onClick={() => {
               handleSubmit();
-            }}
-          >
-            Opprett
-          </button>
+          }}>Opprett</button>
         </div>
       </div>
     </div>

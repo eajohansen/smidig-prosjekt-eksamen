@@ -35,7 +35,7 @@ input {
   flex-direction: column;
   border: 1px solid black;
   border-radius: 1rem;
-  padding: 2rem 3.5rem;
+  padding: 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
   height: 35rem;
@@ -77,9 +77,28 @@ input {
     background-color: var(--main);
   }
 }
+
+/* Registration form  */
 .formContainer {
+  h2 {
+    padding-bottom: 0.5rem;
+  }
+  button {
+    width: 60%;
+    font-size: 10px;
+    border: 1px;
+    height: 2rem;
+  }
+  .cntBtn {
+    width: 100%;
+    margin: 2rem;
+    background-color: var(--secondary);
+    color: white;
+    border-radius: 0.4rem;
+    border-color: black;
+  }
   input {
-    height: 2.5rem;
+    height: 1rem;
     border-radius: 0.2rem;
     box-shadow: none;
     background-color: transparent;
@@ -93,77 +112,149 @@ input {
   }
 }
 
-.formContainer button {
-  width: 60%;
-  font-size: 12px;
-  border: 1px solid black;
-  height: 2rem;
-}
-.loginBtnContainer button:hover {
-  border: 1px solid black;
-  color: white;
-  background-color: var(--main);
-}
-
-.formContainer .cntBtn {
-  width: 100%;
-  border: none;
-  margin: 2rem;
-  background-color: var(--mediumGreen);
-  color: white;
-  border-radius: 0.4rem;
-}
-
-.InfoLink {
-  font-style: italic;
-  font-size: x-small;
-}
-
-.loginContainer .cntBtn:hover {
-  filter: brightness(90%);
+hr {
+  width: 237%;
 }
 
 .profileInfoContainer {
+  h2 {
+    font-size: 2rem;
+    font-weight: normal;
+  }
+  width: 40rem;
+  height: 35rem;
   display: flex;
-  border: 1px solid black;
   border-radius: 1rem;
-  padding: 2rem 3.5rem;
+  padding: 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
   div {
-    padding: 1rem;
+    padding: 1.5rem;
   }
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
 }
 
 .userInfoContainer {
   display: flex;
   flex-direction: column;
-}
-.profileInfoContainer div {
-  padding: 1rem;
+  input {
+    font-size: 1rem;
+    padding: 0.9rem;
+    width: 15rem;
+  }
+  label {
+    padding: 0.6rem;
+    padding-left: 0;
+  }
+  .emailContainer {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    .icon-inside {
+      margin-left: -2rem;
+      margin-top: 0.9rem;
+    }
+  }
+  #dobInput {
+    filter: invert(100%);
+    color: black;
+    border-color: rgb(70, 70, 70);
+  }
+  #dobInput:focus {
+    border: 1px solid black;
+  }
 }
 
 .allergyContainer {
   display: flex;
   flex-direction: column;
+  .allergies {
+    padding-top: 3.5rem;
+  }
+  .yourAllergies {
+    padding: 0.6rem;
+    padding-left: 0;
+    padding-top: 0;
+    margin-top: -0.95rem;
+  }
 }
 
 .allergyOutput {
-  height: 50%;
-  width: 100%;
-  border: white 1px solid;
+  height: 15rem;
+  width: 17rem;
+  border: 1px solid rgb(174, 174, 174);
+  border-radius: 0.3rem;
+  .allergy {
+    border: 1px solid white;
+    border-radius: 0.3rem;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    list-style-type: none;
+    margin-left: -0.8rem;
+    margin-top: -0.8rem;
+    margin-bottom: 1rem;
+  }
+  .trash {
+    color: #cb4353;
+    margin-left: 1rem;
+  }
 }
+
 .btnDiv {
   display: flex;
-  width: 100%;
+  flex-direction: row;
   button {
-    margin-right: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;
+    height: 2.8rem;
+    width: 8rem;
+    margin-left: -1.5rem;
   }
+}
+
+.canclBtn {
+  border-color: black;
+  margin-right: 5.7rem;
+}
+
+.createBtn {
+  background-color: #497d95;
+  color: white;
 }
 
 .allergyBtnDiv {
   display: flex;
+  margin-top: -0.9rem;
+  margin-left: -1.5rem;
+  .addBtn {
+    font-size: 0.8rem;
+    width: 5rem;
+    height: 3rem;
+    background-color: #497d95;
+    color: white;
+    border-radius: 0.3rem;
+    margin-left: 0.3rem;
+  }
+  #allergyInput {
+    width: 13rem;
+    padding: 0.9rem;
+  }
+}
+
+.disclaimerDiv {
+  display: flex;
+  .checkBox {
+    margin-top: -0.25rem;
+    margin-right: 0.8rem;
+    margin-left: -1.5rem;
+    background-color: white;
+  }
+  .disclaimer {
+    font-size: 0.8rem;
+    margin-top: -0.3rem;
+  }
 }
 
 .navHeader {
