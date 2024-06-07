@@ -1,4 +1,5 @@
 main {
+    display:flex;
     justify-self: start;
     align-self:start;
     input {
@@ -64,9 +65,4 @@ main {
     & .event-check-box input:not(.checkbox-styling) {
         width: 2rem;
     }
-}
-.checkbox-styling {
-    border: 1px solid #565656;
-    width: 1.5rem;
-    height: 1rem;
 }

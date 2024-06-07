@@ -96,7 +96,8 @@ export const ProfileForm = ({ userEmail }) => {
       <div className="allergyContainer">
           <label className="allergies" htmlFor="allergyInput">
               Allergier
-          </label>        <div className="allergyBtnDiv">
+          </label>
+        <div className="allergyBtnDiv">
           <input
             type="text"
             id="allergyInput"
@@ -120,11 +121,12 @@ export const ProfileForm = ({ userEmail }) => {
           </ul>
         </div>
         <div className="disclaimerDiv">
-          <input className="checkBox" type="checkbox" />
-          <label className="disclaimer">
+          <div><input className="checkBox" type="checkbox"/></div>
+
+          <span className="disclaimer">
             Ved å registrere brukerprofil, samtykker du til at denne
             informasjonen kan deles med arrangør og eventuelle medarrangører.
-          </label>
+          </span>
         </div>
         <div className="btnDiv">
           <button className="canclBtn">Avbryt</button>
