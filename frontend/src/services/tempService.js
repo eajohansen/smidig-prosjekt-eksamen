@@ -42,3 +42,16 @@ export const sendLogin = async (email, password) => {
     return err;
   }
 };
+export const sendEvent = async (event) => {
+  console.log("what i get in:");
+  console.log(event);
+  try {
+    const result = await axiosInstance.post("api/event/create", event);
+    if (result.status === 200) {
+      console.log("result: ");
+      console.log(result);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
