@@ -216,15 +216,22 @@ input {
     border: 1px solid white;
     border-radius: 0.3rem;
     padding: 0.4rem;
+    margin-bottom: 10px;
     font-size: 0.9rem;
     list-style-type: none;
-    margin-left: -0.8rem;
-    margin-top: -0.8rem;
-    margin-bottom: 1rem;
+
+
   }
   .trash {
     color: #cb4353;
     margin-left: 1rem;
+  }
+  ul {
+    padding: 0;
+  }
+  ul li {
+    display: flex;
+    justify-content: space-between;
   }
 }
 
@@ -277,6 +284,9 @@ input {
     margin-right: 0.8rem;
     margin-left: -1.5rem;
     background-color: white;
+  }
+  .checkBox:checked {
+    background-color: var(--main);
   }
   .disclaimer {
     font-size: 0.8rem;

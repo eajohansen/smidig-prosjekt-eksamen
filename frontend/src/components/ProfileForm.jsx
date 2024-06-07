@@ -113,7 +113,7 @@ export const ProfileForm = ({ userEmail }) => {
           <ul>
             {allergies.map((item, i) => (
               <li className="allergy" key={i}>
-                {item}
+                <span>{item}</span>
                 <i className="trash bi bi-trash3 "></i>
               </li>
             ))}
