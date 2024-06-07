@@ -16,15 +16,30 @@ button:hover {
   appearance: none;
   margin: 0;
   padding: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.07rem;
   box-sizing: border-box;
 }
 
 body {
   display: flex;
   height: 100vh;
-  justify-content: center;
-  align-items: center;
-  padding-left: 15rem;
+  width: 100vw;
+  flex-direction: row;
+  > div {
+    display: flex;
+  }
+  > div > header {
+    height: 100vh;
+    align-self: start;
+  }
+  > div > main {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    padding: 2rem;
+  }
 }
 
 textarea,
@@ -33,7 +48,10 @@ input {
 }
 
 .loginContainer {
+  align-self: center;
+  justify-self: center;
   height: 60vh;
+  max-width: 60%;
   margin-right: 15rem;
   min-height: 35rem;
   display: flex;
@@ -68,7 +86,7 @@ input {
     align-self: flex-start;
   }
   .InfoLink {
-    font-size: x-small;
+    font-size: medium;
     margin-top: 0.5rem;
   }
   .cntBtn {
@@ -109,20 +127,25 @@ input {
 .inputHover input:focus {
   border: 1px solid white;
 }
+.checkBox {
+  height: 1rem;
+  background-color: white;
+}
+.checkBox:checked {
+  background-color: var(--main);
+}
 
 /* Registration form  */
 .registerContainer {
-  display: flex;
-  flex-direction: column;
-  margin-left: 5%;
-  width: 75%;
+  justify-content: center;
+  width: 68vw;
+  height: 60vh;
   border-radius: 1rem;
   padding: 3.5rem;
   background-color: var(--darkBkgrnd);
   color: white;
   font-family: "Inter", sans-serif;
   font-size: 1rem;
-  display: flex;
 }
 .headerDiv {
   display: flex;
@@ -138,6 +161,10 @@ input {
 }
 .profileInfoContainer {
   display: flex;
+  h2 {
+    font-size: 2rem;
+    font-weight: normal;
+  }
   button {
     width: 60%;
     font-size: 10px;
@@ -157,19 +184,20 @@ input {
   input:focus {
     border: 1px solid white;
   }
-  div {
+  > div {
     padding: 1.5rem;
   }
+}
+hr {
+  width: 100%;
 }
 .userInfoContainer {
   width: 50%;
   display: flex;
   flex-direction: column;
-  width: 50%;
   input {
     font-size: 1rem;
     padding: 0.9rem;
-    width: 15rem;
   }
   label {
     padding: 0.6rem;
@@ -181,6 +209,9 @@ input {
     padding: 0;
     display: flex;
     flex-direction: row;
+  }
+  .emailContainer input {
+    width: 100%;
   }
 
   #dobInput {
@@ -209,11 +240,11 @@ input {
 }
 
 .allergyOutput {
-  height: 15rem;
-  width: 17rem;
   border: 1px solid rgb(174, 174, 174);
   border-radius: 0.3rem;
   overflow-y: scroll;
+  min-height: 40%;
+  padding: 0.2rem;
   .allergy {
     border: 1px solid white;
     border-radius: 0.3rem;
@@ -221,8 +252,6 @@ input {
     margin-bottom: 10px;
     font-size: 0.9rem;
     list-style-type: none;
-
-
   }
   .trash {
     color: #cb4353;
@@ -240,12 +269,13 @@ input {
 .btnDiv {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  padding-top: 1rem;
   button {
     border-radius: 0.3rem;
     font-size: 0.8rem;
     height: 2.8rem;
     width: 8rem;
-    margin-left: -1.5rem;
   }
 }
 
@@ -258,11 +288,16 @@ input {
   background-color: #497d95;
   color: white;
 }
-
+.allergies {
+  padding: 0 0 0.6rem 0;
+}
 .allergyBtnDiv {
   display: flex;
-  margin-top: -0.9rem;
-  margin-left: -1.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 0 !important;
+  padding-bottom: 1rem !important;
+
   .addBtn {
     font-size: 0.8rem;
     width: 5rem;
@@ -273,18 +308,24 @@ input {
     margin-left: 0.3rem;
   }
   #allergyInput {
-    width: 13rem;
+    width: 100%;
     padding: 0.9rem;
   }
 }
 
 .disclaimerDiv {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 0.6rem;
+  padding-top: 0.6rem;
+  > div {
+    width: 30px;
+    padding-right: 20px;
+    padding-top: 4%;
+  }
   .checkBox {
     height: 1rem;
-    margin-top: -0.25rem;
-    margin-right: 0.8rem;
-    margin-left: -1.5rem;
     background-color: white;
   }
   .checkBox:checked {
@@ -292,19 +333,19 @@ input {
   }
   .disclaimer {
     font-size: 0.8rem;
-    margin-top: -0.3rem;
   }
 }
 
 .navHeader {
-  position: fixed;
   display: flex;
   flex-direction: column;
   background-color: #d6d5d5;
   height: 100%;
   width: 15rem;
-  top: 0;
-  left: 0;
+  align-items: stretch;
+  flex:1;
+  overflow: auto;
+  align-self: auto;
   p {
     display: inline;
     margin-left: 1rem;
