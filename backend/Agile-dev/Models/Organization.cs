@@ -15,10 +15,6 @@ public class Organization {
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
 
     */
-
-    public Organization(string name) {
-        Name = name;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

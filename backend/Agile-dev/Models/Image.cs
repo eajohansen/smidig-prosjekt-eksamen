@@ -14,10 +14,6 @@ public class Image {
        [StringLength(*number*)] = Data annotation for setting a max length on the field
 
     */
-
-    public Image(string link) {
-        Link = link;
-    }
     
     [Key] // Data annotation for primary key of this model
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

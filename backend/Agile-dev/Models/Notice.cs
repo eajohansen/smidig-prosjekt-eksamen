@@ -16,10 +16,6 @@ public class Notice {
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
 
     */
-
-    public Notice(int userId) {
-        UserId = userId;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

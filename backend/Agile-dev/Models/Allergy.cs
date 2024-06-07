@@ -15,7 +15,6 @@ public class Allergy {
       [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
 
    */
-    
      
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
