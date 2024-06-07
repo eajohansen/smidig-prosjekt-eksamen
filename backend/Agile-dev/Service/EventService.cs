@@ -72,14 +72,8 @@ public class EventService {
             if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
             }
-            
-            Event tempEvent = (await _dbCon.Event.AddAsync(eEvent)).Entity;
-            
-            foreach (EventCustomField eEventCustomField in eEvent.EventCustomFields) {
-                eEventCustomField.EventId = tempEvent.EventId;
-                _dbCon.EventCustomField.Update(eEventCustomField);
-            }
-            
+
+            await _dbCon.Event.AddAsync(eEvent);
             await _dbCon.SaveChangesAsync();
             return true;
         }
@@ -94,7 +88,9 @@ public class EventService {
                 return 0;
             }
 
-            await _dbCon.Place.AddAsync(place);
+            Place newPlace = await CheckIfPlaceExists(place) ?? (await _dbCon.Place.AddAsync(place)).Entity;
+            
+            await _dbCon.Place.AddAsync(newPlace);
             await _dbCon.SaveChangesAsync();
             return _dbCon.Place.LastAsync().Result.PlaceId;
         }
@@ -109,6 +105,9 @@ public class EventService {
                 return 0;
             }
 
+            ContactPerson newContactPerson = await CheckIfContactPersonExists(contactPerson) ??
+                                             (await _dbCon.ContactPerson.AddAsync(contactPerson)).Entity;
+            
             await _dbCon.ContactPerson.AddAsync(contactPerson);
             await _dbCon.SaveChangesAsync();
             return _dbCon.ContactPerson.LastAsync().Result.ContactPersonId;
@@ -118,25 +117,26 @@ public class EventService {
         }
     }
 
-    public async Task<List<EventCustomField>> AddCustomFields(int userId, int organizationId,
-        List<CustomField> customFields) {
+    public async Task<bool> AddCustomFields(int userId, int organizationId,
+        List<CustomField> customFields, int eventId) {
         try {
-            List<EventCustomField> eventCustomFields = [];
             if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return eventCustomFields;
+                return false;
             }
 
             foreach (CustomField customField in customFields) {
                 
-                CustomField tempCustomField = (await _dbCon.CustomField.AddAsync(customField)).Entity;
-                EventCustomField newEventCustomField = new EventCustomField(tempCustomField.CustomFieldId, 0);
+                // Checks if CustomField already exists, if not adds a new CustomField
+                // The ?? means that if CheckIfExists return null it will do the right side of the ??
+                CustomField tempCustomField = await CheckIfCustomFieldExists(customField) ?? (await _dbCon.CustomField.AddAsync(customField)).Entity;
                 
-                newEventCustomField = (await _dbCon.EventCustomField.AddAsync(newEventCustomField)).Entity;
-                eventCustomFields.Add(newEventCustomField);
+                EventCustomField newEventCustomField = new EventCustomField(tempCustomField.CustomFieldId, eventId);
+                
+                await _dbCon.EventCustomField.AddAsync(newEventCustomField);
             }
             
             await _dbCon.SaveChangesAsync();
-            return eventCustomFields;
+            return true;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding customFields to database.", exception);
@@ -274,6 +274,59 @@ public class EventService {
             .ToListAsync();
 
         return newEvents;
+    }
+    
+    private async Task<ContactPerson?> CheckIfContactPersonExists(ContactPerson newContactPerson) {
+        ContactPerson? contactPerson;
+        
+        if (newContactPerson.Email == null) {
+            // Email can be null here, but not number. Frontend handles the logic that at least email or number have to exist
+            contactPerson = await _dbCon.ContactPerson
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
+                                            newContactPerson.Number!.Equals(loopContactPerson.Number) && 
+                                            loopContactPerson.Email == null)
+                .FirstOrDefaultAsync();
+            
+        } else if (newContactPerson.Number == null) {
+            // Number can be null here, but not email. Frontend handles the logic that at least email or number have to exist
+            contactPerson = await _dbCon.ContactPerson
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
+                                            newContactPerson.Email.Equals(loopContactPerson.Email) && 
+                                            loopContactPerson.Number == null)
+                .FirstOrDefaultAsync();
+            
+        } else {
+            contactPerson = await _dbCon.ContactPerson
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
+                                            newContactPerson.Email.Equals(loopContactPerson.Email) && 
+                                            newContactPerson.Number.Equals(loopContactPerson.Number))
+                .FirstOrDefaultAsync();
+        }
+        
+        return contactPerson;
+    }
+    
+    private async Task<Place?> CheckIfPlaceExists(Place newPlace) {
+        Place? place;
+        if (newPlace.Url == null) {
+            place = await _dbCon.Place
+                .Where(loopPlace => newPlace.Location.Equals(loopPlace.Location) && loopPlace.Url == null)
+                .FirstOrDefaultAsync();
+        } else {
+            place = await _dbCon.Place
+                .Where(loopPlace => newPlace.Location.Equals(loopPlace.Location) && newPlace.Url.Equals(loopPlace.Url))
+                .FirstOrDefaultAsync();
+        }
+        
+        return place;
+    }
+
+    private async Task<CustomField?> CheckIfCustomFieldExists(CustomField newCustomField) {
+        CustomField? customField = await _dbCon.CustomField
+            .Where(customField => newCustomField.Value.Equals(customField.Value) && newCustomField.Description.Equals(customField.Description))
+            .FirstOrDefaultAsync();
+
+        return customField;
     }
 
     #endregion
