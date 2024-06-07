@@ -19,19 +19,9 @@ public class EventService {
 
     public async Task<ICollection<Event>> FetchAllEvents() {
         try {
-
-            CustomField? customFieldPrivate =
-                await _dbCon.CustomField.Where(customField => customField.Description.Equals("Private") || customField.Value.Equals(true)).FirstOrDefaultAsync();
-
-            ICollection<Event> foundEvents;
-            
-            if (customFieldPrivate != null) {
-                foundEvents = await _dbCon.Event
-                    .Where(eEvent => eEvent.EventCustomFields != null && eEvent.EventCustomFields.Any(eventCustomField => eventCustomField.CustomFieldId != customFieldPrivate.CustomFieldId))
-                    .ToListAsync();
-            } else {
-                foundEvents = await _dbCon.Event.ToListAsync();
-            }
+            ICollection<Event> foundEvents = foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.Private.Equals(false))
+                .ToListAsync();
             ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
             
             return newEvents;
@@ -74,7 +64,7 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != user.UserId))
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != user.UserId) && eEvent.Private.Equals(false))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -88,7 +78,7 @@ public class EventService {
     public async Task<ICollection<Event>> FetchAllEventsByOrganization(int organizationId) {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.OrganizationId.Equals(organizationId))
+                .Where(eEvent => eEvent.OrganizationId.Equals(organizationId) && eEvent.Private.Equals(false))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -102,7 +92,7 @@ public class EventService {
     public async Task<ICollection<Event>> FetchAllEventsByOtherOrganizations(int organizationId) {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.OrganizationId != organizationId)
+                .Where(eEvent => eEvent.OrganizationId != organizationId && eEvent.Private.Equals(false))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -163,6 +153,7 @@ public class EventService {
 
             Event eEvent = new Event(frontendEvent.Event.Title) {
                 Title = frontendEvent.Event.Title,
+                Private = frontendEvent.Event.Private,
                 Published = frontendEvent.Event.Published,
                 OrganizationId = frontendEvent.Event.OrganizationId,
                 CreatedAt = DateTime.Now

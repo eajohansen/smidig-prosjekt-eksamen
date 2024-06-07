@@ -35,6 +35,10 @@ public class Event {
     public string? Description { get; set; }
     
     [Required]
+    [Display(Name = "Private")]
+    public bool Private { get; set; }
+    
+    [Required]
     [Display(Name = "Published")]
     public bool Published { get; set; }
     
