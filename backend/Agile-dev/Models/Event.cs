@@ -53,6 +53,11 @@ public class Event {
     public int? ContactPersonId  { get; set; }
     public ContactPerson? ContactPerson { get;set; }
     
+    [Display(Name = "Organization id")]
+    [ForeignKey("OrganizationId")]
+    public int OrganizationId { get; set; }
+    public Organization? Organization { get; set; }
+    
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
     [Display(Name = "Created at")]

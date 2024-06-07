@@ -31,6 +31,70 @@ namespace Agile_dev.Controller {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
             }
         }
+        
+        // GET: api/event/fetchAll/attending/1
+        [HttpGet("fetchAll/attending/{userID}")]
+        public async Task<ActionResult> FetchAllEventsByAttending([FromRoute] int userID) {
+            try {
+                ICollection<Event> result = await _eventService.FetchAllEventsByAttending(userID);
+                if (result.Count == 0) {
+                    return NoContent();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
+        
+        // GET: api/event/fetchAll/not/attending/1
+        [HttpGet("fetchAll/not/attending/{userID}")]
+        public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] int userID) {
+            try {
+                ICollection<Event> result = await _eventService.FetchAllEventsByAttending(userID);
+                if (result.Count == 0) {
+                    return NoContent();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
+        
+        // GET: api/event/fetchAll/organization/1
+        [HttpGet("fetchAll/organization/{organizationID}")]
+        public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationID) {
+            try {
+                ICollection<Event> result = await _eventService.FetchAllEventsByOrganization(organizationID);
+                if (result.Count == 0) {
+                    return NoContent();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
+        
+        // GET: api/event/fetchAll/not/organization/1
+        [HttpGet("fetchAll/not/organization/{organizationID}")]
+        public async Task<ActionResult> FetchAllEventsByOtherOrganizations([FromRoute] int organizationID) {
+            try {
+                ICollection<Event> result = await _eventService.FetchAllEventsByOtherOrganizations(organizationID);
+                if (result.Count == 0) {
+                    return NoContent();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
 
         // GET api/event/fetch/id/5
         [HttpGet("fetch/id/{id}")]
