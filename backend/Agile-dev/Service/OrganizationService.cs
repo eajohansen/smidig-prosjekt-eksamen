@@ -7,6 +7,7 @@ namespace agile_dev.Service;
 public class OrganizationService {
     private readonly InitContext _dbCon;
     private readonly UserService _userService;
+    private readonly EventService _eventService;
 
     public OrganizationService(InitContext context) {
         _dbCon = context;
@@ -51,6 +52,17 @@ public class OrganizationService {
             User? user = await _userService.FetchUserById(userId);
             if (user == null || !_userService.IsUserAdmin(user).Result) {
                 return false;
+            }
+
+            if (organization.Image != null) {
+                Image? newImage = await _eventService.CheckIfImageExists(organization.Image);
+                if (newImage == null) {
+                    await _dbCon.Image.AddAsync(organization.Image);
+                    await _dbCon.SaveChangesAsync();
+                    newImage = organization.Image;
+                }
+
+                organization.ImageId = newImage.ImageId;
             }
             
             
