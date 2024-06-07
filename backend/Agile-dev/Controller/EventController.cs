@@ -119,11 +119,14 @@ namespace Agile_dev.Controller {
         // POST api/event/customfield/create/5/6
         [HttpPost("customfield/create/{userId}/{organizationId}")]
         public async Task<IActionResult> AddCustomFields([FromRoute] int userId, [FromBody] List<CustomField> customFields,
-            [FromRoute] int organizationId) {
+            [FromRoute] int organizationId, [FromRoute] int eventId) {
             try {
-                List<EventCustomField> isAdded = await _eventService.AddCustomFields(userId, organizationId, customFields);
-
-                return Ok(isAdded);
+                bool validation = await _eventService.AddCustomFields(userId, organizationId, customFields, eventId);
+                if (!validation) {
+                    return BadRequest();
+                }
+                
+                return Ok();
             }
             catch (Exception exception) {
                 throw new Exception("An error occurred while adding eventDateTime to database.", exception);
