@@ -17,7 +17,6 @@ public class CustomField {
 
     public CustomField(string description) {
         Description = description;
-        EventCustomFields = new HashSet<EventCustomField>();
     }
     
     [Key]
@@ -35,5 +34,5 @@ public class CustomField {
     public bool Value { get; set; }
     
     // A HasSet of all EventCustomFields with this CustomField
-    public ICollection<EventCustomField> EventCustomFields { get; set; }
+    public ICollection<EventCustomField>? EventCustomFields { get; set; }
 }

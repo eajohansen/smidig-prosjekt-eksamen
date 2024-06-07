@@ -7,6 +7,7 @@ namespace agile_dev.Service;
 public class OrganizationService {
     private readonly InitContext _dbCon;
     private readonly UserService _userService;
+    private readonly EventService _eventService;
 
     public OrganizationService(InitContext context) {
         _dbCon = context;
@@ -52,9 +53,23 @@ public class OrganizationService {
             if (user == null || !_userService.IsUserAdmin(user).Result) {
                 return false;
             }
+
+            if (organization.Image != null) {
+                Image? newImage = await _eventService.CheckIfImageExists(organization.Image);
+                if (newImage == null) {
+                    await _dbCon.Image.AddAsync(organization.Image);
+                    await _dbCon.SaveChangesAsync();
+                    newImage = organization.Image;
+                }
+
+                organization.ImageId = newImage.ImageId;
+            }
+            
             
             await _dbCon.Organization.AddAsync(organization);
             await _dbCon.SaveChangesAsync();
+            
+            
             return true;
         }
         catch (Exception exception) {
@@ -116,6 +131,7 @@ public class OrganizationService {
             .Where(organizer=> organizationIds.Contains(organizer.OrganizationId))
             .Include(organizer=> organizer.Followers)
             .Include(organizer=> organizer.Organizers)
+            .Include(organizer=> organizer.Events)
             .ToListAsync();
 
         return newOrganizations;

@@ -17,8 +17,6 @@ public class Image {
 
     public Image(string link) {
         Link = link;
-        Organizations = new HashSet<Organization>();
-        Events = new HashSet<Event>();
     }
     
     [Key] // Data annotation for primary key of this model
@@ -36,8 +34,8 @@ public class Image {
     public string? ImageDescription { get; set; }
     
     // A HasSet of all Organizations with this Image
-    public ICollection<Organization> Organizations { get; set; }
+    public ICollection<Organization>? Organizations { get; set; }
     
     // A HasSet of all Events with this Image
-    public ICollection<Event> Events { get; set; }
+    public ICollection<Event>? Events { get; set; }
 }
