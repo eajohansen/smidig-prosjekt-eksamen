@@ -32,7 +32,6 @@ public class Program
         );
         builder.Services.AddControllers();
         builder.Services.AddScoped<UserService>();
-        builder.Services.AddScoped<ImageService>();
         builder.Services.AddScoped<EventService>();
         builder.Services.AddScoped<OrganizationService>();
         builder.Services.AddDbContext<InitContext>(options =>
