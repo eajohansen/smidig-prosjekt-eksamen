@@ -1,8 +1,10 @@
+using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 
 namespace Agile_dev.Controller {
     [Route("api/[controller]")]
@@ -131,9 +133,9 @@ namespace Agile_dev.Controller {
         
         // POST api/event/create/5/6
         [HttpPost("create/{userId}/{organizationId}")]
-        public async Task<IActionResult> AddEvent([FromRoute] int userId, [FromBody] Event eEvent, [FromRoute] int organizationId) {
+        public async Task<IActionResult> AddEvent([FromRoute] int userId, [FromBody] EventDto frontendEvent, [FromRoute] int organizationId) {
             try {
-                bool isAdded = await _eventService.AddEvent(userId, eEvent, organizationId);
+                bool isAdded = await _eventService.AddEvent(userId, frontendEvent, organizationId);
                 if (!isAdded) {
                     // Could not create event, because request is bad
                     return BadRequest();

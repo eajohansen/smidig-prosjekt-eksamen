@@ -53,11 +53,6 @@ public class Program
         app.UseRouting();
 
         app.UseCors("_frontendCorsPolicy");
-        using (var scope = app.Services.CreateScope()) {
-            IServiceProvider services = scope.ServiceProvider;
-            InitContext dbContext = services.GetRequiredService<InitContext>();
-            dbContext.Database.Migrate();
-        }
         app.UseHttpLogging();
         app.UseAuthentication();
         app.UseAuthorization();
