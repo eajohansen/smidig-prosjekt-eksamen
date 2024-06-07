@@ -63,7 +63,7 @@ main {
         justify-content: space-between;
         padding-bottom: 0.5rem;
     }
-    & .event-check-box input:not(.checkbox-styling) {
-        width: 2rem;
+    & .event-check-box input:not(.checkBox) {
+        width: 3rem;
     }
 }
