@@ -70,45 +70,28 @@ public class UserService {
 
     #region POST
 
-    public async Task<bool> AddUserToDatabase(User user) {
+    public async Task<string> AddUserToDatabase(User user) {
         try {
-            if (!_dbCon.User.Any()) {
+            if (!_dbCon.User.AnyAsync().Result) {
                 user.Admin = true;
             }
 
             User? userExists = await FetchUserByEmail(user.Email);
 
             if (userExists != null) {
-                return false;
+                return "User already exists.";
             }
-
-            ICollection<Allergy> allergies = user.Allergies.ToList();
-
-            user.Allergies.Clear();
-
-            await _dbCon.User.AddAsync(user);
+            
+            List<Allergy> allergies = new List<Allergy>();
+            if(user.Allergies != null && user.Allergies.Count > 0) {
+               allergies = user.Allergies.ToList();
+            }
+            User newUser = user;
+            newUser.Allergies = new List<Allergy>(allergies);
+            
+            await _dbCon.User.AddAsync(newUser); 
             await _dbCon.SaveChangesAsync();
-
-            User? databaseUser;
-            try {
-                databaseUser = await FetchUserByEmail(user.Email);
-                if (databaseUser == null) {
-                    return false;
-                }
-            }
-            catch (Exception exception) {
-                throw new Exception("Cant find user by email", exception);
-            }
-
-            if (allergies.Count != 0) {
-                foreach (Allergy allergy in allergies) {
-                    allergy.UserId = databaseUser.UserId;
-                    await _dbCon.Allergy.AddAsync(allergy);
-                }
-            }
-
-            await _dbCon.SaveChangesAsync();
-            return true;
+            return newUser.Email + " has been added to the database.";
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to database.", exception);

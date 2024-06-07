@@ -18,11 +18,6 @@ public class User {
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
     */
 
-    public User(string email, string firstName, string lastName) {
-        Email = email;
-        FirstName = firstName;
-        LastName = lastName;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
