@@ -79,7 +79,7 @@ export const CreateEventPage = () => {
                 <label htmlFor="foodService">Matservering</label>
                 <input
                     id="foodService"
-                    className="checkbox-styling"
+                    className="checkBox"
                     type="checkbox"
                     name="food"
                     onChange={handleChange}
@@ -89,7 +89,7 @@ export const CreateEventPage = () => {
                 <label htmlFor="freeEvent"> Gratis arrangement </label>
                 <input
                     id="freeEvent"
-                    className="checkbox-styling"
+                    className="checkBox"
                     type="checkbox"
                     name="free"
                     onChange={handleChange}
