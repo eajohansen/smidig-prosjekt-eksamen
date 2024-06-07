@@ -16,15 +16,30 @@ button:hover {
   appearance: none;
   margin: 0;
   padding: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.07rem;
   box-sizing: border-box;
 }
 
 body {
   display: flex;
   height: 100vh;
-  justify-content: center;
-  align-items: center;
-  padding-left: 15rem;
+  width: 100vw;
+  flex-direction: row;
+  > div {
+    display: flex;
+  }
+  > div > header {
+    height: 100vh;
+    align-self: start;
+  }
+  > div > main {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    padding: 2rem;
+  }
 }
 
 textarea,
@@ -33,7 +48,10 @@ input {
 }
 
 .loginContainer {
+  align-self: center;
+  justify-self: center;
   height: 60vh;
+  max-width: 40%;
   margin-right: 15rem;
   min-height: 35rem;
   display: flex;
@@ -122,7 +140,6 @@ input {
   color: white;
   font-family: "Inter", sans-serif;
   font-size: 1rem;
-  display: flex;
 }
 .headerDiv {
   display: flex;
@@ -138,6 +155,10 @@ input {
 }
 .profileInfoContainer {
   display: flex;
+  h2 {
+    font-size: 2rem;
+    font-weight: normal;
+  }
   button {
     width: 60%;
     font-size: 10px;
@@ -160,6 +181,9 @@ input {
   div {
     padding: 1.5rem;
   }
+}
+hr {
+  width: 100%;
 }
 .userInfoContainer {
   width: 50%;
@@ -297,14 +321,15 @@ input {
 }
 
 .navHeader {
-  position: fixed;
   display: flex;
   flex-direction: column;
   background-color: #d6d5d5;
   height: 100%;
   width: 15rem;
-  top: 0;
-  left: 0;
+  align-items: stretch;
+  flex:1;
+  overflow: auto;
+  align-self: auto;
   p {
     display: inline;
     margin-left: 1rem;

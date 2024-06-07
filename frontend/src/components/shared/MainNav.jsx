@@ -21,6 +21,9 @@ export const MainNav = ({ version }) => {
             <Link to="events" className="navItem">
               <i className="bi bi-calendar-event"></i> <p>Arrangementer</p>
             </Link>
+            <Link to="createevent" className="navItem">
+              <i className="bi bi-calendar-event"></i> <p>Lag Arrangementer</p>
+            </Link>
             <Link to="/" className="navItem">
               <i class="bi bi-box-arrow-left"></i> <p>Logg ut</p>
             </Link>
