@@ -25,7 +25,7 @@ export const MainNav = ({ version }) => {
               <i className="bi bi-calendar-event"></i> <p>Lag Arrangementer</p>
             </Link>
             <Link to="/" className="navItem">
-              <i class="bi bi-box-arrow-left"></i> <p>Logg ut</p>
+              <i className="bi bi-box-arrow-left"></i> <p>Logg ut</p>
             </Link>
           </div>
         </header>
@@ -46,7 +46,7 @@ export const MainNav = ({ version }) => {
               <i className="bi bi-calendar-event"></i> <p>Arrangementer</p>
             </Link>
             <Link to="/" className="navItem">
-              <i class="bi bi-box-arrow-left"></i> <p>Logg ut</p>
+              <i className="bi bi-box-arrow-left"></i> <p>Logg ut</p>
             </Link>
           </div>
         </header>
@@ -56,7 +56,7 @@ export const MainNav = ({ version }) => {
         <header>
           <div className="navHeader">
             <Link to="/" className="navItem">
-              <i class="bi bi-box-arrow-right"></i> <p>Logg inn</p>
+              <i className="bi bi-box-arrow-right"></i> <p>Logg inn</p>
             </Link>
           </div>
         </header>
