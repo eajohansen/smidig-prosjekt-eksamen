@@ -52,7 +52,7 @@ namespace Agile_dev.Controller {
         [HttpGet("fetchAll/not/attending/{userID}")]
         public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] int userID) {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByAttending(userID);
+                ICollection<Event> result = await _eventService.FetchAllEventsByNotAttending(userID);
                 if (result.Count == 0) {
                     return NoContent();
                 }
