@@ -333,7 +333,17 @@ public class EventService {
     private async Task<ContactPerson?> CheckIfContactPersonExists(ContactPerson newContactPerson) {
         ContactPerson? contactPerson;
         
-        if (newContactPerson.Email == null) {
+        if (newContactPerson.Email == null && newContactPerson.Number == null) {
+            //
+            // It just needs a name, mostly for testing. Should be deleted when frontend can demand number og email
+            //
+            contactPerson = await _dbCon.ContactPerson
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
+                                            loopContactPerson.Number == null && 
+                                            loopContactPerson.Email == null)
+                .FirstOrDefaultAsync();
+            
+        } else if (newContactPerson.Email == null) {
             // Email can be null here, but not number. Frontend handles the logic that at least email or number have to exist
             contactPerson = await _dbCon.ContactPerson
                 .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
