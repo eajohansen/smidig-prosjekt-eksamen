@@ -27,6 +27,63 @@ public class EventService {
         }
     }
 
+    public async Task<ICollection<Event>> FetchAllEventsByAttending(int userId) {
+        try {
+            ICollection<Event> foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId == userId))
+                .ToListAsync();
+        
+            ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
+            return newEvents;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while fetching events that the user is attending.", exception);
+        }
+    }
+    
+    public async Task<ICollection<Event>> FetchAllEventsByNotAttending(int userId) {
+        try {
+            ICollection<Event> foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != userId))
+                .ToListAsync();
+        
+            ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
+            return newEvents;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while fetching events that the user is not attending.", exception);
+        }
+    }
+    
+    public async Task<ICollection<Event>> FetchAllEventsByOrganization(int organizationId) {
+        try {
+            ICollection<Event> foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.OrganizationId.Equals(organizationId))
+                .ToListAsync();
+        
+            ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
+            return newEvents;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while fetching events from this organization.", exception);
+        }
+    }
+    
+    public async Task<ICollection<Event>> FetchAllEventsByOtherOrganizations(int organizationId) {
+        try {
+            ICollection<Event> foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.OrganizationId != organizationId)
+                .ToListAsync();
+        
+            ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
+            return newEvents;
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while fetching events not from this organization.", exception);
+        }
+    }
+
+
     public async Task<Event?> FetchEventById(int id) {
         try {
             Event? eEvent = await _dbCon.Event.FindAsync(id);

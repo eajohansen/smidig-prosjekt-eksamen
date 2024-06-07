@@ -131,6 +131,7 @@ public class OrganizationService {
             .Where(organizer=> organizationIds.Contains(organizer.OrganizationId))
             .Include(organizer=> organizer.Followers)
             .Include(organizer=> organizer.Organizers)
+            .Include(organizer=> organizer.Events)
             .ToListAsync();
 
         return newOrganizations;

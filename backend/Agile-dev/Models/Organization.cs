@@ -44,4 +44,7 @@ public class Organization {
     
     // A HasSet of all Organizers with this Organization
     public ICollection<Organizer>? Organizers { get; set; }
+    
+    // A HasSet of all Events with this Organization
+    public ICollection<Event>? Events { get; set; }
 }
