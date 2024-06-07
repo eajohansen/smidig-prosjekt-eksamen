@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Service;
@@ -34,12 +35,14 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // GET: api/event/fetchAll/attending/1
-        [HttpGet("fetchAll/attending/{userID}")]
-        public async Task<ActionResult> FetchAllEventsByAttending([FromRoute] int userID) {
+        // GET: api/event/fetchAll/attending
+        [Authorize]
+        [HttpGet("fetchAll/attending")]
+        public async Task<ActionResult> FetchAllEventsByAttending() {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByAttending(userID);
-                if (result.Count == 0) {
+                string? userName = User.FindFirstValue(ClaimTypes.Name);
+                ICollection<Event>? result = await _eventService.FetchAllEventsByAttending(userName!);
+                if (result != null) {
                     return NoContent();
                 }
 
@@ -51,11 +54,13 @@ namespace Agile_dev.Controller {
         }
         
         // GET: api/event/fetchAll/not/attending/1
+        [Authorize]
         [HttpGet("fetchAll/not/attending/{userID}")]
         public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] int userID) {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByNotAttending(userID);
-                if (result.Count == 0) {
+                string? userName = User.FindFirstValue(ClaimTypes.Name);
+                ICollection<Event> result = await _eventService.FetchAllEventsByNotAttending(userName!);
+                if (result != null) {
                     return NoContent();
                 }
 
@@ -132,6 +137,7 @@ namespace Agile_dev.Controller {
         #region POST
         
         // POST api/event/create/5/6
+        [Authorize]
         [HttpPost("create/{userId}/{organizationId}")]
         public async Task<IActionResult> AddEvent([FromRoute] int userId, [FromBody] EventDto frontendEvent, [FromRoute] int organizationId) {
             try {
@@ -153,6 +159,7 @@ namespace Agile_dev.Controller {
         #region PUT
 
         // PUT api/event/update/5/6
+        [Authorize]
         [HttpPut("update/{userId}/{organizationId}")]
         public async Task<IActionResult> UpdateEvent([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] Event eEvent) {
             try {
@@ -168,39 +175,8 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // PUT api/event/place/update/5/6/3
-        [HttpPut("update/place/{userId}/{organizationId}/{eventId}")]
-        public async Task<IActionResult> UpdatePlace([FromRoute] int userId, [FromRoute] int organizationId, [FromRoute] int eventId, [FromBody] Place place) {
-            try {
-                bool isAdded = await _eventService.UpdatePlace(userId, organizationId, eventId, place);
-                if (!isAdded) {
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while updating eventDateTime.", exception);
-            }
-        }
-        
-        // PUT api/event/contactperson/update/5/6/3
-        [HttpPut("update/contactperson/{userId}/{organizationId}/{eventId}")]
-        public async Task<IActionResult> UpdateContactPerson([FromRoute] int userId, [FromRoute] int organizationId, [FromRoute] int eventId, [FromBody] ContactPerson contactPerson) {
-            try {
-                bool isAdded = await _eventService.UpdateContactPerson(userId, organizationId, eventId, contactPerson);
-                if (!isAdded) {
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while updating eventDateTime.", exception);
-            }
-        }
-        
         // PUT api/event/customfield/update/5/6/3
+        [Authorize]
         [HttpPut("update/customfield/{userId}/{organizationId}/{eventId}")]
         public async Task<IActionResult> UpdateCustomField([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
             try {
@@ -221,6 +197,7 @@ namespace Agile_dev.Controller {
         #region DELETE
 
         // DELETE api/event/delete/5/6
+        [Authorize]
         [HttpDelete("delete/{userId}/{organizationId}")]
         public async Task<IActionResult> DeleteEvent([FromRoute] int userId, [FromBody] Event eEvent, [FromRoute] int organizationId) {
             try {

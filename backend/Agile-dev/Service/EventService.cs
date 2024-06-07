@@ -19,9 +19,21 @@ public class EventService {
 
     public async Task<ICollection<Event>> FetchAllEvents() {
         try {
-            ICollection<Event> foundEvents = await _dbCon.Event.ToListAsync();
-            ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
 
+            CustomField? customFieldPrivate =
+                await _dbCon.CustomField.Where(customField => customField.Description.Equals("Private") || customField.Value.Equals(true)).FirstOrDefaultAsync();
+
+            ICollection<Event> foundEvents;
+            
+            if (customFieldPrivate != null) {
+                foundEvents = await _dbCon.Event
+                    .Where(eEvent => eEvent.EventCustomFields != null && eEvent.EventCustomFields.Any(eventCustomField => eventCustomField.CustomFieldId != customFieldPrivate.CustomFieldId))
+                    .ToListAsync();
+            } else {
+                foundEvents = await _dbCon.Event.ToListAsync();
+            }
+            ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
+            
             return newEvents;
         }
         catch (Exception exception) {
@@ -29,10 +41,18 @@ public class EventService {
         }
     }
 
-    public async Task<ICollection<Event>> FetchAllEventsByAttending(int userId) {
+    public async Task<ICollection<Event>?> FetchAllEventsByAttending(string userName) {
         try {
-            ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId == userId))
+            User? user = await _userService.FetchUserByEmail(userName);
+
+            ICollection<Event>? foundEvents = null;
+            
+            if (user == null) {
+                return foundEvents;
+            }
+            
+            foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId == user.UserId))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -43,10 +63,18 @@ public class EventService {
         }
     }
     
-    public async Task<ICollection<Event>> FetchAllEventsByNotAttending(int userId) {
+    public async Task<ICollection<Event>?> FetchAllEventsByNotAttending(string userName) {
         try {
-            ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != userId))
+            User? user = await _userService.FetchUserByEmail(userName);
+            
+            ICollection<Event>? foundEvents = null;
+            
+            if (user == null) {
+                return foundEvents;
+            }
+            
+            foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != user.UserId))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -133,31 +161,31 @@ public class EventService {
                 return false;
             }*/
 
-            Event eEvent = new Event(frontendEvent.Title) {
-                Title = frontendEvent.Title,
-                Published = frontendEvent.Published,
-                OrganizationId = frontendEvent.OrganizationId,
+            Event eEvent = new Event(frontendEvent.Event.Title) {
+                Title = frontendEvent.Event.Title,
+                Published = frontendEvent.Event.Published,
+                OrganizationId = frontendEvent.Event.OrganizationId,
                 CreatedAt = DateTime.Now
             };
 
-            if (frontendEvent.Description != null) {
-                eEvent.Description = frontendEvent.Description;
+            if (frontendEvent.Event.Description != null) {
+                eEvent.Description = frontendEvent.Event.Description;
             }
 
-            if (frontendEvent.Place != null) {
-                eEvent.Place = frontendEvent.Place;
+            if (frontendEvent.Event.Place != null) {
+                eEvent.Place = frontendEvent.Event.Place;
             }
 
-            if (frontendEvent.ImageId != null) {
-                eEvent.ImageId = frontendEvent.ImageId;
+            if (frontendEvent.Event.ImageId != null) {
+                eEvent.ImageId = frontendEvent.Event.ImageId;
             }
 
-            if (frontendEvent.Image != null) {
-                eEvent.Image = frontendEvent.Image;
+            if (frontendEvent.Event.Image != null) {
+                eEvent.Image = frontendEvent.Event.Image;
             }
             
-            if (frontendEvent.ContactPerson != null) {
-                eEvent.ContactPerson = frontendEvent.ContactPerson;
+            if (frontendEvent.Event.ContactPerson != null) {
+                eEvent.ContactPerson = frontendEvent.Event.ContactPerson;
             }
             
             if (frontendEvent is { Start: not null, StartTime: not null }) {
