@@ -151,7 +151,7 @@ public class EventService {
                 return false;
             }*/
 
-            Event eEvent = new Event(frontendEvent.Event.Title) {
+            Event eEvent = new Event() {
                 Title = frontendEvent.Event.Title,
                 Private = frontendEvent.Event.Private,
                 Published = frontendEvent.Event.Published,
@@ -239,7 +239,10 @@ public class EventService {
                         newCustomField = customField;
                     }
 
-                    await _dbCon.EventCustomField.AddAsync(new EventCustomField(newCustomField.CustomFieldId, eEvent.EventId));
+                    await _dbCon.EventCustomField.AddAsync(new EventCustomField() {
+                        CustomFieldId = newCustomField.CustomFieldId, 
+                        EventId = eEvent.EventId
+                    });
                 }
             }
 

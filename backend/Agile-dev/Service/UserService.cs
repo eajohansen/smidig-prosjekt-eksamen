@@ -115,7 +115,10 @@ public class UserService {
                 return false;
             }
 
-            Organizer newOrganizer = new (user.UserId, organizationId);
+            Organizer newOrganizer = new () {
+                UserId = user.UserId,
+                OrganizationId = organizationId
+            };
             await _dbCon.Organizer.AddAsync(newOrganizer);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -133,7 +136,10 @@ public class UserService {
                 return false;
             }
 
-            Follower newFollower = new (user.UserId, organizationId);
+            Follower newFollower = new () {
+                UserId = user.UserId,
+                OrganizationId = organizationId
+            };
             await _dbCon.Follower.AddAsync(newFollower);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -151,7 +157,9 @@ public class UserService {
                 return false;
             }
 
-            UserEvent newUserEvent = new (user.UserId, eventId) {
+            UserEvent newUserEvent = new () {
+                UserId = user.UserId,
+                EventId = eventId,
                 Used = false
             };
             
@@ -166,7 +174,8 @@ public class UserService {
 
     public async Task<bool> AddNoticeToUser(User user) {
         try {
-            Notice newNotice = new (user.UserId) {
+            Notice newNotice = new () {
+                UserId = user.UserId,
                 Expire = DateTime.Now.AddDays(30)
             };
 

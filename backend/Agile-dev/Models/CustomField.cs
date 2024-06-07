@@ -14,10 +14,6 @@ public class CustomField {
        [StringLength(*number*)] = Data annotation for setting a max length on the field
 
     */
-
-    public CustomField(string description) {
-        Description = description;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

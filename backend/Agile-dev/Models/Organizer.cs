@@ -15,11 +15,6 @@ public class Organizer {
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
 
     */
-
-    public Organizer(int userId, int organizationId) {
-        UserId = userId;
-        OrganizationId = organizationId;
-    }
     
     [Key] // Data annotation for primary key of this model
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

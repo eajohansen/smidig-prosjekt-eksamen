@@ -15,10 +15,6 @@ public class Event {
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
 
     */
-
-    public Event(string title) {
-        Title = title;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

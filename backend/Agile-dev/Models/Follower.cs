@@ -14,11 +14,6 @@ public class Follower {
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
 
     */
-
-    public Follower(int userId, int organizationId) {
-        UserId = userId;
-        OrganizationId = organizationId;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -14,10 +14,6 @@ public class Place {
        [StringLength(*number*)] = Data annotation for setting a max length on the field
 
     */
-
-    public Place(string location) {
-        Location = location;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
