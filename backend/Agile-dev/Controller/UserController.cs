@@ -111,13 +111,12 @@ namespace agile_dev.Controller {
                 return BadRequest("User is null");
             }
             try {
-                bool isAdded = await _userService.AddUserToDatabase(user);
-                if (!isAdded) {
-                    // Could create user, because request is bad
-                    return BadRequest();
+                string isAdded = await _userService.AddUserToDatabase(user);
+                if (isAdded.Equals(user.Email + " has been added to the database.")) {
+                    return Ok(user.Email + " has been added to the database.");
+                    
                 }
-
-                return Ok();
+                return BadRequest(isAdded);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
