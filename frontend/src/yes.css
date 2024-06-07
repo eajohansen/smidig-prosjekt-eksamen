@@ -1,0 +1,360 @@
+:root {
+    --main: #497d95;
+    --secondary: #cb4353;
+    --darkBkgrnd: #1e3742;
+    --mediumGreen: #34a853;
+}
+button {
+    border: 1px solid transparent;
+}
+button:hover {
+    border: 1px solid transparent;
+}
+
+* {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.07rem;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    flex-direction: row;
+    > div {
+        display: flex;
+    }
+    > div > header {
+        height: 100vh;
+        align-self: start;
+    }
+    > div > main {
+        display: flex;
+        flex-direction: column;
+        width: 80vw;
+        padding: 2rem;
+    }
+}
+
+textarea,
+input {
+    outline: none;
+}
+
+.loginContainer {
+    align-self: center;
+    justify-self: center;
+    height: 60vh;
+    margin-right: 15rem;
+    min-height: 35rem;
+    display: flex;
+    max-width: 40%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 1rem;
+    padding: 3.5rem;
+    background-color: var(--darkBkgrnd);
+    color: white;
+    label {
+        padding-top: 1.5rem;
+        font-size: 0.9rem;
+    }
+    h2 {
+        padding-bottom: 0.5rem;
+    }
+    input {
+        height: 3rem;
+        width: 100%;
+        border-radius: 0.2rem;
+        box-shadow: none;
+        background-color: transparent;
+        border: 1px solid rgb(174, 174, 174);
+        color: white;
+        padding: 0.6rem;
+        font-size: 1rem;
+        align-self: flex-start;
+    }
+    label {
+        align-self: flex-start;
+    }
+    .InfoLink {
+        font-size: x-small;
+        margin-top: 0.5rem;
+    }
+    .cntBtn {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: var(--mediumGreen);
+        color: white;
+        border-radius: 0.4rem;
+        border-color: black;
+    }
+    .logInBtn {
+        margin-top: 1rem;
+    }
+}
+.loginBtnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .registerToggleBtn {
+        border-radius: 0 0.4rem 0.4rem 0;
+    }
+    .loginToggleBtn {
+        border-radius: 0.4rem 0 0 0.4rem;
+    }
+    button {
+        padding-right: 2.5rem;
+        padding-left: 2.5rem;
+        height: 3rem;
+        width: 80%;
+    }
+    button:hover {
+        border: 1px solid black;
+        color: white;
+        background-color: var(--main);
+    }
+}
+.inputHover input:focus {
+    border: 1px solid white;
+}
+
+/* Registration form  */
+.registerContainer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
+    width: 75%;
+    border-radius: 1rem;
+    padding: 3.5rem;
+    background-color: var(--darkBkgrnd);
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-size: 1rem;
+}
+.headerDiv {
+    display: flex;
+    width: 100%;
+    h2 {
+        font-size: 2rem;
+        font-weight: normal;
+        padding-bottom: 0.5rem;
+    }
+    hr {
+        width: 100%;
+    }
+}
+.profileInfoContainer {
+    display: flex;
+    button {
+        width: 60%;
+        font-size: 10px;
+        border: 1px;
+        height: 2rem;
+    }
+    input {
+        height: 3rem;
+        border-radius: 0.2rem;
+        box-shadow: none;
+        background-color: transparent;
+        border: 1px solid rgb(174, 174, 174);
+        color: white;
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    input:focus {
+        border: 1px solid white;
+    }
+}
+
+hr {
+    width: 100%;
+}
+
+.profileInfoContainer {
+    h2 {
+        font-size: 2rem;
+        font-weight: normal;
+    }
+    width: 40rem;
+    height: 35rem;
+    display: flex;
+    border-radius: 1rem;
+    padding: 3.5rem;
+    background-color: var(--darkBkgrnd);
+    color: white;
+    div {
+        padding: 1.5rem;
+    }
+}
+
+.userInfoContainer {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    input {
+        font-size: 1rem;
+        padding: 0.9rem;
+        width: 15rem;
+    }
+    label {
+        padding: 0.6rem;
+        padding-left: 0;
+    }
+    .emailContainer {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+    }
+
+    #dobInput {
+        filter: invert(100%);
+        color: black;
+        border-color: rgb(70, 70, 70);
+    }
+    #dobInput:focus {
+        border: 1px solid black;
+    }
+}
+.icon-inside {
+    margin-left: -2rem;
+    margin-top: 0.9rem;
+}
+.allergyContainer {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    .yourAllergies {
+        padding: 0.6rem;
+        padding-left: 0;
+        padding-top: 0;
+        margin-top: -0.95rem;
+    }
+}
+
+.allergyOutput {
+    height: 15rem;
+    width: 17rem;
+    border: 1px solid rgb(174, 174, 174);
+    border-radius: 0.3rem;
+    .allergy {
+        border: 1px solid white;
+        border-radius: 0.3rem;
+        padding: 0.4rem;
+        font-size: 0.9rem;
+        list-style-type: none;
+        margin-left: -0.8rem;
+        margin-top: -0.8rem;
+        margin-bottom: 1rem;
+    }
+    .trash {
+        color: #cb4353;
+        margin-left: 1rem;
+    }
+}
+
+.btnDiv {
+    display: flex;
+    flex-direction: row;
+    button {
+        border-radius: 0.3rem;
+        font-size: 0.8rem;
+        height: 2.8rem;
+        width: 8rem;
+        margin-left: -1.5rem;
+    }
+}
+
+.canclBtn {
+    border-color: black;
+    margin-right: 5.7rem;
+}
+
+.createBtn {
+    background-color: #497d95;
+    color: white;
+}
+
+.allergyBtnDiv {
+    display: flex;
+    margin-top: -0.9rem;
+    margin-left: -1.5rem;
+    .addBtn {
+        font-size: 0.8rem;
+        width: 5rem;
+        height: 3rem;
+        background-color: #497d95;
+        color: white;
+        border-radius: 0.3rem;
+        margin-left: 0.3rem;
+    }
+    #allergyInput {
+        width: 13rem;
+        padding: 0.9rem;
+    }
+}
+
+.disclaimerDiv {
+    display: flex;
+    .checkBox {
+        height: 1rem;
+        margin-top: -0.25rem;
+        margin-right: 0.8rem;
+        margin-left: -1.5rem;
+        background-color: white;
+    }
+    .disclaimer {
+        font-size: 0.8rem;
+        margin-top: -0.3rem;
+    }
+}
+
+.navHeader {
+    display: flex;
+    flex-direction: column;
+    background-color: #d6d5d5;
+    width: 15rem;
+    min-height: 100%;
+    align-items: stretch;
+    flex:1;
+    overflow: auto;
+    align-self: auto;
+    p {
+        display: inline;
+        margin-left: 1rem;
+    }
+    .navItem {
+        padding: 2rem;
+        text-decoration: none;
+        color: black;
+    }
+    .navItem:hover {
+        color: var(--main);
+    }
+}
+.pwordDetails {
+    position: absolute;
+    top: 45%;
+    left: 70%;
+    width: 10rem;
+    height: 8rem;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+    z-index: 100;
+    display: inline;
+}
+
+.dNone {
+    display: none;
+}
