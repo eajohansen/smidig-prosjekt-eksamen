@@ -78,58 +78,7 @@ namespace Agile_dev.Controller {
                 return Ok();
             }
             catch (Exception exception) {
-                throw new Exception("An error occurred while adding organization to database.", exception);
-            }
-        }
-        
-        // POST api/event/place/create/5/6
-        [HttpPost("place/create/{userId}/{organizationId}")]
-        public async Task<IActionResult> AddPlace([FromRoute] int userId, [FromBody] Place place,
-            [FromRoute] int organizationId) {
-            try {
-                int isAdded = await _eventService.AddPlace(userId, place, organizationId);
-                if (isAdded == 0) {
-                    return BadRequest();
-                }
-
-                return Ok(isAdded);
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while adding eventDateTime to database.", exception);
-            }
-        }
-        
-        // POST api/event/contactperson/create/5/6
-        [HttpPost("contactperson/create/{userId}/{organizationId}")]
-        public async Task<IActionResult> AddContactPerson([FromRoute] int userId, [FromBody] ContactPerson contactPerson,
-            [FromRoute] int organizationId) {
-            try {
-                int isAdded = await _eventService.AddContactPerson(userId, contactPerson, organizationId);
-                if (isAdded == 0) {
-                    return BadRequest();
-                }
-
-                return Ok(isAdded);
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while adding eventDateTime to database.", exception);
-            }
-        }
-        
-        // POST api/event/customfield/create/5/6
-        [HttpPost("customfield/create/{userId}/{organizationId}")]
-        public async Task<IActionResult> AddCustomFields([FromRoute] int userId, [FromBody] List<CustomField> customFields,
-            [FromRoute] int organizationId, [FromRoute] int eventId) {
-            try {
-                bool validation = await _eventService.AddCustomFields(userId, organizationId, customFields, eventId);
-                if (!validation) {
-                    return BadRequest();
-                }
-                
-                return Ok();
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while adding eventDateTime to database.", exception);
+                throw new Exception("An error occurred while adding event to database.", exception);
             }
         }
         

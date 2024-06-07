@@ -68,78 +68,72 @@ public class EventService {
     #region POST
 
     public async Task<bool> AddEvent(int userId, Event eEvent, int organizationId) {
+
         try {
+            /*
             if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
+            }*/
+            
+            eEvent.CreatedAt = DateTime.Now;
+
+            if (eEvent.ContactPerson != null) {
+                ContactPerson? newContactPerson = await CheckIfContactPersonExists(eEvent.ContactPerson);
+                if (newContactPerson == null) {
+                    await _dbCon.ContactPerson.AddAsync(eEvent.ContactPerson);
+                    await _dbCon.SaveChangesAsync();
+                    newContactPerson = eEvent.ContactPerson;
+                }
+                
+                eEvent.ContactPersonId = newContactPerson.ContactPersonId;
             }
 
-            await _dbCon.Event.AddAsync(eEvent);
+            if (eEvent.Image != null) {
+                Image? newImage = await CheckIfImageExists(eEvent.Image);
+                if (newImage == null) {
+                    await _dbCon.Image.AddAsync(eEvent.Image);
+                    await _dbCon.SaveChangesAsync();
+                    newImage = eEvent.Image;
+                }
+                
+                eEvent.ImageId = newImage.ImageId;
+            }
+
+            if (eEvent.Place != null) {
+                Place? newPlace = await CheckIfPlaceExists(eEvent.Place);
+                if (newPlace == null) { 
+                    await _dbCon.Place.AddAsync(eEvent.Place);
+                    await _dbCon.SaveChangesAsync();
+                    newPlace = eEvent.Place;
+                }
+                
+                eEvent.PlaceId = newPlace.PlaceId;
+            }
+
+            if (eEvent.CustomFields != null) {
+                ICollection<CustomField>? customFields = eEvent.CustomFields.ToList();
+                eEvent.CustomFields.Clear();
+
+                await _dbCon.Event.AddAsync(eEvent);
+                await _dbCon.SaveChangesAsync();
+
+                foreach (CustomField customField in customFields) {
+                    CustomField? newCustomField = await CheckIfCustomFieldExists(customField);
+                    if (newCustomField == null) {
+                        await _dbCon.CustomField.AddAsync(customField);
+                        await _dbCon.SaveChangesAsync();
+                        newCustomField = customField;
+                    }
+
+                    await _dbCon.EventCustomField.AddAsync(new EventCustomField(newCustomField.CustomFieldId, eEvent.EventId));
+                }
+            }
+
             await _dbCon.SaveChangesAsync();
             return true;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding event to database.", exception);
-        }
-    }
-    
-    public async Task<int> AddPlace(int userId, Place place, int organizationId) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return 0;
-            }
-
-            Place newPlace = await CheckIfPlaceExists(place) ?? (await _dbCon.Place.AddAsync(place)).Entity;
-            
-            await _dbCon.Place.AddAsync(newPlace);
-            await _dbCon.SaveChangesAsync();
-            return _dbCon.Place.LastAsync().Result.PlaceId;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while adding eventDateTime to database.", exception);
-        }
-    }
-    
-    public async Task<int> AddContactPerson(int userId, ContactPerson contactPerson, int organizationId) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return 0;
-            }
-
-            ContactPerson newContactPerson = await CheckIfContactPersonExists(contactPerson) ??
-                                             (await _dbCon.ContactPerson.AddAsync(contactPerson)).Entity;
-            
-            await _dbCon.ContactPerson.AddAsync(contactPerson);
-            await _dbCon.SaveChangesAsync();
-            return _dbCon.ContactPerson.LastAsync().Result.ContactPersonId;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while adding eventDateTime to database.", exception);
-        }
-    }
-
-    public async Task<bool> AddCustomFields(int userId, int organizationId,
-        List<CustomField> customFields, int eventId) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
-
-            foreach (CustomField customField in customFields) {
-                
-                // Checks if CustomField already exists, if not adds a new CustomField
-                // The ?? means that if CheckIfExists return null it will do the right side of the ??
-                CustomField tempCustomField = await CheckIfCustomFieldExists(customField) ?? (await _dbCon.CustomField.AddAsync(customField)).Entity;
-                
-                EventCustomField newEventCustomField = new EventCustomField(tempCustomField.CustomFieldId, eventId);
-                
-                await _dbCon.EventCustomField.AddAsync(newEventCustomField);
-            }
-            
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while adding customFields to database.", exception);
         }
     }
     
@@ -149,14 +143,17 @@ public class EventService {
 
     public async Task<bool> UpdateEvent(int userId, int organizationId, Event eEvent) {
         try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
+            /*
+             if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
-            }
+            }*/
 
             Event? databaseEvent = await FetchEventById(eEvent.EventId);
             if (databaseEvent == null) {
                 return false;
             }
+            
+            
 
             _dbCon.Event.Update(eEvent);
             await _dbCon.SaveChangesAsync();
@@ -304,6 +301,21 @@ public class EventService {
         }
         
         return contactPerson;
+    }
+    
+    public async Task<Image?> CheckIfImageExists(Image newImage) {
+        Image? image;
+        if (newImage.ImageDescription == null) {
+            image = await _dbCon.Image
+                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && loopImage.ImageDescription == null)
+                .FirstOrDefaultAsync();
+        } else {
+            image = await _dbCon.Image
+                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && newImage.ImageDescription.Equals(loopImage.ImageDescription))
+                .FirstOrDefaultAsync();
+        }
+        
+        return image;
     }
     
     private async Task<Place?> CheckIfPlaceExists(Place newPlace) {
