@@ -1,3 +1,5 @@
+using System.Globalization;
+using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Repo;
 using Microsoft.EntityFrameworkCore;
@@ -124,15 +126,51 @@ public class EventService {
 
     #region POST
 
-    public async Task<bool> AddEvent(int userId, Event eEvent, int organizationId) {
-
+    public async Task<bool> AddEvent(int userId, EventDto frontendEvent, int organizationId) {
         try {
             /*
             if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
             }*/
+
+            Event eEvent = new Event(frontendEvent.Title) {
+                Title = frontendEvent.Title,
+                Published = frontendEvent.Published,
+                OrganizationId = frontendEvent.OrganizationId,
+                CreatedAt = DateTime.Now
+            };
+
+            if (frontendEvent.Description != null) {
+                eEvent.Description = frontendEvent.Description;
+            }
+
+            if (frontendEvent.Place != null) {
+                eEvent.Place = frontendEvent.Place;
+            }
+
+            if (frontendEvent.ImageId != null) {
+                eEvent.ImageId = frontendEvent.ImageId;
+            }
+
+            if (frontendEvent.Image != null) {
+                eEvent.Image = frontendEvent.Image;
+            }
             
-            eEvent.CreatedAt = DateTime.Now;
+            if (frontendEvent.ContactPerson != null) {
+                eEvent.ContactPerson = frontendEvent.ContactPerson;
+            }
+            
+            if (frontendEvent is { Start: not null, StartTime: not null }) {
+                eEvent.StartTime = CombineDateTime(frontendEvent.Start, frontendEvent.StartTime);
+            }
+            
+            if (frontendEvent is { End: not null, EndTime: not null }) {
+                eEvent.EndTime = CombineDateTime(frontendEvent.End, frontendEvent.EndTime);
+            }
+
+            if (eEvent.Published) {
+                eEvent.PublishedAt = DateTime.Now;
+            }
 
             if (eEvent.ContactPerson != null) {
                 ContactPerson? newContactPerson = await CheckIfContactPersonExists(eEvent.ContactPerson);
@@ -407,6 +445,11 @@ public class EventService {
 
         return customField;
     }
+    
+    private DateTime CombineDateTime(string date, string time) {
+        return DateTime.ParseExact($"{date} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+    }
+
 
     #endregion
 }
