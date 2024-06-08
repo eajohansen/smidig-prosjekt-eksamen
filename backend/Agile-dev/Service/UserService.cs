@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Security.Claims;
-using agile_dev.Models;
+﻿using agile_dev.Models;
 using agile_dev.Repo;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace agile_dev.Service;
@@ -39,7 +35,7 @@ public class UserService {
         }
     }
 
-    public async Task<User?> FetchUserById(int id) {
+    public async Task<object> FetchUserById(int id) {
         try {
             User? user = await _dbCon.User.FindAsync(id);
             if (user != null) {
@@ -48,7 +44,7 @@ public class UserService {
                 return foundUser[0];
             }
             else {
-                return user;
+                return "Could not find user with this id";
             }
         }
         catch (Exception exception) {
@@ -83,7 +79,7 @@ public class UserService {
             }
             
             List<Allergy> allergies = new List<Allergy>();
-            if(user.Allergies != null && user.Allergies.Count > 0) {
+            if(user.Allergies is { Count: > 0 }) {
                allergies = user.Allergies.ToList();
             }
             User newUser = user;
@@ -192,16 +188,15 @@ public class UserService {
 
     #region PUT
 
-    public async Task<bool> UpdateUser(User user) {
+    public async Task<object> UpdateUser(User user) {
         try {
-            User? databaseUser = await FetchUserById(user.UserId);
-            if (databaseUser == null) {
-                return false;
+            object databaseUser = await FetchUserById(user.UserId);
+            if (databaseUser is not User realUser) {
+                return "Could not find the user to update them";
             }
-
-            // Check if databaseUser and user have the same autorization level
-            if (user.Admin != databaseUser.Admin) {
-                return false;
+            // Check if databaseUser and user have the same authorization level
+            if (user.Admin != realUser.Admin) {
+                return "User has a different authorization privilege";
             }
             
             // Handle allergies
@@ -212,51 +207,52 @@ public class UserService {
             // databaseUser.OrganizerOrganization = new List<Organizer>();
             // databaseUser.Notices = new List<Notice>();
             
-            if (databaseUser.Allergies.Count != 0) {
-                foreach (Allergy allergy in databaseUser.Allergies) {
+            if (realUser.Allergies != null && realUser.Allergies.Count != 0) {
+                foreach (Allergy allergy in realUser.Allergies) {
                     _dbCon.Allergy.Remove(allergy);
                 }
             }
             
-            if (user.Allergies.Count != 0) {
+            if (user.Allergies != null && user.Allergies.Count != 0) {
                 foreach (Allergy allergy in user.Allergies) {
                     allergy.UserId = user.UserId;
                     await _dbCon.Allergy.AddAsync(allergy);
                 }
             }
             
-            databaseUser.Email = user.Email;
-            databaseUser.Birthdate = user.Birthdate;
-            databaseUser.ExtraInfo = user.ExtraInfo;
-            databaseUser.FirstName = user.FirstName;
-            databaseUser.LastName = user.LastName;
+            realUser.Email = user.Email;
+            realUser.Birthdate = user.Birthdate;
+            realUser.ExtraInfo = user.ExtraInfo;
+            realUser.FirstName = user.FirstName;
+            realUser.LastName = user.LastName;
             
-                _dbCon.User.Update(databaseUser);
+                _dbCon.User.Update(realUser);
                 
             await _dbCon.SaveChangesAsync();
             
-            return true;
+            return realUser;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while updating user.", exception);
         }
     }
 
-    public async Task<bool> MakeUserAdmin(User adminUser, int id) {
+    public async Task<object> MakeUserAdmin(User adminUser, int id) {
         try {
             bool isUserAdmin = IsUserAdmin(adminUser).Result;
             if (!isUserAdmin) {
-                return false;
+                return "User does not have admin privilege";
             }
 
-            User? databaseUser = FetchUserById(id).Result;
-            if (databaseUser == null) {
-                return false;
+            object databaseUser = FetchUserById(id).Result;
+            if (databaseUser is not User realUser) {
+                return "Could not fetch user by id";
             }
 
-            databaseUser.Admin = true;
+            realUser.Admin = true;
 
             // databaseUser.Role = "admin";
+            _dbCon.User.Update(realUser);
             await _dbCon.SaveChangesAsync();
             return true;
         }
@@ -285,32 +281,40 @@ public class UserService {
     #region MISCELLANEOUS
 
     public async Task<bool> IsUserAdmin(User user) {
-        User? databaseAdminUser = await FetchUserById(user.UserId);
-        return databaseAdminUser is { Admin: true };
+        object databaseAdminUser = await FetchUserById(user.UserId);
+        return (User)databaseAdminUser is { Admin: true };
     }
 
     public async Task<bool> IsUserOrganizerForOrganization(User user, Organization organization) {
-        User? databaseUser = await FetchUserById(user.UserId);
+        object databaseUser = await FetchUserById(user.UserId);
+        if (databaseUser is not User realUser) {
+            return false;
+        }
         
         // Loops through all the organizations the user is an organizer for, and returns true if we find the id of the organization we are looking for
-        return databaseUser != null && databaseUser.OrganizerOrganization.Any(organizations =>
+        return realUser.OrganizerOrganization != null && realUser.OrganizerOrganization.Any(organizations =>
             organizations.OrganizationId.Equals(organization.OrganizationId));
     }
 
     private async Task<bool> IsUserFollowingOrganization(User user, Organization organization) {
-        User? databaseUser = await FetchUserById(user.UserId);
+        object databaseUser = await FetchUserById(user.UserId);
+        if (databaseUser is not User realUser) {
+            return false;
+        }
         
         // Loops through all the organizations the user is following, and returns true if we find the id of the organization we are looking for
-        return databaseUser != null && databaseUser.FollowOrganization.Any(organizations =>
+        return realUser.FollowOrganization != null && realUser.FollowOrganization.Any(organizations =>
             organizations.OrganizationId.Equals(organization.OrganizationId));
     }
 
     private async Task<bool> IsUserAttendingEvent(User user, Event eEvent) {
-        User? databaseUser = await FetchUserById(user.UserId);
+        object databaseUser = await FetchUserById(user.UserId);
+        if (databaseUser is not User realUser) {
+            return false;
+        }
         
         // Loops through all the events the user is attending, and returns true if we find the id of the event we are looking for
-        return databaseUser != null &&
-               databaseUser.UserEvents.Any(userEvent => userEvent.EventId.Equals(eEvent.EventId));
+        return realUser.UserEvents != null && realUser.UserEvents.Any(userEvent => userEvent.EventId.Equals(eEvent.EventId));
     }
 
     private async Task<List<User>> AddRelationToUser(List<User> users) {

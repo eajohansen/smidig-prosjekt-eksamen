@@ -2,9 +2,7 @@ using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace agile_dev.Controller {
     [Route("/api/[controller]")]
@@ -21,7 +19,7 @@ namespace agile_dev.Controller {
             This is important because the main thread is responsible for handling incoming requests.
 
             Exceptions are thrown when an error occurs.
-            This is important bacause we have to send the error code to the client.
+            This is important because we have to send the error code to the client.
 
             Task<> is used because we are using async methods.
 
@@ -53,19 +51,19 @@ namespace agile_dev.Controller {
         public async Task<IActionResult> FetchUserById(int id) {
 
             try {
-                User? result = await _userService.FetchUserById(id);
-                if (result == null) {
+                object result = await _userService.FetchUserById(id);
+                if (result is not User user) {
                     return NoContent();
                 }
                 
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                bool isLoggedInUser = result.Email.Equals(userName);
+                bool isLoggedInUser = user.Email.Equals(userName);
 
                 if (!isLoggedInUser) {
                     return Unauthorized();
                 }
 
-                return Ok(result);
+                return Ok(user);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -111,12 +109,11 @@ namespace agile_dev.Controller {
                 return BadRequest("User is null");
             }
             try {
-                object isAdded = await _userService.AddUserToDatabase(user);
-                if (isAdded.Equals(user.Email + " has been added to the database.")) {
-                    return Ok(user.Email + " has been added to the database.");
-                    
+                object newUser = await _userService.AddUserToDatabase(user);
+                if (newUser is not Models.User) {
+                    return BadRequest(newUser);
                 }
-                return BadRequest(isAdded);
+                return Ok(newUser);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
@@ -207,12 +204,12 @@ namespace agile_dev.Controller {
             }
             
             try {
-                bool isAdded = await _userService.UpdateUser(user);
-                if (!isAdded) {
-                    return BadRequest();
+                object updatedUser = await _userService.UpdateUser(user);
+                if (updatedUser is not Models.User) {
+                    return BadRequest(updatedUser);
                 }
 
-                return Ok();
+                return Ok(updatedUser);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
@@ -229,12 +226,12 @@ namespace agile_dev.Controller {
                 return BadRequest("AdminUser is null");
             }
             try {
-                bool makeUserAdmin = await _userService.MakeUserAdmin(adminUser, id);
-                if (!makeUserAdmin) {
-                    return Unauthorized();
+                object makeUserAdmin = await _userService.MakeUserAdmin(adminUser, id);
+                if (makeUserAdmin is not Models.User) {
+                    return Unauthorized(makeUserAdmin);
                 }
 
-                return Ok();
+                return Ok(makeUserAdmin);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
