@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
@@ -30,8 +31,10 @@ public class Image {
     public string? ImageDescription { get; set; }
     
     // A HasSet of all Organizations with this Image
+    [JsonIgnore]
     public ICollection<Organization>? Organizations { get; set; }
     
     // A HasSet of all Events with this Image
+    [JsonIgnore]
     public ICollection<Event>? Events { get; set; }
 }

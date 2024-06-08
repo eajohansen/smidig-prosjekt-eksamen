@@ -137,22 +137,27 @@ namespace Agile_dev.Controller {
 
         #region POST
         
-        // POST api/event/create/5/6
+        // POST api/event/create
         [Authorize]
-        [HttpPost("create/{organizationId}")]
-        public async Task<IActionResult> AddEvent([FromBody] EventDto frontendEvent, [FromRoute] string organizationId) {
+        [HttpPost("create")]
+        public async Task<IActionResult> AddEvent([FromBody] EventDto? frontendEvent) {
             try {
+                if (frontendEvent == null) {
+                    return BadRequest("Event is required");
+                }
+                
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
                 if(userName == null) {
                     return Unauthorized("Invalid user");
                 }
-                bool isAdded = await _eventService.AddEvent(userName, frontendEvent, organizationId);
-                if (!isAdded) {
+                
+                object newEvent = await _eventService.AddEvent(userName, frontendEvent);
+                if (newEvent is not Event) {
                     // Could not create event, because request is bad
-                    return BadRequest();
+                    return BadRequest(newEvent);
                 }
 
-                return Ok();
+                return Ok(newEvent);
             }
             catch (Exception exception) {
                 throw new Exception("An error occurred while adding event to database.", exception);

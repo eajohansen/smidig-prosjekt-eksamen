@@ -60,7 +60,6 @@ namespace Agile_dev.Controller {
                 if(userName == null) {
                     return Unauthorized("Invalid user");
                 }
-                Console.WriteLine(organization.Name);
                 bool isAdded = await _organizationService.AddOrganization(userName, organization);
                 if (!isAdded) {
                     // Could not create organization, because request is bad
