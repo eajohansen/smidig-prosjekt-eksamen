@@ -177,7 +177,7 @@ export const CreateEventPage = () => {
                     Legg til
                   </button>
                 </div>
-                <label className="yourAllergies">Dine egendefinerte felt</label>
+                <h3>Dine egendefinerte felt</h3>
                 <div className="allergyOutput">
                   <ul>
                     {event.EventCustomFields.map((item, i) => (
