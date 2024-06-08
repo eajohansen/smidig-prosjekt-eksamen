@@ -111,7 +111,7 @@ namespace agile_dev.Controller {
                 return BadRequest("User is null");
             }
             try {
-                string isAdded = await _userService.AddUserToDatabase(user);
+                object isAdded = await _userService.AddUserToDatabase(user);
                 if (isAdded.Equals(user.Email + " has been added to the database.")) {
                     return Ok(user.Email + " has been added to the database.");
                     

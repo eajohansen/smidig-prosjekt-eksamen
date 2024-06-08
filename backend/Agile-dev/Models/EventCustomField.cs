@@ -23,7 +23,7 @@ public class EventCustomField {
     [Display(Name = "Custom field id")]
     [ForeignKey("CustomFieldId")]
     public int? CustomFieldId { get; set; }
-    public CustomField CustomField { get; set; }
+    public CustomField? CustomField { get; set; }
     
     [Display(Name = "Event id")]
     [ForeignKey("EventId")]

@@ -167,6 +167,14 @@ public class EventService {
             if (frontendEvent.Event.Description != null) {
                 eEvent.Description = frontendEvent.Event.Description;
             }
+            
+            if (frontendEvent.Event.Capacity != null) {
+                eEvent.Capacity = frontendEvent.Event.Capacity;
+            }
+            
+            if (frontendEvent.Event.AgeLimit != null) {
+                eEvent.AgeLimit = frontendEvent.Event.AgeLimit;
+            }
 
             if (frontendEvent.Event.Place != null) {
                 eEvent.Place = frontendEvent.Event.Place;

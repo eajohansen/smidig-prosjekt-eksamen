@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
@@ -55,17 +56,22 @@ public class User {
     public string? ExtraInfo { get; set; }
     
     // A HasSet of all Organizations that this User follows
+    [JsonIgnore]
     public ICollection<Follower>? FollowOrganization { get; set; }
     
     // A HasSet of all Organizations that this User can organize
+    [JsonIgnore]
     public ICollection<Organizer>? OrganizerOrganization { get; set; }
     
     // A HasSet of all UserEvents with this User 
+    [JsonIgnore]
     public ICollection<UserEvent>? UserEvents { get; set; }
     
     // A HasSet of all Notices with this User
+    [JsonIgnore]
     public ICollection<Notice>? Notices { get; set; }
     
     // A HasSet of all Allergies with this User
+    [JsonIgnore]
     public ICollection<Allergy>? Allergies { get; set; }
 }

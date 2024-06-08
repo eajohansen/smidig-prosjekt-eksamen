@@ -70,7 +70,7 @@ public class UserService {
 
     #region POST
 
-    public async Task<string> AddUserToDatabase(User user) {
+    public async Task<object> AddUserToDatabase(User user) {
         try {
             if (!_dbCon.User.AnyAsync().Result) {
                 user.Admin = true;
@@ -91,7 +91,7 @@ public class UserService {
             
             await _dbCon.User.AddAsync(newUser); 
             await _dbCon.SaveChangesAsync();
-            return newUser.Email + " has been added to the database.";
+            return newUser;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to database.", exception);
