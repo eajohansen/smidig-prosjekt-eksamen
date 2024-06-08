@@ -143,7 +143,6 @@ namespace Agile_dev.Controller {
         public async Task<IActionResult> AddEvent([FromBody] EventDto frontendEvent, [FromRoute] string organizationId) {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                Console.WriteLine("---1111---- " + userName + "---1111---- ");
                 if(userName == null) {
                     return Unauthorized("Invalid user");
                 }
