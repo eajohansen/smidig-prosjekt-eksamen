@@ -16,11 +16,6 @@ public class ContactPerson {
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
 
     */
-
-    public ContactPerson(string name) {
-        Name = name;
-        Events = new HashSet<Event>();
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -43,5 +38,5 @@ public class ContactPerson {
     public string? Number { get; set; }
     
     // A HasSet of all Events with this ContactPerson
-    public ICollection<Event> Events { get; set; }
+    public ICollection<Event>? Events { get; set; }
 }

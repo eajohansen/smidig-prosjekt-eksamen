@@ -14,11 +14,6 @@ public class Place {
        [StringLength(*number*)] = Data annotation for setting a max length on the field
 
     */
-
-    public Place(string location) {
-        Location = location;
-        Events = new HashSet<Event>();
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -35,5 +30,5 @@ public class Place {
     public string? Url { get; set; }
     
     // A HasSet of all Events with this Place
-    public ICollection<Event> Events { get; set; }
+    public ICollection<Event>? Events { get; set; }
 }

@@ -15,13 +15,6 @@ public class Organization {
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
 
     */
-
-    public Organization(string name, int imageId) {
-        Name = name;
-        ImageId = imageId;
-        Followers = new HashSet<Follower>();
-        Organizers = new HashSet<Organizer>();
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -37,14 +30,17 @@ public class Organization {
     [StringLength(2000)]
     public string? Description { get; set; }
     
-    [Required]
     [Display(Name = "Image id")]
     [ForeignKey("ImageId")]
-    public int ImageId { get; set; }
+    public int? ImageId { get; set; }
+    public Image? Image { get; set; }
     
     // A HasSet of all Followers with this Organization
-    public ICollection<Follower> Followers { get; set; }
+    public ICollection<Follower>? Followers { get; set; }
     
     // A HasSet of all Organizers with this Organization
-    public ICollection<Organizer> Organizers { get; set; }
+    public ICollection<Organizer>? Organizers { get; set; }
+    
+    // A HasSet of all Events with this Organization
+    public ICollection<Event>? Events { get; set; }
 }

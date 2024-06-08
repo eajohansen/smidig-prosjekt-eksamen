@@ -32,6 +32,8 @@ public class Program
         );
         builder.Services.AddControllers();
         builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<EventService>();
+        builder.Services.AddScoped<OrganizationService>();
         builder.Services.AddDbContext<InitContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<InitContext>();
@@ -50,11 +52,6 @@ public class Program
         app.UseRouting();
 
         app.UseCors("_frontendCorsPolicy");
-        using (var scope = app.Services.CreateScope()) {
-            IServiceProvider services = scope.ServiceProvider;
-            InitContext dbContext = services.GetRequiredService<InitContext>();
-            dbContext.Database.Migrate();
-        }
         app.UseHttpLogging();
         app.UseAuthentication();
         app.UseAuthorization();

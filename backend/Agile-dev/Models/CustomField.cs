@@ -14,11 +14,6 @@ public class CustomField {
        [StringLength(*number*)] = Data annotation for setting a max length on the field
 
     */
-
-    public CustomField(string description) {
-        Description = description;
-        EventCustomFields = new HashSet<EventCustomField>();
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -35,5 +30,5 @@ public class CustomField {
     public bool Value { get; set; }
     
     // A HasSet of all EventCustomFields with this CustomField
-    public ICollection<EventCustomField> EventCustomFields { get; set; }
+    public ICollection<EventCustomField>? EventCustomFields { get; set; }
 }

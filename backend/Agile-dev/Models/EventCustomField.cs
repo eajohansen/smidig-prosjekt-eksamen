@@ -14,11 +14,6 @@ public class EventCustomField {
        [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
 
     */
-
-    public EventCustomField(int customFieldId, int eventId) {
-        CustomFieldId = customFieldId;
-        EventId = eventId;
-    }
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

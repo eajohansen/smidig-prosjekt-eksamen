@@ -111,20 +111,19 @@ namespace agile_dev.Controller {
                 return BadRequest("User is null");
             }
             try {
-                bool isAdded = await _userService.AddUserToDatabase(user);
-                if (!isAdded) {
-                    // Could create user, because request is bad
-                    return BadRequest();
+                string isAdded = await _userService.AddUserToDatabase(user);
+                if (isAdded.Equals(user.Email + " has been added to the database.")) {
+                    return Ok(user.Email + " has been added to the database.");
+                    
                 }
-
-                return Ok();
+                return BadRequest(isAdded);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
 
-        // POST api/user/organizer/create/5/1
+        // POST api/user/organizer/create/5
         [Authorize]
         [HttpPost("organizer/create/{loggedInUserId}")]
         public async Task<IActionResult> AddOrganizer([FromRoute] int loggedInUserId, [FromBody] User? user) {
@@ -206,6 +205,7 @@ namespace agile_dev.Controller {
             if (!isLoggedInUser) {
                 return Unauthorized();
             }
+            
             try {
                 bool isAdded = await _userService.UpdateUser(user);
                 if (!isAdded) {

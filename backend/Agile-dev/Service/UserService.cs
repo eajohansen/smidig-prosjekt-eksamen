@@ -70,45 +70,28 @@ public class UserService {
 
     #region POST
 
-    public async Task<bool> AddUserToDatabase(User user) {
+    public async Task<string> AddUserToDatabase(User user) {
         try {
-            if (!_dbCon.User.Any()) {
+            if (!_dbCon.User.AnyAsync().Result) {
                 user.Admin = true;
             }
 
             User? userExists = await FetchUserByEmail(user.Email);
 
             if (userExists != null) {
-                return false;
+                return "User already exists.";
             }
-
-            ICollection<Allergy> allergies = user.Allergies.ToList();
-
-            user.Allergies.Clear();
-
-            await _dbCon.User.AddAsync(user);
+            
+            List<Allergy> allergies = new List<Allergy>();
+            if(user.Allergies != null && user.Allergies.Count > 0) {
+               allergies = user.Allergies.ToList();
+            }
+            User newUser = user;
+            newUser.Allergies = new List<Allergy>(allergies);
+            
+            await _dbCon.User.AddAsync(newUser); 
             await _dbCon.SaveChangesAsync();
-
-            User? databaseUser;
-            try {
-                databaseUser = await FetchUserByEmail(user.Email);
-                if (databaseUser == null) {
-                    return false;
-                }
-            }
-            catch (Exception exception) {
-                throw new Exception("Cant find user by email", exception);
-            }
-
-            if (allergies.Count != 0) {
-                foreach (Allergy allergy in allergies) {
-                    allergy.UserId = databaseUser.UserId;
-                    await _dbCon.Allergy.AddAsync(allergy);
-                }
-            }
-
-            await _dbCon.SaveChangesAsync();
-            return true;
+            return newUser.Email + " has been added to the database.";
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to database.", exception);
@@ -132,7 +115,10 @@ public class UserService {
                 return false;
             }
 
-            Organizer newOrganizer = new (user.UserId, organizationId);
+            Organizer newOrganizer = new () {
+                UserId = user.UserId,
+                OrganizationId = organizationId
+            };
             await _dbCon.Organizer.AddAsync(newOrganizer);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -150,7 +136,10 @@ public class UserService {
                 return false;
             }
 
-            Follower newFollower = new (user.UserId, organizationId);
+            Follower newFollower = new () {
+                UserId = user.UserId,
+                OrganizationId = organizationId
+            };
             await _dbCon.Follower.AddAsync(newFollower);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -168,7 +157,9 @@ public class UserService {
                 return false;
             }
 
-            UserEvent newUserEvent = new (user.UserId, eventId) {
+            UserEvent newUserEvent = new () {
+                UserId = user.UserId,
+                EventId = eventId,
                 Used = false
             };
             
@@ -183,7 +174,8 @@ public class UserService {
 
     public async Task<bool> AddNoticeToUser(User user) {
         try {
-            Notice newNotice = new (user.UserId) {
+            Notice newNotice = new () {
+                UserId = user.UserId,
                 Expire = DateTime.Now.AddDays(30)
             };
 
@@ -214,6 +206,12 @@ public class UserService {
             
             // Handle allergies
 
+            // databaseUser.UserEvents = new List<UserEvent>();
+            // databaseUser.Allergies = new List<Allergy>();
+            // databaseUser.FollowOrganization = new List<Follower>();
+            // databaseUser.OrganizerOrganization = new List<Organizer>();
+            // databaseUser.Notices = new List<Notice>();
+            
             if (databaseUser.Allergies.Count != 0) {
                 foreach (Allergy allergy in databaseUser.Allergies) {
                     _dbCon.Allergy.Remove(allergy);
@@ -226,21 +224,15 @@ public class UserService {
                     await _dbCon.Allergy.AddAsync(allergy);
                 }
             }
-
+            
             databaseUser.Email = user.Email;
             databaseUser.Birthdate = user.Birthdate;
             databaseUser.ExtraInfo = user.ExtraInfo;
             databaseUser.FirstName = user.FirstName;
             databaseUser.LastName = user.LastName;
-
-            try {
-                _dbCon.User.Update(databaseUser);
-            }
-            catch (Exception e) {
-                Console.WriteLine(e);
-                throw;
-            }
             
+                _dbCon.User.Update(databaseUser);
+                
             await _dbCon.SaveChangesAsync();
             
             return true;
