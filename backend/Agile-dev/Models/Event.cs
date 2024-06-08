@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
@@ -85,8 +86,10 @@ public class Event {
     public DateTime? EndTime { get; set; }
     
     // A HasSet of all EventCustomFields with this Event
+    [JsonIgnore]
     public ICollection<EventCustomField>? EventCustomFields { get; set; }
     
     // A HasSet of all UserEvents with this Event
+    [JsonIgnore]
     public ICollection<UserEvent>? UserEvents { get; set; }
 }

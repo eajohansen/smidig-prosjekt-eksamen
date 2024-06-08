@@ -3,9 +3,7 @@ using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 
 namespace Agile_dev.Controller {
     [Route("api/[controller]")]
@@ -56,11 +54,11 @@ namespace Agile_dev.Controller {
         
         // GET: api/event/fetchAll/not/attending/1
         [Authorize]
-        [HttpGet("fetchAll/not/attending/{userID}")]
-        public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] int userID) {
+        [HttpGet("fetchAll/not/attending/{userId}")]
+        public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] int userId) {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<Event> result = await _eventService.FetchAllEventsByNotAttending(userName!);
+                ICollection<Event>? result = await _eventService.FetchAllEventsByNotAttending(userName!);
                 if (result != null) {
                     return NoContent();
                 }
@@ -73,10 +71,10 @@ namespace Agile_dev.Controller {
         }
         
         // GET: api/event/fetchAll/organization/1
-        [HttpGet("fetchAll/organization/{organizationID}")]
-        public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationID) {
+        [HttpGet("fetchAll/organization/{organizationId}")]
+        public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationId) {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByOrganization(organizationID);
+                ICollection<Event> result = await _eventService.FetchAllEventsByOrganization(organizationId);
                 if (result.Count == 0) {
                     return NoContent();
                 }
@@ -89,10 +87,10 @@ namespace Agile_dev.Controller {
         }
         
         // GET: api/event/fetchAll/not/organization/1
-        [HttpGet("fetchAll/not/organization/{organizationID}")]
-        public async Task<ActionResult> FetchAllEventsByOtherOrganizations([FromRoute] int organizationID) {
+        [HttpGet("fetchAll/not/organization/{organizationId}")]
+        public async Task<ActionResult> FetchAllEventsByOtherOrganizations([FromRoute] int organizationId) {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByOtherOrganizations(organizationID);
+                ICollection<Event> result = await _eventService.FetchAllEventsByOtherOrganizations(organizationId);
                 if (result.Count == 0) {
                     return NoContent();
                 }
@@ -120,8 +118,8 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // GET: api/event/customfield/fetchAll
-        [HttpGet("customfield/fetchAll/{eventId}")]
+        // GET: api/event/customField/fetchAll
+        [HttpGet("customField/fetchAll/{eventId}")]
         public async Task<ActionResult> FetchAllCustomFields(int eventId) {
             try {
                 ICollection<CustomField?> result = await _eventService.FetchAllCustomFields(eventId);
@@ -185,9 +183,9 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // PUT api/event/customfield/update/5/6/3
+        // PUT api/event/customField/update/5/6/3
         [Authorize]
-        [HttpPut("update/customfield/{userId}/{organizationId}/{eventId}")]
+        [HttpPut("update/customField/{userId}/{organizationId}/{eventId}")]
         public async Task<IActionResult> UpdateCustomField([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
             try {
                 bool isAdded = await _eventService.UpdateCustomField(userId, organizationId, customFields);
