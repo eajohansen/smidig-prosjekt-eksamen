@@ -292,8 +292,6 @@ public class EventService {
             if (databaseEvent == null) {
                 return false;
             }
-            
-            
 
             _dbCon.Event.Update(eEvent);
             await _dbCon.SaveChangesAsync();
