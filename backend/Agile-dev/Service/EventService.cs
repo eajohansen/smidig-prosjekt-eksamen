@@ -145,23 +145,25 @@ public class EventService {
 
     #region POST
 
-    public async Task<bool> AddEvent(string userName, EventDto frontendEvent, int organizationId) {
+    public async Task<bool> AddEvent(string userName, Event frontendEvent, string organizationId) {
         try {
             User? user = await _userService.FetchUserByEmail(userName);
             if (user == null) {
                 return false;
             }
-            if (!CheckIfUserIsOrganizer(user.UserId, organizationId).Result) {
+
+            int parsedInt = Int32.Parse(organizationId);
+            if (!CheckIfUserIsOrganizer(user.UserId, parsedInt).Result) {
                 return false;
             }
 
-            Console.WriteLine(frontendEvent.Event.Title);
+            Console.WriteLine(frontendEvent.Title);
 
             Event eEvent = new Event() {
-                Title = frontendEvent.Event.Title,
-                Private = frontendEvent.Event.Private,
-                Published = frontendEvent.Event.Published,
-                OrganizationId = frontendEvent.Event.OrganizationId,
+                Title = frontendEvent.Title,
+                Private = frontendEvent.Private,
+                Published = frontendEvent.Published,
+                OrganizationId = parsedInt,
                 CreatedAt = DateTime.Now
             };
 
@@ -231,6 +233,7 @@ public class EventService {
                 eEvent.PlaceId = newPlace.PlaceId;
             }*/
             await _dbCon.Event.AddAsync(eEvent);
+            await _dbCon.SaveChangesAsync();
 
             /* if (eEvent.CustomFields != null) {
                 ICollection<CustomField>? customFields = eEvent.CustomFields.ToList();
@@ -250,12 +253,12 @@ public class EventService {
                     });
                 }
             } */
-            await _dbCon.SaveChangesAsync();
+            
             return true;
         }
         catch (Exception exception) {
             Console.WriteLine(exception);
-            throw new Exception("An error occurred while adding event to database.", exception);
+            return false;
         }
     }
     

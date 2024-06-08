@@ -140,12 +140,16 @@ namespace Agile_dev.Controller {
         // POST api/event/create/5/6
         [Authorize]
         [HttpPost("create/{organizationId}")]
-        public async Task<IActionResult> AddEvent([FromBody] EventDto frontendEvent, [FromRoute] int organizationId) {
+        public async Task<IActionResult> AddEvent([FromBody] Event frontendEvent, [FromRoute] string organizationId) {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
                 if(userName == null) {
                     return Unauthorized("Invalid user");
                 }
+
+                Console.WriteLine(frontendEvent.Title);
+                Console.WriteLine(organizationId);
+                Console.WriteLine(userName);
                 bool isAdded = await _eventService.AddEvent(userName, frontendEvent, organizationId);
                 if (!isAdded) {
                     // Could not create event, because request is bad
