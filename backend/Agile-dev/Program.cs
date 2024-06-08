@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using agile_dev.Models;
 using agile_dev.Repo;
 using agile_dev.Service;
 using Microsoft.AspNetCore.HttpLogging;
@@ -39,7 +40,27 @@ public class Program
         builder.Services.AddScoped<OrganizationService>();
         builder.Services.AddDbContext<InitContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<InitContext>();
+        builder.Services.AddIdentityApiEndpoints<User>(options =>
+                   {
+                       // Password settings.
+                       options.Password.RequireDigit = true;
+                       options.Password.RequireLowercase = true;
+                       options.Password.RequireNonAlphanumeric = true;
+                       options.Password.RequireUppercase = true;
+                       options.Password.RequiredLength = 8;
+                       options.Password.RequiredUniqueChars = 1;
+
+                       // Lockout settings.
+                       options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                       options.Lockout.MaxFailedAccessAttempts = 5;
+                       options.Lockout.AllowedForNewUsers = true;
+
+                       // User settings.
+                       options.User.RequireUniqueEmail = true;
+                   })
+                   .AddDefaultUI()
+                   .AddRoles<IdentityRole>()
+                   .AddEntityFrameworkStores<InitContext>();
 
         builder.Services.AddAuthentication();
    
@@ -71,4 +92,18 @@ public class Program
         });
         app.Run();
     }
+     private static async Task SeedRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            string[] roleNames = { "Admin", "Organizer", "User" };
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+        }
 }

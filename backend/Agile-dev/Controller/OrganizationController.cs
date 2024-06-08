@@ -81,9 +81,10 @@ namespace Agile_dev.Controller {
         // PUT api/organization/update/5
         [Authorize]
         [HttpPut("update/{userId}")]
-        public async Task<IActionResult> UpdateOrganization([FromRoute] int userId, [FromBody] Organization organization) {
+        public async Task<IActionResult> UpdateOrganization([FromRoute] string userId, [FromBody] Organization organization) {
             try {
-                bool isAdded = await _organizationService.UpdateOrganization(userId, organization);
+                bool isAdded = true;
+              //  bool isAdded = await _organizationService.UpdateOrganization(userId, organization);
                 if (!isAdded) {
                     return BadRequest();
                 }
@@ -100,9 +101,9 @@ namespace Agile_dev.Controller {
         #region DELETE
 
         // DELETE api/organization/delete/5
-        [Authorize]
+        /*[Authorize]
         [HttpDelete("delete/{userId}")]
-        public Task<IActionResult> DeleteOrganization([FromRoute] int userId, [FromBody] Organization? organization) {
+        public Task<IActionResult> DeleteOrganization([FromRoute] string userId, [FromBody] Organization? organization) {
             if (organization == null) {
                 return Task.FromResult<IActionResult>(BadRequest("User is null"));
             }
@@ -119,7 +120,7 @@ namespace Agile_dev.Controller {
             catch (Exception exception) {
                 return Task.FromResult<IActionResult>(StatusCode(500, "Internal server error: " + exception.Message));
             }
-        }
+        }*/
         
         #endregion
     }

@@ -28,8 +28,8 @@ public class UserEvent {
     
     [Required]
     [Display(Name = "User id")]
-    [ForeignKey("UserId")]
-    public int UserId { get; set; }
+    [ForeignKey("Id")]
+    public string Id { get; set; }
     
     [Required]
     [Display(Name = "Event id")]

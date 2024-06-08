@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
-public class User {
+public class User : IdentityUser {
     
     /*
        Data annotations
@@ -19,18 +20,7 @@ public class User {
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
     */
 
-    
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Display(Name = "User Id")]
-    public int UserId { get; set; }
-    
-    [Required]
-    [Display(Name = "Email")]
-    [StringLength(200)]
-    [DataType(DataType.EmailAddress)]
-    [EmailAddress(ErrorMessage = "Invalid Email Address")]
-    public string Email { get; set; }
+
     
     [Required]
     [Display(Name = "Admin rights")]

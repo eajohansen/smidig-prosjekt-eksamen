@@ -55,7 +55,7 @@ namespace Agile_dev.Controller {
         // GET: api/event/fetchAll/not/attending/1
         [Authorize]
         [HttpGet("fetchAll/not/attending/{userId}")]
-        public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] int userId) {
+        public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] string userId) {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
                 ICollection<Event>? result = await _eventService.FetchAllEventsByNotAttending(userName!);
@@ -169,7 +169,7 @@ namespace Agile_dev.Controller {
         // PUT api/event/update/5/6
         [Authorize]
         [HttpPut("update/{userId}/{organizationId}")]
-        public async Task<IActionResult> UpdateEvent([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] Event eEvent) {
+        public async Task<IActionResult> UpdateEvent([FromRoute] string userId, [FromRoute] int organizationId, [FromBody] Event eEvent) {
             try {
                 bool isAdded = await _eventService.UpdateEvent(userId, organizationId, eEvent);
                 if (!isAdded) {
@@ -186,7 +186,7 @@ namespace Agile_dev.Controller {
         // PUT api/event/customField/update/5/6/3
         [Authorize]
         [HttpPut("update/customField/{userId}/{organizationId}/{eventId}")]
-        public async Task<IActionResult> UpdateCustomField([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
+        public async Task<IActionResult> UpdateCustomField([FromRoute] string userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
             try {
                 bool isAdded = await _eventService.UpdateCustomField(userId, organizationId, customFields);
                 if (!isAdded) {
@@ -207,7 +207,7 @@ namespace Agile_dev.Controller {
         // DELETE api/event/delete/5/6
         [Authorize]
         [HttpDelete("delete/{userId}/{organizationId}")]
-        public async Task<IActionResult> DeleteEvent([FromRoute] int userId, [FromBody] Event eEvent, [FromRoute] int organizationId) {
+        public async Task<IActionResult> DeleteEvent([FromRoute] string userId, [FromBody] Event eEvent, [FromRoute] int organizationId) {
             try {
                 bool isDeleted = await _eventService.DeleteEvent(userId, eEvent, organizationId);
                 if (!isDeleted) {

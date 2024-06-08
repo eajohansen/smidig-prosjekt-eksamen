@@ -43,7 +43,7 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId == user.UserId))
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id == user.Id))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -65,7 +65,7 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != user.UserId) && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id != user.Id) && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -153,7 +153,7 @@ public class EventService {
                 return "Could not find user by email";
             }
             
-            if (!CheckIfUserIsOrganizer(user.UserId, frontendEvent.Event.OrganizationId).Result) {
+            if (!CheckIfUserIsOrganizer(user.Id, frontendEvent.Event.OrganizationId).Result) {
                 return "User is not organizer";
             }
             
@@ -281,14 +281,14 @@ public class EventService {
     
     #region PUT
 
-    public async Task<bool> UpdateEvent(int userId, int organizationId, Event eEvent) {
+    public async Task<bool> UpdateEvent(string userId, int organizationId, Event eEvent) {
         try {
             /*
              if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
             }*/
 
-            Event? databaseEvent = await FetchEventById(eEvent.EventId);
+            Event? databaseEvent = new();//await FetchEventById(eEvent.EventId);
             if (databaseEvent == null) {
                 return false;
             }
@@ -302,11 +302,13 @@ public class EventService {
         }
     }
     
-    public async Task<bool> UpdatePlace(int userId, int organizationId, int eventId, Place place) {
+    public async Task<bool> UpdatePlace(string userId, int organizationId, int eventId, Place place) {
         try {
+            /*
             if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
             }
+            */
             
             Event? eEvent = await _dbCon.Event.FindAsync(eventId);
 
@@ -328,11 +330,11 @@ public class EventService {
         }
     }
     
-    public async Task<bool> UpdateContactPerson(int userId, int organizationId, int eventId, ContactPerson contactPerson) {
+    public async Task<bool> UpdateContactPerson(string userId, int organizationId, int eventId, ContactPerson contactPerson) {
         try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
+            /*if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
-            }
+            }*/
             
             Event? eEvent = await _dbCon.Event.FindAsync(eventId);
 
@@ -354,11 +356,11 @@ public class EventService {
         }
     }
 
-    public async Task<bool> UpdateCustomField(int userId, int organizationId, List<CustomField> customFields) {
+    public async Task<bool> UpdateCustomField(string userId, int organizationId, List<CustomField> customFields) {
         try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
+            /*if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
-            }
+            }*/
 
             foreach (CustomField customField in customFields) {
                 CustomField? databaseCustomField = await _dbCon.CustomField.FindAsync(customField.CustomFieldId);
@@ -380,11 +382,11 @@ public class EventService {
     
     #region DELETE
 
-    public async Task<bool> DeleteEvent(int userId, Event eEvent, int organizationId) {
+    public async Task<bool> DeleteEvent(string userId, Event eEvent, int organizationId) {
         try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
+            /*if (!_organizationService.CheckValidation(userId, organizationId).Result) {
                 return false;
-            }
+            }*/
 
             _dbCon.Event.Remove(eEvent);
             await _dbCon.SaveChangesAsync();
@@ -476,9 +478,9 @@ public class EventService {
         return customField;
     }
 
-    private async Task<bool> CheckIfUserIsOrganizer(int userId, int orgId) {
+    private async Task<bool> CheckIfUserIsOrganizer(string userId, int orgId) {
         Organizer? organizer = await _dbCon.Organizer
-            .Where(organizer => organizer.UserId.Equals(userId) && organizer.OrganizationId.Equals(orgId))
+            .Where(organizer => organizer.Id.Equals(userId) && organizer.OrganizationId.Equals(orgId))
             .FirstOrDefaultAsync();
         return organizer != null;
     }
