@@ -31,8 +31,9 @@ public class Program
                 );
             }
         );
-        builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options => {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<EventService>();
         builder.Services.AddScoped<OrganizationService>();
