@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { sendEvent } from "../services/tempService";
 import "../temp.css";
 import "../css/CreateEventPage.css";
@@ -7,8 +7,10 @@ export const CreateEventPage = () => {
   const organization = 1;
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
-
+  const [customFields, setCustomFields] = useState([]);
+  const [newCustomField, setNewCustomField] = useState({});
   const [event, setEvent] = useState({
+    organizationId: 0,
     title: "",
     address: "",
     contactP: "",
@@ -18,22 +20,49 @@ export const CreateEventPage = () => {
     food: false,
     free: false,
     published: false,
+    private: false,
     start: "",
     startTime: "",
     end: "",
     endTime: "",
-    org: organization,
-    customField: []
+    customfieldsDesc: "",
+    customfieldsValue: false,
+    eventCustomFields: {
+      description: "",
+      value: false
+    }
 
   });
 
+  useEffect(() => {
+    setNewCustomField(newCustomField);
+  }, [newCustomField]);
+
   const handleChange = (e) => {
     setEvent({ ...event, [e.currentTarget.name]: e.currentTarget.value });
+    if(e.currentTarget.name === "customfieldsDesc") {
+      setNewCustomField({...newCustomField, description: e.currentTarget.value});
+      setEvent({...event, eventCustomFields: {...event.eventCustomFields, description: e.currentTarget.value}});
+    } else if(e.currentTarget.name === "customfieldsValue") {
+      let value = false;
+      if(e.target.type === 'checkbox') {
+        value = e.target.checked
+      }
+      setNewCustomField({...newCustomField, "value": value});
+      setEvent({...event, eventCustomFields: {...event.eventCustomFields, value: value}});
+    }
   };
 
+  const handleCustomFields = () => {
+    setCustomFields([...customFields, {
+      "description": newCustomField.description,
+      "value": newCustomField.value
+    }]);
+    setNewCustomField("");
+  }
+
   const handleSubmit = async () => {
-    const result = await sendEvent(event);
-    console.log(result);
+     await sendEvent(event);
   };
 
   return (
@@ -75,65 +104,73 @@ export const CreateEventPage = () => {
                 <label htmlFor="minAge">Aldersgrense</label>
                 <input id="minAge" name="ageLimit" onChange={handleChange} />
               </div>
-              <div>
-                <label htmlFor="foodService">Matservering</label>
-                <input
-                    id="foodService"
-                    className="checkBox"
-                    type="checkbox"
-                    name="food"
-                    onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="freeEvent"> Gratis arrangement </label>
-                <input
-                    id="freeEvent"
-                    className="checkBox"
-                    type="checkbox"
-                    name="free"
-                    onChange={handleChange}
-                />
-              </div>
             </div>
           </section>
           <section className="right-box">
-            <label htmlFor="startTime">Start dato og kl.</label>
-            <input
-                id="startDate"
-                type="date"
-                name="start"
-                onChange={handleChange}
-            ></input>
-            <input
-                id="startTime"
-                type="time"
-                max="23:59"
-                name="startTime"
-                onChange={handleChange}
-            ></input>
-            <label htmlFor="endTime">Slutt dato og kl.</label>
-            <input
-                id="endDate"
-                type="date"
-                name="end"
-                onChange={handleChange}
-            ></input>
-            <input
-                id="endTime"
-                type="time"
-                name="endTime"
-                onChange={handleChange}
-            ></input>
-            <div>
-              <div>
-                <label htmlFor="customField"></label>
-                <input></input>
-                <input type="checkbox"></input>
+            <div className="force-width">
+              <label htmlFor="startTime">Start dato og kl.</label>
+              <div className="date-time-format">
+                <input
+                    id="startDate"
+                    type="date"
+                    name="start"
+                    onChange={handleChange}
+                ></input>
+                <input
+                    id="startTime"
+                    type="time"
+                    max="23:59"
+                    name="startTime"
+                    onChange={handleChange}
+                ></input>
+              </div>
+
+              <label htmlFor="endTime">Slutt dato og kl.</label>
+              <div className="date-time-format">
+                <input
+                    id="endDate"
+                    type="date"
+                    name="end"
+                    onChange={handleChange}
+                ></input>
+                <input
+                    id="endTime"
+                    type="time"
+                    name="endTime"
+                    onChange={handleChange}
+                ></input>
+              </div>
+              <div className="allergyContainer">
+                <label className="allergies" htmlFor="allergyInput">
+                  Egendefinert felt
+                </label>
+                <div className="custom-fields-input">
+                  <input
+                      type="text"
+                      id="allergyInput"
+                      name="customfieldsDesc"
+                      onChange={handleChange}
+                      value={newCustomField.description}
+                  />
+                  <input className="checkBox custom-field-checkbox" type="checkbox" name="customfieldsValue" value={newCustomField.value} onChange={handleChange} />
+                  <button onClick={handleCustomFields}>
+                    Legg til
+                  </button>
+                </div>
+                <label className="yourAllergies">Dine egendefinerte felt</label>
+                <div className="allergyOutput">
+                  <ul>
+                    {customFields.map((item, i) => (
+                        <li className="allergy" key={i}>
+                          <span>{item.description} {item.value ? "(ja)" : "(nei)"}</span>
+                          <i className="trash bi bi-trash3 "></i>
+                        </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
-            <div>
-              <label></label>
+            <div className="event-page-button-div">
               <button>Last opp bilde</button>
               <button>Avbryt</button>
               <button onClick={handleSubmit}>Lagre og forhåndsvis</button>

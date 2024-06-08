@@ -229,26 +229,36 @@ public class EventService {
                 eEvent.PlaceId = newPlace.PlaceId;
             }
             await _dbCon.Event.AddAsync(eEvent);
+            await _dbCon.SaveChangesAsync();
+            if (frontendEvent.Event.EventCustomFields != null) {
+                ICollection<EventCustomField>? customFields = frontendEvent.Event.EventCustomFields.ToList();
+                frontendEvent.Event.EventCustomFields.Clear();
+                EventCustomField newEventCustomField = new EventCustomField();
+                foreach (EventCustomField customField in customFields) {
+                    CustomField? newCustomField = await CheckIfCustomFieldExists(customField);
+                    if (newCustomField == null) {
+                        newCustomField = new CustomField {
+                            Description = customField.CustomField.Description,
+                            Value = customField.CustomField.Value
+                        };
+                        await _dbCon.CustomField.AddAsync(newCustomField);
+                        await _dbCon.SaveChangesAsync();
+                        newEventCustomField = new EventCustomField {
+                            CustomFieldId = newCustomField.CustomFieldId,
+                            EventId = eEvent.EventId
+                        };
+                    } else {
+                        newEventCustomField = new EventCustomField {
+                            CustomFieldId = newCustomField.CustomFieldId,
+                            EventId = eEvent.EventId
+                        };
+                    }
 
-            if (eEvent.EventCustomFields != null) {
-                
-                
-                ICollection<EventCustomField>? eventCustomFields = eEvent.EventCustomFields.ToList();
-                eEvent.EventCustomFields.Clear();
-
-                List<EventCustomField> newEventCustomFields = new List<EventCustomField>();
-                
-                foreach (EventCustomField eventCustomField in eventCustomFields) {
-                    CustomField? newCustomField = await CheckIfCustomFieldExists(eventCustomField) ?? eventCustomField.CustomField;
-                    newEventCustomFields.Add(new EventCustomField() {
-                        CustomFieldId = newCustomField.CustomFieldId, 
-                        EventId = eEvent.EventId
-                    });
+                    await _dbCon.EventCustomField.AddAsync(newEventCustomField);
                 }
 
-                await _dbCon.EventCustomField.AddRangeAsync(newEventCustomFields);
+                await _dbCon.SaveChangesAsync();
             }
-            await _dbCon.SaveChangesAsync();
             return eEvent;
         }
         catch (Exception exception) {
@@ -451,11 +461,10 @@ public class EventService {
     private async Task<CustomField?> CheckIfCustomFieldExists(EventCustomField newEventCustomField) {
         string customFieldDescription = newEventCustomField.CustomField.Description;
         bool customFieldValue = newEventCustomField.CustomField.Value;
-        
-        CustomField? customField = await _dbCon.CustomField
-            .Where(customField => customFieldDescription.Equals(customField.Description) && customFieldValue.Equals(customField.Value))
-            .FirstOrDefaultAsync();
 
+        CustomField? customField = await _dbCon.CustomField
+            .Where(customField => customFieldDescription.Equals(customField.Description) &&
+                                  customFieldValue.Equals(customField.Value)).FirstOrDefaultAsync();
         return customField;
     }
 

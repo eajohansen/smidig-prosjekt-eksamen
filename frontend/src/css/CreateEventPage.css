@@ -27,6 +27,12 @@ main {
     background: var(--darkBkgrnd);
 }
 .create-event-box {
+    > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0.5rem;
+    }
     display: flex;
     flex-direction: row;
     min-width: 70vw;
@@ -34,22 +40,31 @@ main {
         padding: 2rem;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: start;
         text-align: start;
         width: 50%;
     }
     > .left-box > div {
         display: flex;
         flex-direction: column;
-        padding: 0.5rem;
     }
     > .right-box {
-        padding: 2rem;
         display: flex;
         flex-direction: column;
-        justify-content: start;
-        align-items: center;
+        justify-content: space-between;
         width: 50%;
+    }
+    > .right-box > div {
+        padding: 2rem;
+        width: 100%;
+    }
+    > .right-box > div > div {
+        display: flex;
+        flex-direction: column;
+    }
+    > .right-box > div > .date-time-format {
+        display: flex;
+        flex-direction: row;
     }
     & .event-check-box {
         padding: 0;
@@ -66,4 +81,39 @@ main {
     & .event-check-box input:not(.checkBox) {
         width: 3rem;
     }
+
+}
+.event-page-button-div {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    gap: 1rem;
+    button {
+        padding: 0.5rem 1rem;
+        border-radius: 0.2rem;
+        border: 1px solid white;
+        font-size: 0.8rem;
+    }
+}
+.date-time-format {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 1rem;
+
+    input {
+        width: 30%;
+        gap: 1rem;
+    }
+}
+.custom-fields-input {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    input:not(.custom-field-checkbox) {
+        width: 100%;
+    }
+}
+.custom-field-checkbox {
+    padding: 0.5rem;
 }
