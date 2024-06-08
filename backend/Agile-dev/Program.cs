@@ -40,7 +40,7 @@ public class Program
         builder.Services.AddScoped<OrganizationService>();
         builder.Services.AddDbContext<InitContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddIdentityApiEndpoints<User>(options =>
+        builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
                    {
                        // Password settings.
                        options.Password.RequireDigit = true;
@@ -58,10 +58,9 @@ public class Program
                        // User settings.
                        options.User.RequireUniqueEmail = true;
                    })
-                   .AddDefaultUI()
                    .AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<InitContext>();
-
+        
         builder.Services.AddAuthentication();
    
         builder.Services.AddAuthorization();
