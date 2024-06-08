@@ -1,16 +1,10 @@
+/*Likt på alle sidene*/
 :root {
   --main: #497d95;
   --secondary: #cb4353;
   --darkBkgrnd: #1e3742;
   --mediumGreen: #34a853;
 }
-button {
-  border: 1px solid transparent;
-}
-button:hover {
-  border: 1px solid transparent;
-}
-
 * {
   -webkit-appearance: none;
   appearance: none;
@@ -21,7 +15,6 @@ button:hover {
   letter-spacing: 0.07rem;
   box-sizing: border-box;
 }
-
 body {
   display: flex;
   height: 100vh;
@@ -41,12 +34,21 @@ body {
     padding: 2rem;
   }
 }
+.dNone {
+  display: none;
+}
+/*Logg inn/ registrer bruker (første side)*/
 
+button {
+  border: 1px solid transparent;
+}
+button:hover {
+  border: 1px solid transparent;
+}
 textarea,
 input {
   outline: none;
 }
-
 .loginContainer {
   align-self: center;
   justify-self: center;
@@ -127,6 +129,17 @@ input {
 .inputHover input:focus {
   border: 1px solid white;
 }
+.pwordDetails {
+  position: absolute;
+  top: 45%;
+  left: 70%;
+  width: 10rem;
+  height: 8rem;
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+  z-index: 100;
+  display: inline;
 .checkBox {
   height: 1rem;
   background-color: white;
@@ -339,6 +352,8 @@ header {
   width: 16rem;
 }
 
+/*Navigasjons meny*/
+
 .navHeader {
   display: flex;
   flex-direction: column;
@@ -361,18 +376,27 @@ header {
     color: var(--main);
   }
 }
-.pwordDetails {
-  position: absolute;
-  top: 45%;
-  left: 70%;
-  width: 10rem;
-  height: 8rem;
-  background-color: white;
-  border: 1px solid black;
-  color: black;
-  z-index: 100;
-  display: inline;
-}
+/*Organisasjons profil*/
+.OrgProfilContainer{
+    display: flex;
+    width: 100vh;
+    height: 100vh;
+    flex-direction: column;
+    padding: 3rem;
+      font-family: "Inter", sans-serif;
+      font-size: 1rem;
+    }
+    
+    .headderContainer {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    
+      h2 {
+        font-size: 2rem;
+        font-weight: normal;
+      }
+    }
 
 .dNone {
   display: none;

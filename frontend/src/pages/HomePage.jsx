@@ -3,6 +3,6 @@ import LoginPopup from "../components/LoginPopup";
 import { ProfileForm } from "../components/ProfileForm";
 
 export const HomePage = () => {
-  // return <LoginPopup />;
-  return <ProfileForm />;
+   return <LoginPopup />;
+  //return <ProfileForm />;
 };
