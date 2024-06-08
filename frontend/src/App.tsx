@@ -5,6 +5,7 @@ import { HomePage } from "./pages/HomePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { TicketsPage } from "./pages/TicketsPage";
 import { EventsPage } from "./pages/EventsPage";
+
 import {CreateEventPage} from "./pages/CreateEventPage";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="tickets" element={<TicketsPage />} />
             <Route path="events" element={<EventsPage />} />
+            <Route path="orgProfile" element={<OrgProfilePage/>} />
             <Route path="createEvent" element={<CreateEventPage />} />
           </Routes>
 
