@@ -1,24 +1,25 @@
 import { useState } from "react";
 import { EventItem } from "../components/EventItem";
 import { getEvents } from "../services/tempService";
+export const events = [
+  {
+    id: 1,
+    title: "bursdag",
+    date: "14.mai.2002",
+  },
+  {
+    id: 2,
+    title: "bursdag",
+    date: "14.mai.2002",
+  },
+  {
+    id: 3,
+    title: "bursdag",
+    date: "14.mai.2002",
+  },
+];
 export const EventsPage = () => {
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "bursdag",
-      date: "14.mai.2002",
-    },
-    {
-      id: 2,
-      title: "bursdag",
-      date: "14.mai.2002",
-    },
-    {
-      id: 3,
-      title: "bursdag",
-      date: "14.mai.2002",
-    },
-  ]); // = getEvents()
+  // = getEvents()
 
   return (
     <>
