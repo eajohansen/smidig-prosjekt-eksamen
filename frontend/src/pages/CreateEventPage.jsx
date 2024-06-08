@@ -37,7 +37,6 @@ export const CreateEventPage = () => {
   }, [newCustomField]);
 
   const handleChange = (e) => {
-    console.log(e);
     const curTargetVal = e?.currentTarget?.value;
     const curTargetName = e?.currentTarget?.name;
     e.persist();
@@ -182,7 +181,6 @@ export const CreateEventPage = () => {
                   <ul>
                     {event.EventCustomFields.map((item, i) => (
                         <li className="allergy" key={i}>
-                          {console.log(item)}
                           <span>{item.CustomField.Description} {item.CustomField.Value ? "(ja)" : "(nei)"}</span>
                           <i className="trash bi bi-trash3 "></i>
                         </li>
