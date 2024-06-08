@@ -105,7 +105,6 @@ namespace agile_dev.Controller {
         #region POST
 
         // POST api/user/create
-        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> AddUser(User? user) {
             if (user == null) {
