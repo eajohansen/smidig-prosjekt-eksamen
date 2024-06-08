@@ -13,7 +13,7 @@ export const EventItem = (props) => {
         <p>{title}</p>
         <p>{date}</p>
       </div>
-      <Link to={""}>
+      <Link to={`/events/details/${id}`}>
         <button>Se arrangement</button>
       </Link>
     </article>
