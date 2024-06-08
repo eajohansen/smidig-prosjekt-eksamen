@@ -139,7 +139,7 @@ input {
 .registerContainer {
   justify-content: center;
   width: 68vw;
-  height: 60vh;
+  height: 60%;
   border-radius: 1rem;
   padding: 3.5rem;
   background-color: var(--darkBkgrnd);
@@ -345,7 +345,7 @@ header {
   background-color: #d6d5d5;
   height: 100%;
   align-items: stretch;
-  flex:1;
+  flex: 1;
   overflow: auto;
   align-self: auto;
   p {
@@ -376,4 +376,8 @@ header {
 
 .dNone {
   display: none;
+}
+
+.errorDisplay ul {
+  display: flex;
 }

@@ -55,3 +55,12 @@ export const sendEvent = async (event) => {
     console.log(err);
   }
 };
+
+export const getEvents = async () => {
+  try {
+    const result = await axiosInstance.get("");
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};

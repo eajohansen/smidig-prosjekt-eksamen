@@ -1,16 +1,37 @@
-import React from "react";
-import { axiosInstance } from "../services/helpers";
+import { useState } from "react";
+import { EventItem } from "../components/EventItem";
+import { getEvents } from "../services/tempService";
 export const EventsPage = () => {
-  const testClick = async () => {
-    const result = await axiosInstance.get("api/user/fetchall");
-    console.log(result);
-  };
+  const [events, setEvents] = useState([
+    {
+      id: 1,
+      title: "bursdag",
+      date: "14.mai.2002",
+    },
+    {
+      id: 2,
+      title: "bursdag",
+      date: "14.mai.2002",
+    },
+    {
+      id: 3,
+      title: "bursdag",
+      date: "14.mai.2002",
+    },
+  ]); // = getEvents()
+
   return (
-    <div>
-      {" "}
-      <button className="testBtn" onClick={testClick}>
-        Klikk meg
-      </button>
-    </div>
+    <>
+      <main className="eventsPageContainer">
+        {events.map((event) => (
+          <EventItem
+            key={event.id}
+            id={event.id}
+            title={event.title}
+            date={event.date}
+          />
+        ))}
+      </main>
+    </>
   );
 };
