@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace agile_dev.Models;
 
@@ -30,5 +31,6 @@ public class Place {
     public string? Url { get; set; }
     
     // A HasSet of all Events with this Place
+    [JsonIgnore]
     public ICollection<Event>? Events { get; set; }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
@@ -30,5 +31,6 @@ public class CustomField {
     public bool Value { get; set; }
     
     // A HasSet of all EventCustomFields with this CustomField
+    [JsonIgnore]
     public ICollection<EventCustomField>? EventCustomFields { get; set; }
 }

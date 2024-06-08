@@ -11,7 +11,7 @@ export const ProfileForm = ({ userEmail }) => {
     lastName: "",
     email: userEmail,
     birthdate: "",
-    // allergyList: allergies,
+    allergyList: allergies,
   });
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export const ProfileForm = ({ userEmail }) => {
       if (allergies.length > 5) {
           alert("Beklager! Du kan ikke legge til fler enn 6 allergier.");
       } else {
-          setAllergies([...allergies, newAllergy]);
+          setAllergies([...allergies, {"name": newAllergy}]);
           setNewAllergy("");
       }
   };
@@ -114,7 +114,7 @@ export const ProfileForm = ({ userEmail }) => {
           <ul>
             {allergies.map((item, i) => (
               <li className="allergy" key={i}>
-                <span>{item}</span>
+                <span>{item.name}</span>
                 <i className="trash bi bi-trash3 "></i>
               </li>
             ))}

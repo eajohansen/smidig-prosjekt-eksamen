@@ -8,19 +8,20 @@ namespace agile_dev.Service;
 
 public class EventService {
     private readonly InitContext _dbCon;
-    private readonly UserService _userService;
     private readonly OrganizationService _organizationService;
 
-    public EventService(InitContext context) {
+    public EventService(InitContext context, OrganizationService organizationService) {
         _dbCon = context;
+        _organizationService = organizationService;
     }
+
 
     #region GET
 
     public async Task<ICollection<Event>> FetchAllEvents() {
         try {
-            ICollection<Event> foundEvents = foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.Private.Equals(false))
+            ICollection<Event> foundEvents = await _dbCon.Event
+                .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
                 .ToListAsync();
             ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
             
@@ -33,7 +34,7 @@ public class EventService {
 
     public async Task<ICollection<Event>?> FetchAllEventsByAttending(string userName) {
         try {
-            User? user = await _userService.FetchUserByEmail(userName);
+            User? user = await _organizationService._userService.FetchUserByEmail(userName);
 
             ICollection<Event>? foundEvents = null;
             
@@ -55,7 +56,7 @@ public class EventService {
     
     public async Task<ICollection<Event>?> FetchAllEventsByNotAttending(string userName) {
         try {
-            User? user = await _userService.FetchUserByEmail(userName);
+            User? user = await _organizationService._userService.FetchUserByEmail(userName);
             
             ICollection<Event>? foundEvents = null;
             
@@ -64,7 +65,7 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != user.UserId) && eEvent.Private.Equals(false))
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != user.UserId) && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -92,7 +93,7 @@ public class EventService {
     public async Task<ICollection<Event>> FetchAllEventsByOtherOrganizations(int organizationId) {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.OrganizationId != organizationId && eEvent.Private.Equals(false))
+                .Where(eEvent => eEvent.OrganizationId != organizationId && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -129,10 +130,11 @@ public class EventService {
                 return customFields;
             }
 
+            if (eEvent.EventCustomFields == null) return customFields;
             foreach (EventCustomField eventCustomField in eEvent.EventCustomFields) {
                 customFields.Add(await _dbCon.CustomField.FindAsync(eventCustomField.CustomFieldId));
             }
-            
+
             return customFields;
         }
         catch (Exception exception) {
@@ -144,13 +146,17 @@ public class EventService {
 
     #region POST
 
-    public async Task<bool> AddEvent(int userId, EventDto frontendEvent, int organizationId) {
+    public async Task<object> AddEvent(string userName, EventDto frontendEvent) {
         try {
-            /*
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }*/
-
+            User? user = await _organizationService._userService.FetchUserByEmail(userName);
+            if (user == null) {
+                return "Could not find user by email";
+            }
+            
+            if (!CheckIfUserIsOrganizer(user.UserId, frontendEvent.Event.OrganizationId).Result) {
+                return "User is not organizer";
+            }
+            
             Event eEvent = new Event() {
                 Title = frontendEvent.Event.Title,
                 Private = frontendEvent.Event.Private,
@@ -158,9 +164,17 @@ public class EventService {
                 OrganizationId = frontendEvent.Event.OrganizationId,
                 CreatedAt = DateTime.Now
             };
-
+            
             if (frontendEvent.Event.Description != null) {
                 eEvent.Description = frontendEvent.Event.Description;
+            }
+            
+            if (frontendEvent.Event.Capacity != null) {
+                eEvent.Capacity = frontendEvent.Event.Capacity;
+            }
+            
+            if (frontendEvent.Event.AgeLimit != null) {
+                eEvent.AgeLimit = frontendEvent.Event.AgeLimit;
             }
 
             if (frontendEvent.Event.Place != null) {
@@ -203,7 +217,7 @@ public class EventService {
             }
 
             if (eEvent.Image != null) {
-                Image? newImage = await CheckIfImageExists(eEvent.Image);
+                Image? newImage = await _organizationService.CheckIfImageExists(eEvent.Image);
                 if (newImage == null) {
                     await _dbCon.Image.AddAsync(eEvent.Image);
                     await _dbCon.SaveChangesAsync();
@@ -223,33 +237,42 @@ public class EventService {
                 
                 eEvent.PlaceId = newPlace.PlaceId;
             }
-
-            if (eEvent.CustomFields != null) {
-                ICollection<CustomField>? customFields = eEvent.CustomFields.ToList();
-                eEvent.CustomFields.Clear();
-
-                await _dbCon.Event.AddAsync(eEvent);
-                await _dbCon.SaveChangesAsync();
-
-                foreach (CustomField customField in customFields) {
+            await _dbCon.Event.AddAsync(eEvent);
+            await _dbCon.SaveChangesAsync();
+            // ReSharper disable once InvertIf
+            if (frontendEvent.Event.EventCustomFields != null) {
+                ICollection<EventCustomField> customFields = frontendEvent.Event.EventCustomFields.ToList();
+                frontendEvent.Event.EventCustomFields.Clear();
+                foreach (EventCustomField customField in customFields) {
                     CustomField? newCustomField = await CheckIfCustomFieldExists(customField);
+                    EventCustomField newEventCustomField;
                     if (newCustomField == null) {
-                        await _dbCon.CustomField.AddAsync(customField);
+                        newCustomField = new CustomField {
+                            Description = customField.CustomField!.Description,
+                            Value = customField.CustomField.Value
+                        };
+                        await _dbCon.CustomField.AddAsync(newCustomField);
                         await _dbCon.SaveChangesAsync();
-                        newCustomField = customField;
+                        newEventCustomField = new EventCustomField {
+                            CustomFieldId = newCustomField.CustomFieldId,
+                            EventId = eEvent.EventId
+                        };
+                    } else {
+                        newEventCustomField = new EventCustomField {
+                            CustomFieldId = newCustomField.CustomFieldId,
+                            EventId = eEvent.EventId
+                        };
                     }
 
-                    await _dbCon.EventCustomField.AddAsync(new EventCustomField() {
-                        CustomFieldId = newCustomField.CustomFieldId, 
-                        EventId = eEvent.EventId
-                    });
+                    await _dbCon.EventCustomField.AddAsync(newEventCustomField);
                 }
-            }
 
-            await _dbCon.SaveChangesAsync();
-            return true;
+                await _dbCon.SaveChangesAsync();
+            }
+            return eEvent;
         }
         catch (Exception exception) {
+            Console.WriteLine(exception);
             throw new Exception("An error occurred while adding event to database.", exception);
         }
     }
@@ -269,8 +292,6 @@ public class EventService {
             if (databaseEvent == null) {
                 return false;
             }
-            
-            
 
             _dbCon.Event.Update(eEvent);
             await _dbCon.SaveChangesAsync();
@@ -430,21 +451,6 @@ public class EventService {
         return contactPerson;
     }
     
-    public async Task<Image?> CheckIfImageExists(Image newImage) {
-        Image? image;
-        if (newImage.ImageDescription == null) {
-            image = await _dbCon.Image
-                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && loopImage.ImageDescription == null)
-                .FirstOrDefaultAsync();
-        } else {
-            image = await _dbCon.Image
-                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && newImage.ImageDescription.Equals(loopImage.ImageDescription))
-                .FirstOrDefaultAsync();
-        }
-        
-        return image;
-    }
-    
     private async Task<Place?> CheckIfPlaceExists(Place newPlace) {
         Place? place;
         if (newPlace.Url == null) {
@@ -460,16 +466,28 @@ public class EventService {
         return place;
     }
 
-    private async Task<CustomField?> CheckIfCustomFieldExists(CustomField newCustomField) {
-        CustomField? customField = await _dbCon.CustomField
-            .Where(customField => newCustomField.Value.Equals(customField.Value) && newCustomField.Description.Equals(customField.Description))
-            .FirstOrDefaultAsync();
+    private async Task<CustomField?> CheckIfCustomFieldExists(EventCustomField newEventCustomField) {
+        string customFieldDescription = newEventCustomField.CustomField!.Description;
+        bool customFieldValue = newEventCustomField.CustomField.Value;
 
+        CustomField? customField = await _dbCon.CustomField
+            .Where(customField => customFieldDescription.Equals(customField.Description) &&
+                                  customFieldValue.Equals(customField.Value)).FirstOrDefaultAsync();
         return customField;
+    }
+
+    private async Task<bool> CheckIfUserIsOrganizer(int userId, int orgId) {
+        Organizer? organizer = await _dbCon.Organizer
+            .Where(organizer => organizer.UserId.Equals(userId) && organizer.OrganizationId.Equals(orgId))
+            .FirstOrDefaultAsync();
+        return organizer != null;
     }
     
     private DateTime CombineDateTime(string date, string time) {
-        return DateTime.ParseExact($"{date} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+        
+        string correctDate = DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy");
+        
+        return DateTime.ParseExact($"{correctDate} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
     }
 
 

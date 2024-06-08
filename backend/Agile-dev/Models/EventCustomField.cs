@@ -20,13 +20,12 @@ public class EventCustomField {
     [Display(Name = "Event Custom field id")]
     public int EventCustomFieldId { get; set; }
     
-    [Required]
     [Display(Name = "Custom field id")]
     [ForeignKey("CustomFieldId")]
-    public int CustomFieldId { get; set; }
+    public int? CustomFieldId { get; set; }
+    public CustomField? CustomField { get; set; }
     
-    [Required]
     [Display(Name = "Event id")]
     [ForeignKey("EventId")]
-    public int EventId { get; set; }
+    public int? EventId { get; set; }
 }

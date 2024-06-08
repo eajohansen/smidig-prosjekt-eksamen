@@ -6,11 +6,11 @@ namespace agile_dev.Service;
 
 public class OrganizationService {
     private readonly InitContext _dbCon;
-    private readonly UserService _userService;
-    private readonly EventService _eventService;
+    public readonly UserService _userService;
 
-    public OrganizationService(InitContext context) {
+    public OrganizationService(InitContext context, UserService userService) {
         _dbCon = context;
+        _userService = userService;
     }
 
     #region GET
@@ -47,15 +47,20 @@ public class OrganizationService {
 
     #region POST
 
-    public async Task<bool> AddOrganization(int userId, Organization organization) {
+    public async Task<object> AddOrganization(string userEmail, Organization organization) {
+        
         try {
-            User? user = await _userService.FetchUserById(userId);
-            if (user == null || !_userService.IsUserAdmin(user).Result) {
-                return false;
+            User? user = await _userService.FetchUserByEmail(userEmail);
+            if (user == null) {
+                return "User was not found";
+            }
+
+            if (!_userService.IsUserAdmin(user).Result) {
+                return "User does not have admin rights";
             }
 
             if (organization.Image != null) {
-                Image? newImage = await _eventService.CheckIfImageExists(organization.Image);
+                Image? newImage = await CheckIfImageExists(organization.Image);
                 if (newImage == null) {
                     await _dbCon.Image.AddAsync(organization.Image);
                     await _dbCon.SaveChangesAsync();
@@ -64,15 +69,21 @@ public class OrganizationService {
 
                 organization.ImageId = newImage.ImageId;
             }
+            organization.Organizers = new List<Organizer> {
+                new() {
+                    UserId = user.UserId,
+                }
+            };
             
             
             await _dbCon.Organization.AddAsync(organization);
             await _dbCon.SaveChangesAsync();
             
             
-            return true;
+            return organization;
         }
         catch (Exception exception) {
+            Console.WriteLine(exception);
             throw new Exception("An error occurred while adding organization to database.", exception);
         }
     }
@@ -138,20 +149,38 @@ public class OrganizationService {
     }
     
     public async Task<bool> CheckValidation(int userId, int organizationId) {
-        User? user = await _userService.FetchUserById(userId);
+        object databaseUser = await _userService.FetchUserById(userId);
+        if (databaseUser is not User realUser) {
+            return false;
+        }
         Organization? organization = await FetchOrganizationById(organizationId);
 
-        if (user == null || organization == null) {
+        if (organization == null) {
             return false;
         }
             
-        bool isAdmin = await _userService.IsUserAdmin(user);
-        bool isOrganizer = await _userService.IsUserOrganizerForOrganization(user, organization);
+        bool isAdmin = await _userService.IsUserAdmin(realUser);
+        bool isOrganizer = await _userService.IsUserOrganizerForOrganization(realUser, organization);
         if (!isAdmin && !isOrganizer) {
             return false;
         } else {
             return true;
         }
+    }
+    
+    public async Task<Image?> CheckIfImageExists(Image newImage) {
+        Image? image;
+        if (newImage.ImageDescription == null) {
+            image = await _dbCon.Image
+                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && loopImage.ImageDescription == null)
+                .FirstOrDefaultAsync();
+        } else {
+            image = await _dbCon.Image
+                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && newImage.ImageDescription.Equals(loopImage.ImageDescription))
+                .FirstOrDefaultAsync();
+        }
+        
+        return image;
     }
 
     #endregion

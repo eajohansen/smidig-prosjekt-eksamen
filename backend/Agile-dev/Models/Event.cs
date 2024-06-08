@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
@@ -29,6 +30,12 @@ public class Event {
     [Display(Name = "Description")]
     [StringLength(3000)]
     public string? Description { get; set; }
+    
+    [Display(Name = "Capacity")]
+    public int? Capacity { get; set; }
+    
+    [Display(Name = "Age Limit")]
+    public int? AgeLimit { get; set; }
     
     [Required]
     [Display(Name = "Private")]
@@ -79,10 +86,10 @@ public class Event {
     public DateTime? EndTime { get; set; }
     
     // A HasSet of all EventCustomFields with this Event
+    [JsonIgnore]
     public ICollection<EventCustomField>? EventCustomFields { get; set; }
-    // A HasSet of all CustomFields with this Event
-    public ICollection<CustomField>? CustomFields { get; set; }
     
     // A HasSet of all UserEvents with this Event
+    [JsonIgnore]
     public ICollection<UserEvent>? UserEvents { get; set; }
 }
