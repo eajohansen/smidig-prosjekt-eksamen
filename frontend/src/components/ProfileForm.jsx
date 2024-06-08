@@ -90,12 +90,18 @@ export const ProfileForm = ({ userEmail }) => {
           name="lName"
           onChange={handleChange}
           />
-        <label htmlFor="dobInput">Fødselsdato</label>
-        <input className="date" type="date" id="dobInput" name="dob" onChange={handleChange} />
-      </div>
-      <div className="allergyContainer">
+          <label htmlFor="dobInput">Fødselsdato</label>
+          <input
+            className="date"
+            type="date"
+            id="dobInput"
+            name="dob"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="allergyContainer">
           <label className="allergies" htmlFor="allergyInput">
-              Allergier
+            Allergier
           </label>
         <div className="allergyBtnDiv">
           <input
@@ -123,19 +129,24 @@ export const ProfileForm = ({ userEmail }) => {
         <div className="disclaimerDiv">
           <div><input className="checkBox" type="checkbox"/></div>
 
-          <span className="disclaimer">
-            Ved å registrere brukerprofil, samtykker du til at denne
-            informasjonen kan deles med arrangør og eventuelle medarrangører.
-          </span>
-        </div>
-        <div className="btnDiv">
-          <button className="canclBtn">Avbryt</button>
-          <button className="createBtn"             onClick={() => {
-            handleSubmit();
-          }}>Opprett</button>
+            <span className="disclaimer">
+              Ved å registrere brukerprofil, samtykker du til at denne
+              informasjonen kan deles med arrangør og eventuelle medarrangører.
+            </span>
+          </div>
+          <div className="btnDiv">
+            <button className="canclBtn">Avbryt</button>
+            <button
+              className="createBtn"
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
+              Opprett
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   );
 };

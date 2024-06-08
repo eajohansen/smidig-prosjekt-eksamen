@@ -157,7 +157,7 @@ input {
 .registerContainer {
   justify-content: center;
   width: 68vw;
-  height: 60vh;
+  height: 60%;
   border-radius: 1rem;
   padding: 3.5rem;
   background-color: var(--darkBkgrnd);
@@ -365,7 +365,7 @@ header {
   background-color: #d6d5d5;
   height: 100%;
   align-items: stretch;
-  flex:1;
+  flex: 1;
   overflow: auto;
   align-self: auto;
   p {
@@ -427,7 +427,7 @@ header {
     font-size: 2rem;
     font-weight: normal;
   }
-} 
+}
 .chageEMOrg{
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -450,7 +450,7 @@ header {
     background-color: gray;
     color: white;
     border-radius: 0.3rem;
-    font-size: 0.8rem;  
+    font-size: 0.8rem;
   }
  }
 
@@ -472,7 +472,7 @@ header {
   .inputHover input:focus {
     border: 1px solid black;
     }
-      
+
   .disclaimer{
     padding: 0;
     }
@@ -480,7 +480,7 @@ header {
       padding-top: 1rem;
       padding-bottom: 1rem;
     }
-    
+
 }
 .chageEM{
   padding-bottom: 1rem;
@@ -493,4 +493,7 @@ header {
 }
 .moreInfoTxt{
   padding-bottom: 0.6rem;
+}
+.errorDisplay ul {
+    display: flex;
 }

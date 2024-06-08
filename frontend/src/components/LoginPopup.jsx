@@ -155,9 +155,11 @@ const LoginPopup = () => {
               characters long
             </div>
             <div className="errorDisplay">
-              {pwordErr.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
+              <ul>
+                {pwordErr.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
             </div>
             <p className="InfoLink">
               Ved å klikke fortsett godtar du våre <a href="#">brukervilkår</a>{" "}
@@ -172,7 +174,6 @@ const LoginPopup = () => {
             >
               Fortsett
             </button>
-            
           </div>
         );
       case 3:
