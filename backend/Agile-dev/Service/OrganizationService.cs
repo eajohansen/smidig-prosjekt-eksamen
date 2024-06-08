@@ -6,16 +6,11 @@ namespace agile_dev.Service;
 
 public class OrganizationService {
     private readonly InitContext _dbCon;
-    private readonly UserService _userService;
-    private readonly EventService _eventService;
+    public readonly UserService _userService;
 
-    public OrganizationService(InitContext context) {
-        _dbCon = context;
-    }
-    public OrganizationService(InitContext context, UserService userService, EventService eventService) {
+    public OrganizationService(InitContext context, UserService userService) {
         _dbCon = context;
         _userService = userService;
-        _eventService = eventService;
     }
 
     #region GET
@@ -61,7 +56,7 @@ public class OrganizationService {
             }
             
             if (organization.Image != null) {
-                Image? newImage = await _eventService.CheckIfImageExists(organization.Image);
+                Image? newImage = await CheckIfImageExists(organization.Image);
                 if (newImage == null) {
                     await _dbCon.Image.AddAsync(organization.Image);
                     await _dbCon.SaveChangesAsync();
@@ -164,6 +159,21 @@ public class OrganizationService {
         } else {
             return true;
         }
+    }
+    
+    public async Task<Image?> CheckIfImageExists(Image newImage) {
+        Image? image;
+        if (newImage.ImageDescription == null) {
+            image = await _dbCon.Image
+                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && loopImage.ImageDescription == null)
+                .FirstOrDefaultAsync();
+        } else {
+            image = await _dbCon.Image
+                .Where(loopImage => newImage.Link.Equals(loopImage.Link) && newImage.ImageDescription.Equals(loopImage.ImageDescription))
+                .FirstOrDefaultAsync();
+        }
+        
+        return image;
     }
 
     #endregion
