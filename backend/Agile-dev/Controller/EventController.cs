@@ -12,6 +12,7 @@ namespace Agile_dev.Controller {
     [ApiController]
     public class EventController : ControllerBase {
         private readonly EventService _eventService;
+        
 
         public EventController(EventService eventService) {
             _eventService = eventService;
@@ -138,10 +139,14 @@ namespace Agile_dev.Controller {
         
         // POST api/event/create/5/6
         [Authorize]
-        [HttpPost("create/{userId}/{organizationId}")]
-        public async Task<IActionResult> AddEvent([FromRoute] int userId, [FromBody] EventDto frontendEvent, [FromRoute] int organizationId) {
+        [HttpPost("create/{organizationId}")]
+        public async Task<IActionResult> AddEvent([FromBody] EventDto frontendEvent, [FromRoute] int organizationId) {
             try {
-                bool isAdded = await _eventService.AddEvent(userId, frontendEvent, organizationId);
+                string? userName = User.FindFirstValue(ClaimTypes.Name);
+                if(userName == null) {
+                    return Unauthorized("Invalid user");
+                }
+                bool isAdded = await _eventService.AddEvent(userName, frontendEvent, organizationId);
                 if (!isAdded) {
                     // Could not create event, because request is bad
                     return BadRequest();

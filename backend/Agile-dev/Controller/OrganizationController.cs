@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -50,12 +51,17 @@ namespace Agile_dev.Controller {
 
         #region POST
         
-        // POST api/organization/create/5
+        // POST api/organization/create
         [Authorize]
-        [HttpPost("create/{userId}")]
-        public async Task<IActionResult> AddOrganization([FromRoute] int userId , [FromBody] Organization organization) {
+        [HttpPost("create")]
+        public async Task<IActionResult> AddOrganization([FromBody] Organization organization) {
             try {
-                bool isAdded = await _organizationService.AddOrganization(userId, organization);
+                var userName = User.FindFirstValue(ClaimTypes.Name);
+                if(userName == null) {
+                    return Unauthorized("Invalid user");
+                }
+                Console.WriteLine(organization.Name);
+                bool isAdded = await _organizationService.AddOrganization(userName, organization);
                 if (!isAdded) {
                     // Could not create organization, because request is bad
                     return BadRequest();
@@ -64,6 +70,7 @@ namespace Agile_dev.Controller {
                 return Ok();
             }
             catch (Exception exception) {
+                Console.WriteLine(exception);
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }

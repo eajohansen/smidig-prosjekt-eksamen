@@ -12,6 +12,11 @@ public class OrganizationService {
     public OrganizationService(InitContext context) {
         _dbCon = context;
     }
+    public OrganizationService(InitContext context, UserService userService, EventService eventService) {
+        _dbCon = context;
+        _userService = userService;
+        _eventService = eventService;
+    }
 
     #region GET
 
@@ -47,13 +52,14 @@ public class OrganizationService {
 
     #region POST
 
-    public async Task<bool> AddOrganization(int userId, Organization organization) {
+    public async Task<bool> AddOrganization(string userEmail, Organization organization) {
+        
         try {
-            User? user = await _userService.FetchUserById(userId);
+            User? user = await _userService.FetchUserByEmail(userEmail);
             if (user == null || !_userService.IsUserAdmin(user).Result) {
                 return false;
             }
-
+            
             if (organization.Image != null) {
                 Image? newImage = await _eventService.CheckIfImageExists(organization.Image);
                 if (newImage == null) {
@@ -64,6 +70,11 @@ public class OrganizationService {
 
                 organization.ImageId = newImage.ImageId;
             }
+            organization.Organizers = new List<Organizer> {
+                new Organizer {
+                    UserId = user.UserId,
+                }
+            };
             
             
             await _dbCon.Organization.AddAsync(organization);
@@ -73,7 +84,8 @@ public class OrganizationService {
             return true;
         }
         catch (Exception exception) {
-            throw new Exception("An error occurred while adding organization to database.", exception);
+            Console.WriteLine(exception);
+            return false;
         }
     }
 
