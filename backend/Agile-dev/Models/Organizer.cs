@@ -28,6 +28,6 @@ public class Organizer {
     
     [Required]
     [Display(Name = "User id")]
-    [ForeignKey("UserId")]
-    public int UserId { get; set; }
+    [ForeignKey("Id")]
+    public string Id { get; set; }
 }

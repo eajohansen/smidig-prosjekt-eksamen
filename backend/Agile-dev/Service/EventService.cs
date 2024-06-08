@@ -24,6 +24,7 @@ public class EventService {
                 .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
                 .ToListAsync();
             ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
+            
             return newEvents;
         }
         catch (Exception exception) {
@@ -42,7 +43,7 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId == user.UserId))
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id == user.Id))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -64,7 +65,7 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.UserId != user.UserId) && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id != user.Id) && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -152,7 +153,7 @@ public class EventService {
                 return "Could not find user by email";
             }
             
-            if (!CheckIfUserIsOrganizer(user.UserId, frontendEvent.Event.OrganizationId).Result) {
+            if (!CheckIfUserIsOrganizer(user.Id, frontendEvent.Event.OrganizationId).Result) {
                 return "User is not organizer";
             }
             
@@ -278,13 +279,8 @@ public class EventService {
     
     #region PUT
 
-    public async Task<bool> UpdateEvent(int userId, int organizationId, Event eEvent) {
+    public async Task<bool> UpdateEvent(Event eEvent) {
         try {
-            /*
-             if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }*/
-
             Event? databaseEvent = await FetchEventById(eEvent.EventId);
             if (databaseEvent == null) {
                 return false;
@@ -435,38 +431,12 @@ public class EventService {
         }
     }
 
-    public async Task<bool> UpdateCustomField(int userId, int organizationId, List<CustomField> customFields) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
-
-            foreach (CustomField customField in customFields) {
-                CustomField? databaseCustomField = await _dbCon.CustomField.FindAsync(customField.CustomFieldId);
-                if (databaseCustomField != null) {
-                    _dbCon.CustomField.Update(databaseCustomField);
-                }
-            }
-
-            await _dbCon.SaveChangesAsync();
-            return true;
-
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while updating customField.", exception);
-        }
-    }
-
     #endregion
     
     #region DELETE
 
-    public async Task<bool> DeleteEvent(int userId, Event eEvent, int organizationId) {
+    public async Task<bool> DeleteEvent(Event eEvent) {
         try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
-
             _dbCon.Event.Remove(eEvent);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -557,9 +527,9 @@ public class EventService {
         return customField;
     }
 
-    private async Task<bool> CheckIfUserIsOrganizer(int userId, int orgId) {
+    private async Task<Or> CheckIfUserIsOrganizer(string userId, int orgId) {
         Organizer? organizer = await _dbCon.Organizer
-            .Where(organizer => organizer.UserId.Equals(userId) && organizer.OrganizationId.Equals(orgId))
+            .Where(organizer => organizer.Id.Equals(userId) && organizer.OrganizationId.Equals(orgId))
             .FirstOrDefaultAsync();
         return organizer != null;
     }

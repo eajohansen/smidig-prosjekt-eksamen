@@ -21,9 +21,10 @@ public class Follower {
     public int FollowerId { get; set; }
     
     [Required]
+    [ForeignKey("Id")]
     [Display(Name = "User id")]
-    [ForeignKey("UserId")]
-    public int UserId { get; set; }
+    [StringLength(254)]
+    public string Id { get; set; }
     
     [Required]
     [Display(Name = "Organization id")]

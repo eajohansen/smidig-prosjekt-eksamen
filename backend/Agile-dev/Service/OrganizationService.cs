@@ -55,9 +55,10 @@ public class OrganizationService {
                 return "User was not found";
             }
 
+            /*
             if (!_userService.IsUserAdmin(user).Result) {
                 return "User does not have admin rights";
-            }
+            }*/
 
             if (organization.Image != null) {
                 Image? newImage = await CheckIfImageExists(organization.Image);
@@ -71,7 +72,7 @@ public class OrganizationService {
             }
             organization.Organizers = new List<Organizer> {
                 new() {
-                    UserId = user.UserId,
+                    Id = user.Id,
                 }
             };
             
@@ -90,9 +91,10 @@ public class OrganizationService {
 
     #endregion
 
+    /*
     #region PUT
 
-    public async Task<bool> UpdateOrganization(int userId, Organization organization) {
+    public async Task<bool> UpdateOrganization(string userId, Organization organization) {
         try {
             if (!CheckValidation(userId, organization.OrganizationId).Result) {
                 return false;
@@ -116,7 +118,7 @@ public class OrganizationService {
 
     #region DELETE
 
-    public async Task<bool> DeleteOrganization(int userId, Organization organization) {
+    public async Task<bool> DeleteOrganization(string userId, Organization organization) {
         try {
             if (!CheckValidation(userId, organization.OrganizationId).Result) {
                 return false;
@@ -131,7 +133,7 @@ public class OrganizationService {
         }
     }
 
-    #endregion
+    #endregion*/
 
     #region MISCELLANEOUS
 
@@ -148,7 +150,7 @@ public class OrganizationService {
         return newOrganizations;
     }
     
-    public async Task<bool> CheckValidation(int userId, int organizationId) {
+    /*public async Task<bool> CheckValidation(string userId, int organizationId) {
         object databaseUser = await _userService.FetchUserById(userId);
         if (databaseUser is not User realUser) {
             return false;
@@ -166,7 +168,7 @@ public class OrganizationService {
         } else {
             return true;
         }
-    }
+    }*/
     
     public async Task<Image?> CheckIfImageExists(Image newImage) {
         Image? image;

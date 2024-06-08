@@ -31,7 +31,7 @@ public class Allergy {
     public string? Description { get; set; }
      
     // [Required]
-    [ForeignKey("UserId")]
+    [ForeignKey("Id")]
     [Display(Name = "User id")]
-    public int UserId { get; set; }
+    public string Id { get; set; }
 }

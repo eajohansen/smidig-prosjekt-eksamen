@@ -26,6 +26,7 @@ namespace agile_dev.Controller {
             IActionResult is used because we are returning a response.
          */
 
+        /*
         #region GET
 
         // GET: api/user/fetchAll
@@ -98,9 +99,9 @@ namespace agile_dev.Controller {
             }
         }
 
-        #endregion
+        #endregion*/
 
-        #region POST
+      //  #region POST
 
         // POST api/user/create
         [HttpPost("create")]
@@ -109,7 +110,7 @@ namespace agile_dev.Controller {
                 return BadRequest("User is null");
             }
             try {
-                object newUser = await _userService.AddUserToDatabase(user);
+                object newUser = "asdfa"; // await _userService.AddUserToDatabase(user);
                 if (newUser is not Models.User) {
                     return BadRequest(newUser);
                 }
@@ -129,7 +130,8 @@ namespace agile_dev.Controller {
                 return BadRequest("User is null");
             }
             try {
-                bool isAdded = await _userService.AddUserAsOrganizer(loggedInUserId, user, organizationId);
+                bool isAdded = true;
+                // bool isAdded = await _userService.AddUserAsOrganizer(loggedInUserId, user, organizationId);
                 if (!isAdded) {
                     // Could not add user as organizer, because request is bad
                     return BadRequest();
@@ -142,7 +144,7 @@ namespace agile_dev.Controller {
             }
         }
 
-        // POST api/user/follower/create/1
+        /*// POST api/user/follower/create/1
         [Authorize]
         [HttpPost("follower/create/{organizationId}")]
         public async Task<IActionResult> AddFollower([FromBody] User? user, [FromRoute] int organizationId) {
@@ -161,10 +163,10 @@ namespace agile_dev.Controller {
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
-        }
+        }*/
 
         // POST api/user/event/add/3
-        [Authorize]
+        /*[Authorize]
         [HttpPost("event/add/{eventId}")]
         public async Task<IActionResult> AddUserEvent([FromBody] User? user, [FromRoute] int eventId) {
             if (user == null) {
@@ -184,8 +186,9 @@ namespace agile_dev.Controller {
             }
         }
 
-        #endregion
+        #endregion*/
 
+        /*
         #region PUT
 
         // PUT api/user/update
@@ -214,10 +217,11 @@ namespace agile_dev.Controller {
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
-        }
+        }*/
 
         // PUT api/user/admin/update/5
         // "AdminUser" in this context is the user that is making the request
+        /*
         // "id" is the id of the user that is being made admin
         [Authorize]
         [HttpPut("admin/update/{id}")]
@@ -239,8 +243,9 @@ namespace agile_dev.Controller {
         }
 
         #endregion
+        */
 
-        #region DELETE
+        /*#region DELETE
 
         // DELETE api/User/delete
         [Authorize]
@@ -271,6 +276,6 @@ namespace agile_dev.Controller {
             }
         }
 
-        #endregion
+        #endregion*/
     }
 }

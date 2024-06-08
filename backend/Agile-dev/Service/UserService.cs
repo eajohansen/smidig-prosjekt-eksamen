@@ -23,7 +23,7 @@ public class UserService {
 
     #region GET
 
-    public async Task<ICollection<User>> FetchAllUsers() {
+    /*public async Task<ICollection<User>> FetchAllUsers() {
         try {
             ICollection<User> foundUsers = await _dbCon.User.ToListAsync();
             ICollection<User> newUsers = AddRelationToUser(foundUsers.ToList()).Result;
@@ -34,7 +34,9 @@ public class UserService {
             throw new Exception("An error occurred while fetching users.", exception);
         }
     }
+    */
 
+    /*
     public async Task<object> FetchUserById(int id) {
         try {
             User? user = await _dbCon.User.FindAsync(id);
@@ -51,6 +53,7 @@ public class UserService {
             throw new Exception("An error occurred while fetching user.", exception);
         }
     }
+    */
 
     public async Task<User?> FetchUserByEmail(string email) {
         try {
@@ -64,6 +67,7 @@ public class UserService {
 
     #endregion
 
+    /*
     #region POST
 
     public async Task<object> AddUserToDatabase(User user) {
@@ -333,6 +337,7 @@ public class UserService {
     }
 
     #endregion
+    */
 
 
 }
