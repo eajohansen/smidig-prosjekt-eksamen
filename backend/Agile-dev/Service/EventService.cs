@@ -467,7 +467,10 @@ public class EventService {
     }
     
     private DateTime CombineDateTime(string date, string time) {
-        return DateTime.ParseExact($"{date} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+        
+        string correctDate = DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy");
+        
+        return DateTime.ParseExact($"{correctDate} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
     }
 
 
