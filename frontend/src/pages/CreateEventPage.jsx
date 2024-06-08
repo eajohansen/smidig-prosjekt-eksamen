@@ -53,6 +53,7 @@ export const CreateEventPage = () => {
       }
     }
   }
+  const defaultValue = new Date().toISOString().split('T')[0]
 
   const handleCustomFields = () => {
     const newEventCustomField = {
@@ -129,6 +130,7 @@ export const CreateEventPage = () => {
                     id="startDate"
                     type="date"
                     name="start"
+                    defaultValue={defaultValue}
                     onChange={handleChange}
                 ></input>
                 <input
@@ -136,6 +138,7 @@ export const CreateEventPage = () => {
                     type="time"
                     max="23:59"
                     name="startTime"
+                    defaultValue={"12:00"}
                     onChange={handleChange}
                 ></input>
               </div>
@@ -146,12 +149,14 @@ export const CreateEventPage = () => {
                     id="endDate"
                     type="date"
                     name="end"
+                    defaultValue={defaultValue}
                     onChange={handleChange}
                 ></input>
                 <input
                     id="endTime"
                     type="time"
                     name="endTime"
+                    defaultValue={"12:00"}
                     onChange={handleChange}
                 ></input>
               </div>
