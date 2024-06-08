@@ -43,8 +43,7 @@ export const sendLogin = async (email, password) => {
   }
 };
 export const sendEvent = async (event) => {
-  console.log("what i get in:");
-  console.log(event);
+
   try {
     const result = await axiosInstance.post("api/event/create", {
       Event: {
@@ -66,7 +65,7 @@ export const sendEvent = async (event) => {
           Email: "test@test.no",
           Number: ""
         },
-        EventCustomFields: [{CustomField: event.eventCustomFields}],
+        EventCustomFields: event.EventCustomFields,
         Capacity: event.capacity,
         AgeLimit: event.ageLimit
       },

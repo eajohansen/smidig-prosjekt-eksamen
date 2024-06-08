@@ -8,8 +8,10 @@ export const CreateEventPage = () => {
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
   const [customFields, setCustomFields] = useState([]);
-  const [newCustomField, setNewCustomField] = useState({});
-  const [event, setEvent] = useState({
+  const [newCustomField, setNewCustomField] = useState({
+    Description: "",
+    Value: false
+  });  const [event, setEvent] = useState({
     organizationId: 0,
     title: "",
     address: "",
@@ -27,11 +29,7 @@ export const CreateEventPage = () => {
     endTime: "",
     customfieldsDesc: "",
     customfieldsValue: false,
-    eventCustomFields: {
-      description: "",
-      value: false
-    }
-
+    EventCustomFields: []
   });
 
   useEffect(() => {
@@ -39,30 +37,48 @@ export const CreateEventPage = () => {
   }, [newCustomField]);
 
   const handleChange = (e) => {
-    setEvent({ ...event, [e.currentTarget.name]: e.currentTarget.value });
-    if(e.currentTarget.name === "customfieldsDesc") {
-      setNewCustomField({...newCustomField, description: e.currentTarget.value});
-      setEvent({...event, eventCustomFields: {...event.eventCustomFields, description: e.currentTarget.value}});
-    } else if(e.currentTarget.name === "customfieldsValue") {
-      let value = false;
-      if(e.target.type === 'checkbox') {
-        value = e.target.checked
+    console.log(e);
+    const curTargetVal = e?.currentTarget?.value;
+    const curTargetName = e?.currentTarget?.name;
+    e.persist();
+    if (curTargetVal != null) {
+      if (['customfieldsDesc', 'customfieldsValue'].includes(curTargetName)) {
+        let value = curTargetName === 'customfieldsValue' ? e.currentTarget.checked : curTargetVal;
+        setNewCustomField(prev => ({
+          ...prev,
+          [curTargetName === 'customfieldsDesc' ? 'Description' : 'Value']: value
+        }));
+      } else {
+        setEvent({ ...event, [curTargetName]: curTargetVal });
       }
-      setNewCustomField({...newCustomField, "value": value});
-      setEvent({...event, eventCustomFields: {...event.eventCustomFields, value: value}});
     }
-  };
+  }
+  const defaultValue = new Date().toISOString().split('T')[0]
 
   const handleCustomFields = () => {
-    setCustomFields([...customFields, {
-      "description": newCustomField.description,
-      "value": newCustomField.value
-    }]);
-    setNewCustomField("");
-  }
+    const newEventCustomField = {
+      "Description": newCustomField.Description,
+      "Value": newCustomField.Value
+    };
 
+    setEvent(prev => {
+      let newEventCustomFields = [...prev.EventCustomFields];
+      newEventCustomFields.push({CustomField: newEventCustomField});
+
+      // Clear the newCustomField state after adding it to the event
+      setNewCustomField({
+        Description: "",
+        Value: false
+      });
+
+      return {
+        ...prev,
+        EventCustomFields: newEventCustomFields
+      }
+    });
+  }
   const handleSubmit = async () => {
-     await sendEvent(event);
+    await sendEvent(event);
   };
 
   return (
@@ -114,6 +130,7 @@ export const CreateEventPage = () => {
                     id="startDate"
                     type="date"
                     name="start"
+                    defaultValue={defaultValue}
                     onChange={handleChange}
                 ></input>
                 <input
@@ -121,6 +138,7 @@ export const CreateEventPage = () => {
                     type="time"
                     max="23:59"
                     name="startTime"
+                    defaultValue={"12:00"}
                     onChange={handleChange}
                 ></input>
               </div>
@@ -131,12 +149,14 @@ export const CreateEventPage = () => {
                     id="endDate"
                     type="date"
                     name="end"
+                    defaultValue={defaultValue}
                     onChange={handleChange}
                 ></input>
                 <input
                     id="endTime"
                     type="time"
                     name="endTime"
+                    defaultValue={"12:00"}
                     onChange={handleChange}
                 ></input>
               </div>
@@ -150,9 +170,9 @@ export const CreateEventPage = () => {
                       id="allergyInput"
                       name="customfieldsDesc"
                       onChange={handleChange}
-                      value={newCustomField.description}
+                      value={newCustomField.Description}
                   />
-                  <input className="checkBox custom-field-checkbox" type="checkbox" name="customfieldsValue" value={newCustomField.value} onChange={handleChange} />
+                  <input className="checkBox custom-field-checkbox" type="checkbox" name="customfieldsValue" value={newCustomField.Value} onChange={handleChange} />
                   <button onClick={handleCustomFields}>
                     Legg til
                   </button>
@@ -160,9 +180,10 @@ export const CreateEventPage = () => {
                 <label className="yourAllergies">Dine egendefinerte felt</label>
                 <div className="allergyOutput">
                   <ul>
-                    {customFields.map((item, i) => (
+                    {event.EventCustomFields.map((item, i) => (
                         <li className="allergy" key={i}>
-                          <span>{item.description} {item.value ? "(ja)" : "(nei)"}</span>
+                          {console.log(item)}
+                          <span>{item.CustomField.Description} {item.CustomField.Value ? "(ja)" : "(nei)"}</span>
                           <i className="trash bi bi-trash3 "></i>
                         </li>
                     ))}
