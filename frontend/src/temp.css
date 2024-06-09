@@ -403,7 +403,16 @@ header {
   font-family: "Inter", sans-serif;
   font-size: 1rem;
   color: black;
+
+  .inputHover input:focus {
+      border: 1px solid black;
+    }
+  #infoAboutUs{
+    height: 15rem;
+    font-size: 1rem;
+  }
 }
+
 
 .headderContainer {
   display: flex;
@@ -414,11 +423,64 @@ header {
     font-size: 2rem;
     font-weight: normal;
   }
+} 
+.chageEMOrg{
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
+.aboutUsContainer {
+   width: 50%;
+   display: flex;
+   flex-direction: column;
+   label{
+    padding: 0.6rem;
+    padding-left: 0;
+    padding-top: 0;
+   }
+
+ }
+ .imgContainer{
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+ }
 
 /*User profil*/
 .UserProfileContainer{
   font-family: "Inter", sans-serif;
-    font-size: 1rem;
-    color: black;
+  font-size: 1rem;
+  color: black;
+
+  label{
+    padding-top: 0.9rem;
+  }
+  .yourAllergiProfile{
+    padding-top: 0;
+    padding-bottom: 0.6rem;
+  }
+
+
+  .inputHover input:focus {
+    border: 1px solid black;
+    }
+      
+  .disclaimer{
+    padding: 0;
+    }
+    .disclaimerDiv{
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    
+}
+.chageEM{
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+
+}
+#moreInfo{
+  padding: 4rem;
+
+}
+.moreInfoTxt{
+  padding-bottom: 0.6rem;
 }
