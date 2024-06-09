@@ -2,20 +2,31 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export const EventItem = (props) => {
-  const { title, date, id } = props;
+  const { title, date, id, sold, waitlist, available } = props;
   return (
     <article key={id} className="eventItemContainer">
-      <img
-        src="https://images.unsplash.com/photo-1717684566059-4d16b456c72a?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt=""
-      />
-      <div className="eventItemText">
-        <p>{title}</p>
+        <div className="eventImageContainer">
+            <img className="eventImage"
+            src="https://images.unsplash.com/photo-1717684566059-4d16b456c72a?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="random"/>
+        </div>
+        <div className="eventDetails">
+        <h3>{title}</h3>
         <p>{date}</p>
-      </div>
-      <Link to={`/events/details/${id}`}>
-        <button>Se arrangement</button>
-      </Link>
+        </div>
+        <div className="ticketInfo">
+          <h3>Billetter</h3>
+          <p>Solgt</p>
+          <h2>{sold}</h2>
+          <p>Venteliste</p>
+          <h2 className="waitlist">{waitlist}</h2>
+          <p>Ledig</p>
+          <h2 className="available">{available}</h2>
+          <div className="buttonContainer">
+              <button className="viewRegistrationsButton">Vis påmeldte</button>
+              <button>Se arrangement</button>
+          </div>
+        </div>
     </article>
   );
 };
