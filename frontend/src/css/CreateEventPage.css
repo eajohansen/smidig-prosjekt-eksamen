@@ -2,29 +2,27 @@ main {
     display:flex;
     justify-self: start;
     align-self:start;
+    
     input {
+        height: 3rem;
         border-radius: 0.2rem;
         box-shadow: none;
         background-color: transparent;
         border: 1px solid rgb(174, 174, 174);
-        color: white;
         padding: 0.5rem;
         font-size: 0.8rem;
     }
     input:focus {
-        border: 1px solid white;
+        border: 1px solid black;
     }
-    color: white;
 }
 .page-container {
     display:block;
-    padding: 1.3rem;
     border-radius: 10px;
     width: 80vw;
     h2 {
         font-size: 2rem;
     }
-    background: var(--darkBkgrnd);
 }
 .create-event-box {
     > div {
@@ -43,35 +41,36 @@ main {
         justify-content: start;
         text-align: start;
         width: 50%;
+        gap: 1rem;
     }
     > .left-box > div {
         display: flex;
         flex-direction: column;
     }
     > .right-box {
+        padding: 2rem;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: start;
+        text-align: start;
         width: 50%;
+        gap: 1rem;
     }
     > .right-box > div {
-        padding: 2rem;
         width: 100%;
     }
     > .right-box > div > div {
         display: flex;
         flex-direction: column;
+        /* gap: 2rem; */
+        label{
+            padding: 0;
+        }
     }
     > .right-box > div > .date-time-format {
         display: flex;
         flex-direction: row;
-    }
-    & .event-check-box {
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
+        padding-bottom: 1rem;
     }
     & .event-check-box > div {
         display: flex;
@@ -85,14 +84,16 @@ main {
 }
 .event-page-button-div {
     display: flex;
-    justify-content: center;
-    padding: 0;
+    justify-content: start;
     gap: 1rem;
     button {
         padding: 0.5rem 1rem;
         border-radius: 0.2rem;
         border: 1px solid white;
         font-size: 0.8rem;
+    }
+    .canclBtn{
+        margin: 0;
     }
 }
 .date-time-format {
@@ -103,17 +104,39 @@ main {
 
     input {
         width: 30%;
-        gap: 1rem;
+    }
+}
+#upLoad{
+    display: flex;
+    flex-direction: row;
+    .chooseBtn{
+        border-radius: 0.3rem;
+        font-size: 0.7rem;
+        width: 6rem;
+        padding: 0.2rem;
+        background-color: grey;
+        color: white;
+        
     }
 }
 .custom-fields-input {
     display: flex;
     width: 100%;
     flex-direction: row;
+    padding-bottom: 1rem;
+    button{
+        border-radius: 0.3rem;
+        font-size: 0.8rem;
+        width: 5rem;
+        height: 2.8rem;
+        background-color: grey;
+        color: white;
+    }
     input:not(.custom-field-checkbox) {
         width: 100%;
     }
 }
-.custom-field-checkbox {
-    padding: 0.5rem;
+.customFieldsContainer{
+    width: 64%;
+   padding-bottom: 1rem;
 }

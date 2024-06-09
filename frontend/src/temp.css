@@ -392,10 +392,8 @@ header {
 /*Organisasjons profil*/
 .OrgProfilContainer {
   display: flex;
-  width: 100vh;
   height: 100vh;
   flex-direction: column;
-  padding: 3rem;
   font-family: "Inter", sans-serif;
   font-size: 1rem;
   color: black;

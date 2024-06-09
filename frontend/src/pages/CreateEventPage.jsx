@@ -87,15 +87,15 @@ export const CreateEventPage = () => {
         <div className="create-event-box">
           <section className="left-box">
             <div>
-              <label htmlFor="title">Tittel</label>
+              <label htmlFor="title">Tittel*</label>
               <input id="title" name="title" onChange={handleChange}></input>
             </div>
             <div>
-              <label htmlFor="address">Adresse</label>
+              <label htmlFor="address">Adresse*</label>
               <input id="address" name="address" onChange={handleChange}></input>
             </div>
             <div>
-              <label htmlFor="contactPerson">Kontakt Person</label>
+              <label htmlFor="contactPerson">Kontakt person*</label>
               <input
                   id="contactPerson"
                   name="contactP"
@@ -103,7 +103,7 @@ export const CreateEventPage = () => {
               ></input>
             </div>
             <div>
-              <label htmlFor="description">Beskrivelse</label>
+              <label htmlFor="description">Beskrivelse*</label>
               <input
                   id="description"
                   name="description"
@@ -112,18 +112,26 @@ export const CreateEventPage = () => {
             </div>
             <div className="event-check-box">
               <div>
-                <label htmlFor="maxSeating">Antall Plasser</label>
+                <label htmlFor="maxSeating">Antall Plasser*</label>
                 <input id="maxSeating" name="capacity" onChange={handleChange} />
               </div>
               <div>
-                <label htmlFor="minAge">Aldersgrense</label>
+                <label htmlFor="minAge">Aldersgrense*</label>
                 <input id="minAge" name="ageLimit" onChange={handleChange} />
+              </div>
+              <div>
+                <label htmlFor="foodService">Matservering*</label>
+                <input className="checkBox food" type="checkbox" onChange={handleChange} />
+              </div>
+              <div>
+                <label htmlFor="freeEvent">Gratis arrangement*</label>
+                <input className="checkBox" type="checkbox" onChange={handleChange} />
               </div>
             </div>
           </section>
           <section className="right-box">
             <div className="force-width">
-              <label htmlFor="startTime">Start dato og kl.</label>
+              <label htmlFor="startTime">Start dato og kl.*</label>
               <div className="date-time-format">
                 <input
                     id="startDate"
@@ -142,7 +150,7 @@ export const CreateEventPage = () => {
                 ></input>
               </div>
 
-              <label htmlFor="endTime">Slutt dato og kl.</label>
+              <label htmlFor="endTime">Slutt dato og kl.*</label>
               <div className="date-time-format">
                 <input
                     id="endDate"
@@ -159,7 +167,7 @@ export const CreateEventPage = () => {
                     onChange={handleChange}
                 ></input>
               </div>
-              <div className="allergyContainer">
+              <div className="customFieldsContainer">
                 <label className="allergies" htmlFor="allergyInput">
                   Egendefinert felt
                 </label>
@@ -172,11 +180,11 @@ export const CreateEventPage = () => {
                       value={newCustomField.Description}
                   />
                   <input className="checkBox custom-field-checkbox" type="checkbox" name="customfieldsValue" value={newCustomField.Value} onChange={handleChange} />
-                  <button onClick={handleCustomFields}>
+                  <button className="addBtn" onClick={handleCustomFields}>
                     Legg til
                   </button>
                 </div>
-                <h3>Dine egendefinerte felt</h3>
+                <label htmlFor="yourAllergiProfile">Dine egendefinerte felt</label>
                 <div className="allergyOutput">
                   <ul>
                     {event.EventCustomFields.map((item, i) => (
@@ -188,11 +196,15 @@ export const CreateEventPage = () => {
                   </ul>
                 </div>
               </div>
+              <div id="upLoad">
+                <label htmlFor="">Last opp bilde: </label>
+                 <button className="chooseBtn">Last opp bilde</button>
+              </div>
             </div>
             <div className="event-page-button-div">
-              <button>Last opp bilde</button>
-              <button>Avbryt</button>
-              <button onClick={handleSubmit}>Lagre og forhåndsvis</button>
+             
+              <button className="canclBtn">Avbryt</button>
+              <button onClick={handleSubmit} className="createBtn">Lagre og forhåndsvis</button>
             </div>
           </section>
         </div>
