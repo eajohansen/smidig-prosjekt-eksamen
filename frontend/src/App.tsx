@@ -11,8 +11,8 @@ import { OrgProfilePage } from "./pages/OrgProfilePage";
 import { EventDetails } from "./pages/EventDetails";
 
 function App() {
-  return (
 
+  return (
       <BrowserRouter>
         <MainNav version={"user"} />
         <main>

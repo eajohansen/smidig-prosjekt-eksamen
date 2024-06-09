@@ -63,32 +63,32 @@ export const ProfileForm = ({ userEmail }) => {
 
   return (
     <div className="registerContainer">
-    <div className="headderDiv">
+      <div className="headderDiv">
         <h2>Opprett Bruker</h2>
         <hr></hr>
-        </div>
-    <div className="profileInfoContainer inputHover">
-      <div className="userInfoContainer">
-        <label htmlFor="emailRegister">Epost</label>
-        <div className="emailContainer">
-          <input type="email" id="emailRegister" value={userEmail} readOnly />
-          <span className="icon-inside">
-            <i className="bi bi-lock"></i>
-          </span>
-        </div>
-        <label htmlFor="fNameInput">Fornavn</label>
-        <input
-          type="text"
-          id="fNameInput"
-          name="fName"
-          onChange={handleChange}
+      </div>
+      <div className="profileInfoContainer inputHover">
+        <div className="userInfoContainer">
+          <label htmlFor="emailRegister">Epost</label>
+          <div className="emailContainer">
+            <input type="email" id="emailRegister" value={userEmail} readOnly />
+            <span className="icon-inside">
+              <i className="bi bi-lock"></i>
+            </span>
+          </div>
+          <label htmlFor="fNameInput">Fornavn</label>
+          <input
+            type="text"
+            id="fNameInput"
+            name="fName"
+            onChange={handleChange}
           />
-        <label htmlFor="lNameInput">Etternavn</label>
-        <input
-          type="text"
-          id="lNameInput"
-          name="lName"
-          onChange={handleChange}
+          <label htmlFor="lNameInput">Etternavn</label>
+          <input
+            type="text"
+            id="lNameInput"
+            name="lName"
+            onChange={handleChange}
           />
           <label htmlFor="dobInput">Fødselsdato</label>
           <input
@@ -103,13 +103,13 @@ export const ProfileForm = ({ userEmail }) => {
           <label className="allergies" htmlFor="allergyInput">
             Allergier
           </label>
-        <div className="allergyBtnDiv">
-          <input
-            type="text"
-            id="allergyInput"
-            name="allergies"
-            onChange={handleChange}
-            value={newAllergy}
+          <div className="allergyBtnDiv">
+            <input
+              type="text"
+              id="allergyInput"
+              name="allergies"
+              onChange={handleChange}
+              value={newAllergy}
             />
           <button className="addBtn" onClick={handleAllergy}>
             Legg til
