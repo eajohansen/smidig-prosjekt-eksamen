@@ -31,7 +31,7 @@ export const EventItem = (props) => {
           </div>
           <div className="buttonContainer">
               <button className="viewRegistrationsButton">Vis påmeldte</button>
-              <button className="seeEventButton ">Se arrangement</button>
+              <button className="seeEventButton">Se arrangement</button>
           </div>
         </div>
     </article>

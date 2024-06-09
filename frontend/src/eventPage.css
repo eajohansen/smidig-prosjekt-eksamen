@@ -14,14 +14,12 @@
     "imageContainer ticketInfo"
     "details ticketInfo"
     "details buttonContainer";
-  gap: 10px;
   border: 1px solid grey;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 20px;
   max-width: 150%;
   margin: 5%;
-  width: 200%;
-  height: auto;
+  width: 120%;
 }
 
 .eventDetails {
