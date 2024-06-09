@@ -2,19 +2,18 @@ import "./temp.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MainNav } from "./components/shared/MainNav";
 import { HomePage } from "./pages/HomePage";
-import { OrgProfilePage } from "./pages/OrgProfilePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { TicketsPage } from "./pages/TicketsPage";
 import { EventsPage } from "./pages/EventsPage";
+import { OrgProfilePage } from "./pages/OrgProfilePage";
 import {CreateEventPage} from "./pages/CreateEventPage";
-
 
 function App() {
 
   return (
 
       <BrowserRouter>
-        <MainNav version={"organizer"} />
+        <MainNav version={"user"} />
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />

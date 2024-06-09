@@ -34,8 +34,8 @@ export const ProfilePage = () => {
           id="lNameInput"
           name="lName"
           />
-          <a href="">Endre E-post</a>
-           <a href="">Endre passord</a>
+          <a className="chageLogIn chageEM" href="">Endre E-post</a>
+           <a className="chageLogIn" href="">Endre passord</a>
       </div>
       <div className="allergyContainer">
           <label className="allergies" htmlFor="allergyInput">
@@ -51,7 +51,7 @@ export const ProfilePage = () => {
             Legg til
           </button>
         </div>
-        <label className="yourAllergies">Dine allergier</label>
+        <label className="yourAllergiProfile">Dine allergier</label>
         <div className="allergyOutput">
           <ul>
             {/* {allergies.map((item, i) => (
@@ -62,7 +62,7 @@ export const ProfilePage = () => {
             ))} */}
           </ul>
         </div>
-        <label htmlFor="moreInfo">Ønsker du å oppgi annen viktig informasjon om deg selv?</label>
+        <label className ="moreInfoTxt" htmlFor="moreInfo">Ønsker du å oppgi annen viktig informasjon om deg selv?</label>
         <input type="text" id="moreInfo"/>
         <div className="disclaimerDiv">
           <input className="checkBox" type="checkbox" />

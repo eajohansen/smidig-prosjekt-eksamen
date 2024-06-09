@@ -25,16 +25,16 @@ export const OrgProfilePage = () => {
                           <i className="bi bi-lock"></i>
                       </span>
               </div>
-                  <a href="">Endre E-post</a>
+                  <a className="chageEMOrg" href="">Endre E-post</a>
                   <a href="">Endre passord</a>
             </div>
 
-          <div className="allergyContainer">
+          <div className="aboutUsContainer">
           <label htmlFor="AboutUs">Om oss</label>
           <input type="text" id="infoAboutUs"/>
           <div className="imgContainer disclaimerDiv">
           <p>Last opp bilde:</p>
-          <button>Velg bilde</button>
+          <button className="chooseBtn">Velg bilde</button>
           </div>
             <div className="btnDiv">
               <button className="canclBtn">Avbryt</button>
