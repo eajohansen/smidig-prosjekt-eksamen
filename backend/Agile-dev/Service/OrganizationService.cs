@@ -71,9 +71,7 @@ public class OrganizationService {
                 organization.ImageId = newImage.ImageId;
             }
             organization.Organizers = new List<Organizer> {
-                new() {
-                    Id = user.Id,
-                }
+                new() 
             };
             
             

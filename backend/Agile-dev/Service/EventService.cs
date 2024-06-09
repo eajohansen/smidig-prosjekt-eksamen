@@ -145,7 +145,6 @@ public class EventService {
     #endregion
 
     #region POST
-
     public async Task<object> AddEvent(string userName, EventDto frontendEvent) {
         try {
             User? user = await _organizationService._userService.FetchUserByEmail(userName);
@@ -153,9 +152,9 @@ public class EventService {
                 return "Could not find user by email";
             }
             
-            if (!CheckIfUserIsOrganizer(user.Id, frontendEvent.Event.OrganizationId).Result) {
-                return "User is not organizer";
-            }
+            // if (!CheckIfUserIsOrganizer(user.Id, frontendEvent.Event.OrganizationId).Result) {
+            //     return "User is not organizer";
+            // }
             
             Event eEvent = new Event() {
                 Title = frontendEvent.Event.Title,
@@ -478,12 +477,12 @@ public class EventService {
         return customField;
     }
 
-    private async Task<bool> CheckIfUserIsOrganizer(string userId, int orgId) {
-        Organizer? organizer = await _dbCon.Organizer
-            .Where(organizer => organizer.Id.Equals(userId) && organizer.OrganizationId.Equals(orgId))
-            .FirstOrDefaultAsync();
-        return organizer != null;
-    }
+    // private async Task<bool> CheckIfUserIsOrganizer(string userId, int orgId) {
+    //     Organizer? organizer = await _dbCon.Organizer
+    //         .Where(organizer => organizer.Id.Equals(userId) && organizer.OrganizationId.Equals(orgId))
+    //         .FirstOrDefaultAsync();
+    //     return organizer != null;
+    // }
     
     private DateTime CombineDateTime(string date, string time) {
         

@@ -18,8 +18,6 @@ public class User : IdentityUser {
        [DisplayFormat(*apply format in edit mode*)] = Data annotation for using the format in edit mode
        [EmailAddress(ErrorMessage = "Invalid Email Address")] = Data annotation for specifying that this needs to be an email
     */
-
-
     
     [Display(Name = "First name")]
     [StringLength(200)]

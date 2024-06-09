@@ -25,9 +25,4 @@ public class Follower {
     [Display(Name = "User id")]
     [StringLength(254)]
     public string Id { get; set; }
-    
-    [Required]
-    [Display(Name = "Organization id")]
-    [ForeignKey("OrganizationId")]
-    public int OrganizationId { get; set; }
 }

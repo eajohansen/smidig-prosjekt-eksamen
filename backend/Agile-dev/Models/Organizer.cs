@@ -25,9 +25,4 @@ public class Organizer {
     [Display(Name = "Organization id")]
     [ForeignKey("OrganizationId")]
     public int OrganizationId { get; set; }
-    
-    [Required]
-    [Display(Name = "User id")]
-    [ForeignKey("Id")]
-    public string Id { get; set; }
 }

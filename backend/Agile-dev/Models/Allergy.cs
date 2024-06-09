@@ -30,10 +30,5 @@ public class Allergy {
     [Display(Name = "Description")]
     [StringLength(1000)]
     public string? Description { get; set; }
-     
-    // [Required]
-    [ForeignKey("Id")]
-    [Display(Name = "User id")]
-    public string Id { get; set; }
 
 }
