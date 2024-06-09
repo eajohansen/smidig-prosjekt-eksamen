@@ -5,7 +5,7 @@ import { HomePage } from "./pages/HomePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { TicketsPage } from "./pages/TicketsPage";
 import { EventsPage } from "./pages/EventsPage";
-
+import { OrgProfilePage } from "./pages/OrgProfilePage";
 import {CreateEventPage} from "./pages/CreateEventPage";
 
 function App() {

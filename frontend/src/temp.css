@@ -402,6 +402,7 @@ header {
   padding: 3rem;
   font-family: "Inter", sans-serif;
   font-size: 1rem;
+  color: black;
 }
 
 .headderContainer {
@@ -413,4 +414,11 @@ header {
     font-size: 2rem;
     font-weight: normal;
   }
+}
+
+/*User profil*/
+.UserProfileContainer{
+  font-family: "Inter", sans-serif;
+    font-size: 1rem;
+    color: black;
 }
