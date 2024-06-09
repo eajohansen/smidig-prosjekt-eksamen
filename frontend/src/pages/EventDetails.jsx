@@ -1,12 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { events } from "./EventsPage";
+// import { events } from "./EventsPage";
 
 export const EventDetails = () => {
   const { id } = useParams();
   const lorem =
     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!";
-  const event = events.find((event) => event.id === parseInt(id));
+  // const event = events.find((event) => event.id === parseInt(id));
   return (
     <div className="eventDetailsContainer">
       <div className="eventDetailsLeft">
@@ -16,8 +16,8 @@ export const EventDetails = () => {
         />
       </div>
       <div className="eventDetailsRight">
-        <h1>{event.title}</h1>
-        <p>{event.date}</p>
+        <h1>TITTEL</h1>
+        <p>DATO</p>
         <p>{lorem}</p>
         <div className="btnDiv">
           <button>Rediger</button>

@@ -86,7 +86,8 @@ export const sendEvent = async (event) => {
 export const getEvents = async () => {
   try {
     const result = await axiosInstance.get("api/event/fetchall");
-    return result;
+    console.log(result);
+    return result.data;
   } catch (err) {
     console.log(err);
   }
