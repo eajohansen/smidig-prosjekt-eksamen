@@ -67,8 +67,8 @@ public class UserService {
 
     #endregion
 
-    /*
-    #region POST
+    
+  //  #region POST
 
     public async Task<object> AddUserToDatabase(User user) {
         try {
@@ -97,7 +97,7 @@ public class UserService {
             throw new Exception("An error occurred while adding user to database.", exception);
         }
     }
-
+/*
     public async Task<bool> AddUserAsOrganizer(int loggedInUserId, User user, int organizationId) {
         try {
             User? foundUser = await _dbCon.User.FindAsync(loggedInUserId);
