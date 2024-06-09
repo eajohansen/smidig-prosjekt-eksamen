@@ -1,4 +1,3 @@
-
 .eventsPageContainer {
   display: flex;
   height: 100vh;
@@ -23,10 +22,10 @@
 }
 
 .eventDetails {
- padding-top: 1rem;
+  padding-top: 1rem;
 }
 
-.ticketInfoContainer{
+.ticketInfoContainer {
   display: flex;
   flex-direction: column;
 }
@@ -59,7 +58,8 @@
   color: green;
 }
 
-.viewRegistrationsButton, .seeEventButton {
+.viewRegistrationsButton,
+.seeEventButton {
   width: 100%;
   border: none;
   padding: 0.5rem 1rem;
@@ -73,6 +73,25 @@
 }
 
 .seeEventButton {
-  background-color: #007BFF;
+  background-color: #007bff;
   color: white;
+}
+
+.eventDetailsContainer {
+  background: #497d95;
+  height: 92vh;
+  display: flex;
+  img {
+    padding: 1rem;
+    height: 20rem;
+    width: 20rem;
+    object-fit: cover;
+  }
+  .eventDetailsRight {
+    display: flex;
+    flex-direction: column;
+  }
+  .btnDiv {
+    /* align-self: flex-end; */
+  }
 }
