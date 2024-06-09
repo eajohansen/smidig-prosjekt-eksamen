@@ -4,7 +4,7 @@ import { getEvents } from "../services/tempService";
 export const events = [
   {
     id: 1,
-    title: "Bursdag",
+    title: "Pils & Prog",
     date: "14.mai.2002",
     sold: 40,
     waitlist: 11,
@@ -12,18 +12,26 @@ export const events = [
   },
   {
     id: 2,
-    title: "Bursdag",
+    title: "Bedpress",
     date: "14.mai.2002",
-    sold: 40,
-    waitlist: 11,
-    available: 0
+    sold: 30,
+    waitlist: 0,
+    available: 4
   },
   {
     id: 3,
-    title: "Bursdag",
+    title: "Sommeravslutning",
     date: "14.mai.2002",
-    sold: 40,
-    waitlist: 11,
+    sold: 240,
+    waitlist: 0,
+    available: 50
+  },
+  {
+    id: 4,
+    title: "Kickoff",
+    date: "14.mai.2002",
+    sold: 190,
+    waitlist: 22,
     available: 0
   },
 ];
@@ -32,8 +40,10 @@ export const EventsPage = () => {
 
   return (
     <>
+      <header className="pageHeader">
+        <h1 className="pageTitle">Kommende arrangementer</h1>
+      </header>
         <main className="eventsPageContainer">
-      <h2 className="pageTitle">Kommende arrangementer</h2>
         {events.map((event) => (
           <EventItem
             key={event.id}

@@ -12,13 +12,14 @@ export const EventItem = (props) => {
           alt="random"
         />
         <div className="eventDetails">
-          <h3>{title}</h3>
-          <p>{date}</p>
+        <h3>{title}</h3>
+        <p>{date}</p>
         </div>
-      </div>
-      <div className="ticketInfoContainer">
-        <h3>Billetter</h3>
-        <div className="ticketInfo">
+        </div>
+        <div className="ticketInfoContainer">
+          <h3>Billettstatus</h3>
+          <div className="ticketInfo">
+
           <div className="">
             <p>Solgt</p>
             <h2>{sold}</h2>
