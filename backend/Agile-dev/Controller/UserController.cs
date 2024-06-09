@@ -223,7 +223,6 @@ namespace agile_dev.Controller {
             try
             {
                 object makeUserOrganizer = await _userService.AddUserAsOrganizer(userToAdd.Email);
-                Console.WriteLine("Checking IF");
                 if (makeUserOrganizer is not Models.User)
                 {
                     
