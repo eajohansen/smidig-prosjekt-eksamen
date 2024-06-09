@@ -2,6 +2,7 @@ using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace agile_dev.Controller {
@@ -168,11 +169,11 @@ namespace agile_dev.Controller {
                 return BadRequest("No email provided in request");
             }
             try {
-                object updateUser = await _userService.UpdateUserAsync(updatedUserInfo.Email, updatedUserInfo);
+                IdentityResult updateUser = await _userService.UpdateUserAsync(updatedUserInfo);
                 
-                if (updateUser is not Models.User) {
-                    return Unauthorized(updateUser);
-                }
+                //if (updateUser is not Models.User) {
+                //    return Unauthorized(updateUser);
+                //}
 
                 return Ok(updateUser);
             }
@@ -192,11 +193,11 @@ namespace agile_dev.Controller {
                 return BadRequest("No email provided in request");
             }
             try {
-                object makeUserAdmin = await _userService.MakeUserAdmin(newAdminUser.Email);
+                IdentityResult makeUserAdmin = await _userService.MakeUserAdmin(newAdminUser.Email);
                 
-                if (makeUserAdmin is not Models.User) {
-                    return Unauthorized(makeUserAdmin);
-                }
+                //if (makeUserAdmin is not Models.User) {
+                //    return Unauthorized(makeUserAdmin);
+                //}
 
                 return Ok(makeUserAdmin);
             }
@@ -222,12 +223,12 @@ namespace agile_dev.Controller {
 
             try
             {
-                object makeUserOrganizer = await _userService.AddUserAsOrganizer(userToAdd.Email);
-                if (makeUserOrganizer is not Models.User)
-                {
+                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(userToAdd.Email);
+                //if (makeUserOrganizer is not Models.User)
+                //{
                     
-                    return Unauthorized(makeUserOrganizer);
-                }
+                //    return Unauthorized(makeUserOrganizer);
+                //}
 
                 return Ok(makeUserOrganizer);
             }

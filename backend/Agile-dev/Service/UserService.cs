@@ -170,12 +170,12 @@ public class UserService {
 
     #region PUT
 
-        public async Task<IdentityResult> UpdateUserAsync(string userEmail, User updatedUserInfo)
+        public async Task<IdentityResult> UpdateUserAsync(User updatedUserInfo)
         {
-            User? user = await _userManager.FindByEmailAsync(userEmail);
+            User? user = await _userManager.FindByEmailAsync(updatedUserInfo.Email!);
             if (user == null)
             {
-                return IdentityResult.Failed(new IdentityError { Description = $"User with email {userEmail} not found." });
+                return IdentityResult.Failed(new IdentityError { Description = $"User with email {updatedUserInfo.Email!} not found." });
             }
 
             user.FirstName = updatedUserInfo.FirstName;
@@ -210,13 +210,13 @@ public class UserService {
     
 
     public async Task<IdentityResult> MakeUserAdmin(string email) {
-        var user = await _userManager.FindByEmailAsync(email);
+        User? user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
             return IdentityResult.Failed(new IdentityError { Description = $"User with email {email} does not exist." });
         }
 
-        var result = await _userManager.AddToRoleAsync(user, "Admin");
+        IdentityResult result = await _userManager.AddToRoleAsync(user, "Admin");
         return result;
     }
 
