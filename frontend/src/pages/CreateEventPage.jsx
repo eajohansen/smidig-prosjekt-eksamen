@@ -21,7 +21,7 @@ export const CreateEventPage = () => {
     ageLimit: 0,
     food: false,
     free: false,
-    published: false,
+    published: true,
     private: false,
     start: "",
     startTime: "",

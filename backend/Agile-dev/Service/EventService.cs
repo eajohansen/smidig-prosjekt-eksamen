@@ -21,7 +21,7 @@ public class EventService {
     public async Task<ICollection<Event>> FetchAllEvents() {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
+                .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
             ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
             
