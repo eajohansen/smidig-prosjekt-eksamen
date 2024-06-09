@@ -34,7 +34,7 @@ export const OrgProfilePage = () => {
           <input type="text" id="infoAboutUs"/>
           <div className="imgContainer disclaimerDiv">
           <p>Last opp bilde:</p>
-          <button>Velg bilde</button>
+          <button className="chooseBtn">Velg bilde</button>
           </div>
             <div className="btnDiv">
               <button className="canclBtn">Avbryt</button>

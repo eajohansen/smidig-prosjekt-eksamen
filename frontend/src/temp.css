@@ -49,6 +49,10 @@ textarea,
 input {
   outline: none;
 }
+.canclBtn{
+  background-color: var(--secondary);
+  color: white;
+}
 .loginContainer {
   align-self: center;
   justify-self: center;
@@ -442,6 +446,12 @@ header {
  .imgContainer{
   padding-top: 3rem;
   padding-bottom: 3rem;
+  .chooseBtn{
+    background-color: gray;
+    color: white;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;  
+  }
  }
 
 /*User profil*/
