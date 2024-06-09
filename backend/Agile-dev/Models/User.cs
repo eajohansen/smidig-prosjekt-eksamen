@@ -23,10 +23,6 @@ public class User : IdentityUser {
 
     
     [Required]
-    [Display(Name = "Admin rights")]
-    public bool Admin { get; set; }
-    
-    [Required]
     [Display(Name = "First name")]
     [StringLength(200)]
     public string FirstName { get; set; }
