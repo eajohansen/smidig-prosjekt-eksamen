@@ -104,13 +104,14 @@ namespace agile_dev.Controller {
       //  #region POST
 
         // POST api/user/create
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> AddUser(User? user) {
             if (user == null) {
                 return BadRequest("User is null");
             }
             try {
-                object newUser = "asdfa"; // await _userService.AddUserToDatabase(user);
+                object newUser =  await _userService.AddUserToDatabase(user);
                 if (newUser is not Models.User) {
                     return BadRequest(newUser);
                 }
