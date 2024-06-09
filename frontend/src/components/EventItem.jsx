@@ -17,7 +17,7 @@ export const EventItem = (props) => {
         </div>
       </div>
       <div className="ticketInfoContainer">
-        <h3>Billetter</h3>
+        <h3>Billettstatus</h3>
         <div className="ticketInfo">
           <div className="">
             <p>Solgt</p>
