@@ -83,6 +83,10 @@ public class Program
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<InitContext>();
             context.Database.Migrate();
+            
+            // Call the SeedData to create roles and the first admin user
+            var configuration = services.GetRequiredService<IConfiguration>();
+            SeedData.Initialize(services, configuration).Wait();
         }
 
         app.UseEndpoints(endpoints =>
@@ -91,18 +95,4 @@ public class Program
         });
         app.Run();
     }
-     private static async Task SeedRoles(IServiceProvider serviceProvider)
-        {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roleNames = { "Admin", "Organizer", "User" };
-
-            foreach (var roleName in roleNames)
-            {
-                var roleExist = await roleManager.RoleExistsAsync(roleName);
-                if (!roleExist)
-                {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
-                }
-            }
-        }
 }
