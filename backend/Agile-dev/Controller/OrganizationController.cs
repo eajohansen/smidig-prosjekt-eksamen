@@ -17,6 +17,7 @@ namespace Agile_dev.Controller {
         #region GET
         
         // GET: api/organization/fetchAll
+        [Authorize(Roles = "Admin")]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllOrganizations() {
             try {
@@ -33,6 +34,7 @@ namespace Agile_dev.Controller {
         }
 
         // GET api/organization/fetch/id/5
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpGet("fetch/id/{id}")]
         public async Task<IActionResult> FetchOrganizationById(int id) {
             try {
@@ -51,16 +53,11 @@ namespace Agile_dev.Controller {
         #region POST
         
         // POST api/organization/create
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> AddOrganization([FromBody] Organization organization) {
             try {
-                var userName = User.FindFirstValue(ClaimTypes.Name);
-                if(userName == null) {
-                    return Unauthorized("Invalid user");
-                }
-                
-                object newOrganization = await _organizationService.AddOrganization(userName, organization);
+                object newOrganization = await _organizationService.AddOrganization(organization);
                 if (newOrganization is not Organization) {
                     // Could not create organization, because request is bad
                     return BadRequest(newOrganization);
@@ -79,12 +76,11 @@ namespace Agile_dev.Controller {
         #region PUT
 
         // PUT api/organization/update/5
-        [Authorize]
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPut("update/{userId}")]
-        public async Task<IActionResult> UpdateOrganization([FromRoute] string userId, [FromBody] Organization organization) {
+        public async Task<IActionResult> UpdateOrganization([FromBody] Organization organization) {
             try {
-                bool isAdded = true;
-              //  bool isAdded = await _organizationService.UpdateOrganization(userId, organization);
+                bool isAdded = await _organizationService.UpdateOrganization(organization);
                 if (!isAdded) {
                     return BadRequest();
                 }

@@ -37,8 +37,7 @@ public class Organization {
     public Image? Image { get; set; }
     
     // A HasSet of all Followers with this Organization
-    [JsonIgnore
-    ]
+    [JsonIgnore]
     public ICollection<Follower>? Followers { get; set; }
     
     // A HasSet of all Organizers with this Organization

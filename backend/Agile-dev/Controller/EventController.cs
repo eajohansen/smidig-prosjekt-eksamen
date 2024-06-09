@@ -19,6 +19,7 @@ namespace Agile_dev.Controller {
         #region GET
         
         // GET: api/event/fetchAll
+        [Authorize]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllEvents() {
             try {
@@ -40,8 +41,8 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEventsByAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<Event>? result = await _eventService.FetchAllEventsByAttending(userName!);
-                if (result != null) {
+                ICollection<Event> result = await _eventService.FetchAllEventsByAttending(userName!);
+                if (result.Count == 0) {
                     return NoContent();
                 }
 
@@ -71,6 +72,7 @@ namespace Agile_dev.Controller {
         }
         
         // GET: api/event/fetchAll/organization/1
+        [Authorize]
         [HttpGet("fetchAll/organization/{organizationId}")]
         public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationId) {
             try {
@@ -87,20 +89,21 @@ namespace Agile_dev.Controller {
         }
         
         // GET: api/event/fetchAll/not/organization/1
-        [HttpGet("fetchAll/not/organization/{organizationId}")]
-        public async Task<ActionResult> FetchAllEventsByOtherOrganizations([FromRoute] int organizationId) {
-            try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByOtherOrganizations(organizationId);
-                if (result.Count == 0) {
-                    return NoContent();
-                }
-
-                return Ok(result);
-            }
-            catch (Exception exception) {
-                return StatusCode(500, "Internal server Error: " + exception.Message);
-            }
-        }
+        // [Authorize]
+        // [HttpGet("fetchAll/not/organization/{organizationId}")]
+        // public async Task<ActionResult> FetchAllEventsByOtherOrganizations([FromRoute] int organizationId) {
+        //     try {
+        //         ICollection<Event> result = await _eventService.FetchAllEventsByOtherOrganizations(organizationId);
+        //         if (result.Count == 0) {
+        //             return NoContent();
+        //         }
+        //
+        //         return Ok(result);
+        //     }
+        //     catch (Exception exception) {
+        //         return StatusCode(500, "Internal server Error: " + exception.Message);
+        //     }
+        // }
 
         // GET api/event/fetch/id/5
         [HttpGet("fetch/id/{id}")]
@@ -136,7 +139,7 @@ namespace Agile_dev.Controller {
         #region POST
         
         // POST api/event/create
-        [Authorize]
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost("create")]
         public async Task<IActionResult> AddEvent([FromBody] EventDto? frontendEvent) {
             try {
@@ -167,7 +170,7 @@ namespace Agile_dev.Controller {
         #region PUT
 
         // PUT api/event/update/5/6
-        [Authorize]
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPut("update/{userId}/{organizationId}")]
         public async Task<IActionResult> UpdateEvent([FromRoute] string userId, [FromRoute] int organizationId, [FromBody] Event eEvent) {
             try {
@@ -184,7 +187,7 @@ namespace Agile_dev.Controller {
         }
         
         // PUT api/event/customField/update/5/6/3
-        [Authorize]
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPut("update/customField/{userId}/{organizationId}/{eventId}")]
         public async Task<IActionResult> UpdateCustomField([FromRoute] string userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
             try {
@@ -205,7 +208,7 @@ namespace Agile_dev.Controller {
         #region DELETE
 
         // DELETE api/event/delete/5/6
-        [Authorize]
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpDelete("delete/{userId}/{organizationId}")]
         public async Task<IActionResult> DeleteEvent([FromRoute] string userId, [FromBody] Event eEvent, [FromRoute] int organizationId) {
             try {

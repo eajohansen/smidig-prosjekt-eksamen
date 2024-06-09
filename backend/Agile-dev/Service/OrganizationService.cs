@@ -34,9 +34,9 @@ public class OrganizationService {
                 List<Organization> foundOrganization = [organization];
                 foundOrganization = await AddRelationToOrganization(foundOrganization);
                 return foundOrganization[0];
-            } else {
-                return organization;
             }
+
+            return organization;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching organization.", exception);
@@ -47,19 +47,8 @@ public class OrganizationService {
 
     #region POST
 
-    public async Task<object> AddOrganization(string userEmail, Organization organization) {
-        
+    public async Task<object> AddOrganization(Organization organization) {
         try {
-            User? user = await _userService.FetchUserByEmail(userEmail);
-            if (user == null) {
-                return "User was not found";
-            }
-
-            /*
-            if (!_userService.IsUserAdmin(user).Result) {
-                return "User does not have admin rights";
-            }*/
-
             if (organization.Image != null) {
                 Image? newImage = await CheckIfImageExists(organization.Image);
                 if (newImage == null) {
@@ -88,15 +77,11 @@ public class OrganizationService {
     }
 
     #endregion
-
-    /*
+    
     #region PUT
 
-    public async Task<bool> UpdateOrganization(string userId, Organization organization) {
+    public async Task<bool> UpdateOrganization(Organization organization) {
         try {
-            if (!CheckValidation(userId, organization.OrganizationId).Result) {
-                return false;
-            }
             
             Organization? databaseOrganization = await FetchOrganizationById(organization.OrganizationId);
             if (databaseOrganization == null) {
@@ -116,22 +101,19 @@ public class OrganizationService {
 
     #region DELETE
 
-    public async Task<bool> DeleteOrganization(string userId, Organization organization) {
-        try {
-            if (!CheckValidation(userId, organization.OrganizationId).Result) {
-                return false;
-            }
-            
-            _dbCon.Organization.Remove(organization);
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while trying to delete organization.", exception);
-        }
-    }
+    // public async Task<bool> DeleteOrganization(string userId, Organization organization) {
+    //     try {
+    //         
+    //         _dbCon.Organization.Remove(organization);
+    //         await _dbCon.SaveChangesAsync();
+    //         return true;
+    //     }
+    //     catch (Exception exception) {
+    //         throw new Exception("An error occurred while trying to delete organization.", exception);
+    //     }
+    // }
 
-    #endregion*/
+    #endregion
 
     #region MISCELLANEOUS
 
@@ -147,26 +129,6 @@ public class OrganizationService {
 
         return newOrganizations;
     }
-    
-    /*public async Task<bool> CheckValidation(string userId, int organizationId) {
-        object databaseUser = await _userService.FetchUserById(userId);
-        if (databaseUser is not User realUser) {
-            return false;
-        }
-        Organization? organization = await FetchOrganizationById(organizationId);
-
-        if (organization == null) {
-            return false;
-        }
-            
-        bool isAdmin = await _userService.IsUserAdmin(realUser);
-        bool isOrganizer = await _userService.IsUserOrganizerForOrganization(realUser, organization);
-        if (!isAdmin && !isOrganizer) {
-            return false;
-        } else {
-            return true;
-        }
-    }*/
     
     public async Task<Image?> CheckIfImageExists(Image newImage) {
         Image? image;
