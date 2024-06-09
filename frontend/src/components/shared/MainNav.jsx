@@ -48,6 +48,9 @@ export const MainNav = ({ version }) => {
             <Link to="/" className="navItem">
               <i className="bi bi-box-arrow-left"></i> <p>Logg ut</p>
             </Link>
+            <Link to="orgProfile" className="navItem">
+              <i className="bi bi-person"></i> <p>Profil</p>
+            </Link>
           </div>
         </header>
       );

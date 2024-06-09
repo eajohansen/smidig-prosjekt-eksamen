@@ -91,3 +91,16 @@ export const getEvents = async () => {
     console.log(err);
   }
 };
+
+export const sendOrg = async (name, description) => {
+  try {
+    const result = await axiosInstance.post(
+      "api/organization/create",
+      name,
+      description
+    );
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
