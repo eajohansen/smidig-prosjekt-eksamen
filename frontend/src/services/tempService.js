@@ -47,7 +47,7 @@ export const sendEvent = async (event) => {
     const result = await axiosInstance.post("api/event/create", {
       Event: {
         Title: event.title,
-        OrganizationId: 8,
+        OrganizationId: 1,
         Description: event.description,
         Published: event.published,
         Private: event.private,
@@ -94,11 +94,10 @@ export const getEvents = async () => {
 
 export const sendOrg = async (name, description) => {
   try {
-    const result = await axiosInstance.post(
-      "api/organization/create",
+    const result = await axiosInstance.post("api/organization/create", {
       name,
-      description
-    );
+      description,
+    });
     return result;
   } catch (err) {
     console.log(err);
