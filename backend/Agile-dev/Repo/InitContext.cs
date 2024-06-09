@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace agile_dev.Repo;
 
-public class InitContext : IdentityDbContext<IdentityUser> {
+public class InitContext : IdentityDbContext<User> {
     private readonly IConfiguration _configuration;
     
     public InitContext(IConfiguration configuration) {
