@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 export const MainNav = ({ version }) => {
+  console.log(version)
   switch (version) {
     case "user":
       return (
@@ -31,6 +32,7 @@ export const MainNav = ({ version }) => {
     case "organizer":
       return (
         <header>
+          {console.log("organizer")}
           <div className="navHeader">
             <Link to="/" className="navItem">
               <i className="bi bi-house"></i> <p>Hjem / TEST</p>
@@ -55,7 +57,7 @@ export const MainNav = ({ version }) => {
           </div>
         </header>
       );
-    case "dummy":
+    default:
       return (
         <header>
           <div className="navHeader">

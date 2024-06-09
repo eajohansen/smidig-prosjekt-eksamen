@@ -9,11 +9,36 @@ import { EventsPage } from "./pages/EventsPage";
 import { CreateEventPage } from "./pages/CreateEventPage";
 import { OrgProfilePage } from "./pages/OrgProfilePage";
 import { EventDetails } from "./pages/EventDetails";
+import {useEffect, useState} from "react";
 
 function App() {
+    const [navBar, setNavBar] = useState("dummy");
+    const fetchUser = async () => {
+        const loggedIn = localStorage.getItem("loggedIn");
+        if(loggedIn === "true") {
+            if(localStorage.getItem("admin") === "true") {
+                setNavBar("organizer");
+            } else if(localStorage.getItem("organizer") === "true") {
+                setNavBar("organizer");
+            } else {
+                setNavBar("user");
+            }
+        }
+    }
+    useEffect(() => {
+        const handleStorageChange = () => {
+            fetchUser();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        fetchUser();
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
   return (
     <BrowserRouter>
-      <MainNav version={"organizer"} />
+      <MainNav version={navBar} />
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />

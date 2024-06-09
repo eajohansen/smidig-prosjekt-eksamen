@@ -32,9 +32,17 @@ export const sendLogin = async (email, password) => {
       console.log(result.data);
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.refreshToken);
+      localStorage.setItem("loggedIn", "true");
       axiosInstance.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.getItem("accessToken")}`;
+      const adminPrivileges = await axiosInstance.get("/api/user/checkAdminPrivileges");
+        if (adminPrivileges.status === 200) {
+          const adminRight = adminPrivileges.data.admin ? "true" : "false";
+          const organizator = adminPrivileges.data.organizator ? "true" : "false";
+            localStorage.setItem("admin", adminRight);
+            localStorage.setItem("organizator", organizator);
+        }
     }
     return;
   } catch (err) {
