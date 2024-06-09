@@ -35,9 +35,9 @@ public class EventService {
     public async Task<ICollection<Event>?> FetchAllEventsByAttending(string userName) {
         try {
             User? user = await _organizationService._userService.FetchUserByEmail(userName);
-
-            ICollection<Event>? foundEvents = null;
             
+            ICollection<Event> foundEvents = new List<Event>();
+
             if (user == null) {
                 return foundEvents;
             }
