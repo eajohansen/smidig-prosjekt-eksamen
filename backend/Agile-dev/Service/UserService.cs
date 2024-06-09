@@ -54,7 +54,7 @@ public class UserService {
 
     public async Task<User?> FetchUserByEmail(string email) {
         try {
-            User? user = await _dbCon.User.FirstOrDefaultAsync(u => u.Email == email);
+            User? user = await _dbCon.User.Where(u => u.Email == email).Include(u => u.OrganizerOrganization).FirstOrDefaultAsync();
             return user;
         }
         catch (Exception exception) {

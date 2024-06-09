@@ -98,6 +98,30 @@ namespace agile_dev.Controller {
             }
         }
 
+        [Authorize]
+        [HttpGet("checkAdminPrivileges")]
+        public async Task<IActionResult> CheckIfUserIsAdminOrOrganizator() {
+            string? user = User.FindFirstValue(ClaimTypes.Name);
+            if(user == null) {
+                return Unauthorized("Login required");
+            }
+            try {
+                User? result = await _userService.FetchUserByEmail(user);
+                if (result == null) {
+                    return Unauthorized("No user found");
+                }
+                
+                var feedback = new {
+                    Admin = result.Admin,
+                    Organizer = result.OrganizerOrganization != null
+                };
+                return Ok(feedback);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
+
         #endregion
 
         #region POST
