@@ -27,8 +27,4 @@ public class Notice {
     [Display(Name = "Expire")]
     public DateTime Expire { get; set; }
     
-    [Required]
-    [Display(Name = "User id")]
-    [ForeignKey("Id")]
-    public string Id { get; set; }
 }

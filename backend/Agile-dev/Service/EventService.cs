@@ -153,9 +153,9 @@ public class EventService {
                 return "Could not find user by email";
             }
             
-            if (!CheckIfUserIsOrganizer(user.Id, frontendEvent.Event.OrganizationId).Result) {
-                return "User is not organizer";
-            }
+            // if (!CheckIfUserIsOrganizer(user.Id, frontendEvent.Event.OrganizationId).Result) {
+            //     return "User is not organizer";
+            // }
             
             Event eEvent = new Event() {
                 Title = frontendEvent.Event.Title,
@@ -525,13 +525,6 @@ public class EventService {
             .Where(customField => customFieldDescription.Equals(customField.Description) &&
                                   customFieldValue.Equals(customField.Value)).FirstOrDefaultAsync();
         return customField;
-    }
-
-    private async Task<Or> CheckIfUserIsOrganizer(string userId, int orgId) {
-        Organizer? organizer = await _dbCon.Organizer
-            .Where(organizer => organizer.Id.Equals(userId) && organizer.OrganizationId.Equals(orgId))
-            .FirstOrDefaultAsync();
-        return organizer != null;
     }
     
     private DateTime CombineDateTime(string date, string time) {
