@@ -43,7 +43,6 @@ export const sendLogin = async (email, password) => {
   }
 };
 export const sendEvent = async (event) => {
-
   try {
     const result = await axiosInstance.post("api/event/create", {
       Event: {
@@ -54,40 +53,31 @@ export const sendEvent = async (event) => {
         Private: event.private,
         Place: {
           Location: event.address,
-          Url: null
+          Url: null,
         },
         Image: {
           Link: "test link",
-          Description: ""
+          Description: "",
         },
         ContactPerson: {
           Name: event.contactP,
           Email: "test@test.no",
-          Number: ""
+          Number: "",
         },
         EventCustomFields: event.EventCustomFields,
         Capacity: event.capacity,
-        AgeLimit: event.ageLimit
+        AgeLimit: event.ageLimit,
       },
       Start: event.start,
       StartTime: event.startTime,
       End: event.end,
-      EndTime: event.endTime
+      EndTime: event.endTime,
     });
     if (result?.status === 200) {
       console.log("result: ");
       console.log(result);
     }
     console.log(result);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const getEvents = async () => {
-  try {
-    const result = await axiosInstance.get("api/event/fetchall");
-    return result;
   } catch (err) {
     console.log(err);
   }
