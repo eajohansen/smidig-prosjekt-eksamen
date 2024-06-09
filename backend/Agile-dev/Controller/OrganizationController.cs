@@ -1,7 +1,7 @@
+using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agile_dev.Controller {
@@ -50,20 +50,26 @@ namespace Agile_dev.Controller {
 
         #region POST
         
-        // POST api/organization/create/5
+        // POST api/organization/create
         [Authorize]
-        [HttpPost("create/{userId}")]
-        public async Task<IActionResult> AddOrganization([FromRoute] int userId , [FromBody] Organization organization) {
+        [HttpPost("create")]
+        public async Task<IActionResult> AddOrganization([FromBody] Organization organization) {
             try {
-                bool isAdded = await _organizationService.AddOrganization(userId, organization);
-                if (!isAdded) {
+                var userName = User.FindFirstValue(ClaimTypes.Name);
+                if(userName == null) {
+                    return Unauthorized("Invalid user");
+                }
+                
+                object newOrganization = await _organizationService.AddOrganization(userName, organization);
+                if (newOrganization is not Organization) {
                     // Could not create organization, because request is bad
-                    return BadRequest();
+                    return BadRequest(newOrganization);
                 }
 
-                return Ok();
+                return Ok(newOrganization);
             }
             catch (Exception exception) {
+                Console.WriteLine(exception);
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
@@ -96,9 +102,9 @@ namespace Agile_dev.Controller {
         // DELETE api/organization/delete/5
         [Authorize]
         [HttpDelete("delete/{userId}")]
-        public async Task<IActionResult> DeleteOrganization([FromRoute] int userId, [FromBody] Organization? organization) {
+        public Task<IActionResult> DeleteOrganization([FromRoute] int userId, [FromBody] Organization? organization) {
             if (organization == null) {
-                return BadRequest("User is null");
+                return Task.FromResult<IActionResult>(BadRequest("User is null"));
             }
 
             try {
@@ -108,10 +114,10 @@ namespace Agile_dev.Controller {
                     BadRequest();
                 }
 
-                return Ok();
+                return Task.FromResult<IActionResult>(Ok());
             }
             catch (Exception exception) {
-                return StatusCode(500, "Internal server error: " + exception.Message);
+                return Task.FromResult<IActionResult>(StatusCode(500, "Internal server error: " + exception.Message));
             }
         }
         

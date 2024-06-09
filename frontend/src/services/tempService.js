@@ -17,7 +17,7 @@ export const sendUser = async (user, allergyList) => {
       firstname: user.firstName,
       lastname: user.lastName,
       birthdate: user.birthdate,
-      allergyList,
+      allergies: allergyList,
     });
     return result.status === 200;
   } catch (err) {
@@ -43,14 +43,42 @@ export const sendLogin = async (email, password) => {
   }
 };
 export const sendEvent = async (event) => {
-  console.log("what i get in:");
-  console.log(event);
+
   try {
-    const result = await axiosInstance.post("api/event/create", event);
-    if (result.status === 200) {
+    const result = await axiosInstance.post("api/event/create", {
+      Event: {
+        Title: event.title,
+        OrganizationId: 8,
+        Description: event.description,
+        Published: event.published,
+        Private: event.private,
+        Place: {
+          Location: event.address,
+          Url: null
+        },
+        Image: {
+          Link: "test link",
+          Description: ""
+        },
+        ContactPerson: {
+          Name: event.contactP,
+          Email: "test@test.no",
+          Number: ""
+        },
+        EventCustomFields: event.EventCustomFields,
+        Capacity: event.capacity,
+        AgeLimit: event.ageLimit
+      },
+      Start: event.start,
+      StartTime: event.startTime,
+      End: event.end,
+      EndTime: event.endTime
+    });
+    if (result?.status === 200) {
       console.log("result: ");
       console.log(result);
     }
+    console.log(result);
   } catch (err) {
     console.log(err);
   }

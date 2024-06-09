@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using agile_dev.Repo;
 using agile_dev.Service;
 using Microsoft.AspNetCore.HttpLogging;
@@ -30,7 +31,9 @@ public class Program
                 );
             }
         );
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options => {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<EventService>();
         builder.Services.AddScoped<OrganizationService>();

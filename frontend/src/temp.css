@@ -30,7 +30,7 @@ body {
   > div > main {
     display: flex;
     flex-direction: column;
-    width: 100vw;
+    width: 80vw;
     padding: 2rem;
   }
 }
@@ -349,6 +349,9 @@ hr {
     font-size: 0.8rem;
   }
 }
+header {
+  width: 16rem;
+}
 
 /*Navigasjons meny*/
 
@@ -357,7 +360,6 @@ hr {
   flex-direction: column;
   background-color: #d6d5d5;
   height: 100%;
-  width: 15rem;
   align-items: stretch;
   flex:1;
   overflow: auto;

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
@@ -38,5 +39,6 @@ public class ContactPerson {
     public string? Number { get; set; }
     
     // A HasSet of all Events with this ContactPerson
+    [JsonIgnore]
     public ICollection<Event>? Events { get; set; }
 }

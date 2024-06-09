@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using agile_dev.Repo;
 
@@ -10,9 +11,11 @@ using agile_dev.Repo;
 namespace Agile_dev.Migrations
 {
     [DbContext(typeof(InitContext))]
-    partial class InitContextModelSnapshot : ModelSnapshot
+    [Migration("20240608174739_RemovedFieldFromEvent")]
+    partial class RemovedFieldFromEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,12 +288,6 @@ namespace Agile_dev.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AgeLimit")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Capacity")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ContactPersonId")
                         .HasColumnType("int");
 
@@ -352,7 +349,7 @@ namespace Agile_dev.Migrations
                     b.Property<int?>("CustomFieldId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EventId")
+                    b.Property<int>("EventId")
                         .HasColumnType("int");
 
                     b.HasKey("EventCustomFieldId");
@@ -650,7 +647,9 @@ namespace Agile_dev.Migrations
 
                     b.HasOne("agile_dev.Models.Event", null)
                         .WithMany("EventCustomFields")
-                        .HasForeignKey("EventId");
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CustomField");
                 });
