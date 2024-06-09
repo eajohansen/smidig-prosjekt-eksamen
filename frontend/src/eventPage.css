@@ -24,20 +24,18 @@
   height: auto;
 }
 
-.eventImageContainer {
-  grid-area: imageContainer;
-}
-
 .eventDetails {
-  grid-area: details;
-  text-align: left;
+ padding-top: 1rem;
 }
 
-.ticketInfo {
-  grid-area: ticketInfo;
+.ticketInfoContainer{
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+}
+.ticketInfo {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
 }
 
 .buttonContainer {
@@ -55,15 +53,7 @@
   border-radius: 8px;
 }
 
-.ticketInfo h3 {
-  margin: 0;
-}
-
 .ticketInfo p {
-  margin: 0.25rem 0;
-}
-
-.ticketInfo h2 {
   margin: 0.25rem 0;
 }
 
