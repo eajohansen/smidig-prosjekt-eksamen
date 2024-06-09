@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace agile_dev.Models;
 
@@ -34,4 +35,5 @@ public class Allergy {
     [ForeignKey("Id")]
     [Display(Name = "User id")]
     public string Id { get; set; }
+
 }

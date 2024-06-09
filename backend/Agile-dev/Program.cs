@@ -40,7 +40,7 @@ public class Program
         builder.Services.AddScoped<OrganizationService>();
         builder.Services.AddDbContext<InitContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
+        builder.Services.AddIdentityApiEndpoints<User>(options =>
                    {
                        // Password settings.
                        options.Password.RequireDigit = true;
@@ -69,7 +69,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         var app = builder.Build();
-        app.MapIdentityApi<IdentityUser>();
+        app.MapIdentityApi<User>();
 
         //app.UseHttpsRedirection();
         app.UseRouting();

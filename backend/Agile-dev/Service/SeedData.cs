@@ -1,3 +1,4 @@
+using agile_dev.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace agile_dev
@@ -6,7 +7,7 @@ namespace agile_dev
     {
         public static async Task Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             // Get the roles from appsettings.json
@@ -15,7 +16,7 @@ namespace agile_dev
 
             foreach (var roleName in roles)
             {
-                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                bool roleExist = await roleManager.RoleExistsAsync(roleName);
                 if (!roleExist)
                 {
                     // Create the roles and seed them to the database
@@ -24,10 +25,9 @@ namespace agile_dev
             }
 
             // Create the Admin user who will maintain the web app
-            
-            // Get the usename and password from appsettings.json
+            // Getting the username and password from appsettings.json
             var adminSettings = configuration.GetSection("AdminUser");
-            var powerUser = new IdentityUser
+            var powerUser = new User
             {
                 UserName = adminSettings["Username"],
                 Email = adminSettings["Email"],
@@ -38,7 +38,7 @@ namespace agile_dev
 
             if (user == null)
             {
-                var createPowerUser = await userManager.CreateAsync(powerUser, userPassword);
+                IdentityResult createPowerUser = await userManager.CreateAsync(powerUser, userPassword);
                 if (createPowerUser.Succeeded)
                 {
                     // Assign the new user the Admin role

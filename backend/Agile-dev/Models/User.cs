@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 
@@ -22,15 +21,13 @@ public class User : IdentityUser {
 
 
     
-    [Required]
     [Display(Name = "First name")]
     [StringLength(200)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
     
-    [Required]
     [Display(Name = "Last name")]
     [StringLength(200)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
     
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

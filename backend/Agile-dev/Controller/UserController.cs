@@ -26,11 +26,11 @@ namespace agile_dev.Controller {
             IActionResult is used because we are returning a response.
          */
 
-        /*
+      
         #region GET
 
         // GET: api/user/fetchAll
-        [Authorize]
+        [Authorize (Roles="Admin, Organizer")]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllUsers() {
             try {
@@ -49,7 +49,7 @@ namespace agile_dev.Controller {
         // GET api/user/fetch/id
         [Authorize]
         [HttpGet("fetch/{id}")]
-        public async Task<IActionResult> FetchUserById(int id) {
+        public async Task<IActionResult> FetchUserById(string id) {
 
             try {
                 object result = await _userService.FetchUserById(id);
@@ -58,6 +58,10 @@ namespace agile_dev.Controller {
                 }
                 
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
+                if (user.Email == null)
+                {
+                    return BadRequest("Email is null");
+                }
                 bool isLoggedInUser = user.Email.Equals(userName);
 
                 if (!isLoggedInUser) {
@@ -99,61 +103,21 @@ namespace agile_dev.Controller {
             }
         }
 
-        #endregion*/
+        #endregion
 
-      //  #region POST
+        #region POST
 
-        // POST api/user/create
-        [Authorize]
-        [HttpPost("create")]
-        public async Task<IActionResult> AddUser(User? user) {
-            if (user == null) {
-                return BadRequest("User is null");
-            }
-            try {
-                object newUser =  await _userService.AddUserToDatabase(user);
-                if (newUser is not Models.User) {
-                    return BadRequest(newUser);
-                }
-                return Ok(newUser);
-            }
-            catch (Exception exception) {
-                return StatusCode(500, "Internal server error: " + exception.Message);
-            }
-        }
-
-        // POST api/user/organizer/create/5
-        [Authorize]
-        [HttpPost("organizer/create/{loggedInUserId}")]
-        public async Task<IActionResult> AddOrganizer([FromRoute] int loggedInUserId, [FromBody] User? user) {
-            int organizationId = 1;
-            if (user == null) {
-                return BadRequest("User is null");
-            }
-            try {
-                bool isAdded = true;
-                // bool isAdded = await _userService.AddUserAsOrganizer(loggedInUserId, user, organizationId);
-                if (!isAdded) {
-                    // Could not add user as organizer, because request is bad
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                return StatusCode(500, "Internal server error: " + exception.Message);
-            }
-        }
-
-        /*// POST api/user/follower/create/1
+        // POST api/user/follower/create/1
         [Authorize]
         [HttpPost("follower/create/{organizationId}")]
-        public async Task<IActionResult> AddFollower([FromBody] User? user, [FromRoute] int organizationId) {
-            if (user == null) {
-                return BadRequest("User is null");
-            }
+        public async Task<IActionResult> AddFollower([FromBody] User? user, [FromRoute] int organizationId)
+        {
+           int tempOrganizationId = 1;
+            
+            string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+            
             try {
-                bool isAdded = await _userService.AddUserAsFollower(user, organizationId);
+                bool isAdded = await _userService.AddUserAsFollower(userEmail, tempOrganizationId);
                 if (!isAdded) {
                     // Could not add user as follower, because request is bad
                     return BadRequest();
@@ -164,17 +128,18 @@ namespace agile_dev.Controller {
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
-        }*/
+        }
 
         // POST api/user/event/add/3
-        /*[Authorize]
+        [Authorize]
         [HttpPost("event/add/{eventId}")]
-        public async Task<IActionResult> AddUserEvent([FromBody] User? user, [FromRoute] int eventId) {
-            if (user == null) {
-                return BadRequest("User is null");
+        public async Task<IActionResult> AddUserEvent([FromRoute] int eventId) {
+            if (eventId < 1) {
+                return BadRequest("No eventId provided");
             }
             try {
-                bool isAdded = await _userService.AddUserToEvent(user, eventId);
+                string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                bool isAdded = await _userService.AddUserToEvent(userEmail, eventId);
                 if (!isAdded) {
                     // Could not add user to event, because request is bad
                     return BadRequest();
@@ -187,51 +152,48 @@ namespace agile_dev.Controller {
             }
         }
 
-        #endregion*/
+        #endregion
 
-        /*
+        
         #region PUT
 
         // PUT api/user/update
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateUser(User? user) {
-            if (user == null) {
-                return BadRequest("User is null");
+        public async Task<IActionResult> UpdateUserInfo(User? updatedUserInfo){
+            if (updatedUserInfo == null) {
+                return BadRequest("User object is null");
             }
-
-            string? userName = User.FindFirstValue(ClaimTypes.Name);
-            bool isLoggedInUser = user.Email.Equals(userName);
-
-            if (!isLoggedInUser) {
-                return Unauthorized();
+            if (updatedUserInfo.Email == null){
+                return BadRequest("No email provided in request");
             }
-            
             try {
-                object updatedUser = await _userService.UpdateUser(user);
-                if (updatedUser is not Models.User) {
-                    return BadRequest(updatedUser);
+                object updateUser = await _userService.UpdateUserAsync(updatedUserInfo.Email, updatedUserInfo);
+                
+                if (updateUser is not Models.User) {
+                    return Unauthorized(updateUser);
                 }
 
-                return Ok(updatedUser);
+                return Ok(updateUser);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
-        }*/
-
-        // PUT api/user/admin/update/5
-        // "AdminUser" in this context is the user that is making the request
-        /*
-        // "id" is the id of the user that is being made admin
-        [Authorize]
-        [HttpPut("admin/update/{id}")]
-        public async Task<IActionResult> MakeUserAdmin([FromBody] User? adminUser, [FromRoute] int id) {
-            if (adminUser == null) {
+        }
+        
+        // PUT api/user/admin/add
+        [Authorize (Roles="Admin")]
+        [HttpPut("admin/add")]
+        public async Task<IActionResult> MakeUserAdmin(User? newAdminUser) {
+            if (newAdminUser == null) {
                 return BadRequest("AdminUser is null");
             }
+            if (newAdminUser.Email == null){
+                return BadRequest("No email provided in request");
+            }
             try {
-                object makeUserAdmin = await _userService.MakeUserAdmin(adminUser, id);
+                object makeUserAdmin = await _userService.MakeUserAdmin(newAdminUser.Email);
+                
                 if (makeUserAdmin is not Models.User) {
                     return Unauthorized(makeUserAdmin);
                 }
@@ -242,29 +204,52 @@ namespace agile_dev.Controller {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
+        
+        // PUT api/user/organizer/add
+        [Authorize(Roles = "Admin")]
+        [HttpPut("organizer/add")]
+        public async Task<IActionResult> AddOrganizer(User? userToAdd)
+        {
+            if (userToAdd == null)
+            {
+                return BadRequest("userToAdd is null");
+            }
+
+            if (userToAdd.Email == null)
+            {
+                return BadRequest("No email provided in request");
+            }
+
+            try
+            {
+                object makeUserOrganizer = await _userService.AddUserAsOrganizer(userToAdd.Email);
+                Console.WriteLine("Checking IF");
+                if (makeUserOrganizer is not Models.User)
+                {
+                    
+                    return Unauthorized(makeUserOrganizer);
+                }
+
+                return Ok(makeUserOrganizer);
+            }
+            catch (Exception exception)
+            {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
 
         #endregion
-        */
+    
+        #region DELETE
 
-        /*#region DELETE
-
-        // DELETE api/User/delete
+        // DELETE api/user/delete
         [Authorize]
         [HttpDelete("delete")]
-        public IActionResult Delete(User? user) {
-            if (user == null) {
-                return BadRequest("User is null");
-            }
+        public IActionResult Delete() {
+            string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
             
-            string? userName = User.FindFirstValue(ClaimTypes.Name);
-            bool isLoggedInUser = user.Email.Equals(userName);
-
-            if (!isLoggedInUser) {
-                return Unauthorized();
-            }
-
             try {
-                bool isDeleted = _userService.DeleteUser(user).Result;
+                bool isDeleted = _userService.DeleteUser(userEmail).Result;
                 if (!isDeleted) {
                     // Could not delete user, because request is bad
                     BadRequest();
