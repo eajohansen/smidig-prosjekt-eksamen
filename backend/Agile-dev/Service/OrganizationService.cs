@@ -59,10 +59,6 @@ public class OrganizationService {
 
                 organization.ImageId = newImage.ImageId;
             }
-            organization.Organizers = new List<Organizer> {
-                new() 
-            };
-            
             
             await _dbCon.Organization.AddAsync(organization);
             await _dbCon.SaveChangesAsync();

@@ -30,4 +30,13 @@ public class UserEvent {
     [Display(Name = "User id")]
     [ForeignKey("Id")]
     public string Id { get; set; }
+    
+    [Required]
+    [Display(Name = "Event id")]
+    [ForeignKey("EventId")]
+    public int EventId { get; set; }
+    
+    // Navigation properties
+    public virtual User User { get; set; }
+    public virtual Event Event { get; set; }
 }

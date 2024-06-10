@@ -111,17 +111,13 @@ namespace agile_dev.Controller {
         // POST api/user/follower/create/1
         [Authorize]
         [HttpPost("follower/create/{organizationId}")]
-        public async Task<IActionResult> AddFollower([FromBody] User? user, [FromRoute] int organizationId)
+        public async Task<IActionResult> AddFollower([FromRoute] int organizationId)
         {
-           int tempOrganizationId = 1;
-            
-            string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
-            
             try {
-                bool isAdded = await _userService.AddUserAsFollower(userEmail, tempOrganizationId);
-                if (!isAdded) {
+                IdentityResult isAdded = await _userService.AddUserAsFollower(organizationId);
+                if (!isAdded.Succeeded) {
                     // Could not add user as follower, because request is bad
-                    return BadRequest();
+                    return BadRequest(isAdded);
                 }
 
                 return Ok();
@@ -140,10 +136,10 @@ namespace agile_dev.Controller {
             }
             try {
                 string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
-                bool isAdded = await _userService.AddUserToEvent(userEmail, eventId);
-                if (!isAdded) {
+                IdentityResult isAdded = await _userService.AddUserToEvent(userEmail, eventId);
+                if (!isAdded.Succeeded) {
                     // Could not add user to event, because request is bad
-                    return BadRequest();
+                    return BadRequest(isAdded);
                 }
 
                 return Ok();
@@ -155,7 +151,6 @@ namespace agile_dev.Controller {
 
         #endregion
 
-        
         #region PUT
 
         // PUT api/user/update
@@ -167,6 +162,10 @@ namespace agile_dev.Controller {
             }
             if (updatedUserInfo.Email == null){
                 return BadRequest("No email provided in request");
+            }
+
+            if (updatedUserInfo.Email != User.FindFirstValue(ClaimTypes.Email)) {
+                return Unauthorized("You are not authorized to update this user");
             }
             try {
                 IdentityResult updateUser = await _userService.UpdateUserAsync(updatedUserInfo);
@@ -194,10 +193,6 @@ namespace agile_dev.Controller {
             }
             try {
                 IdentityResult makeUserAdmin = await _userService.MakeUserAdmin(newAdminUser.Email);
-                
-                //if (makeUserAdmin is not Models.User) {
-                //    return Unauthorized(makeUserAdmin);
-                //}
 
                 return Ok(makeUserAdmin);
             }
@@ -206,10 +201,10 @@ namespace agile_dev.Controller {
             }
         }
         
-        // PUT api/user/organizer/add
+        // PUT api/user/organizer/add/1
         [Authorize(Roles = "Admin")]
-        [HttpPut("organizer/add")]
-        public async Task<IActionResult> AddOrganizer(User? userToAdd)
+        [HttpPut("organizer/add/{orgId}")]
+        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd)
         {
             if (userToAdd == null)
             {
@@ -223,12 +218,16 @@ namespace agile_dev.Controller {
 
             try
             {
-                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(userToAdd.Email);
+                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(orgId, userToAdd.Email);
                 //if (makeUserOrganizer is not Models.User)
                 //{
                     
                 //    return Unauthorized(makeUserOrganizer);
                 //}
+
+                if (!makeUserOrganizer.Succeeded) {
+                    return BadRequest(makeUserOrganizer);
+                }
 
                 return Ok(makeUserOrganizer);
             }
@@ -262,6 +261,6 @@ namespace agile_dev.Controller {
             }
         }
 
-        #endregion*/
+        #endregion
     }
 }

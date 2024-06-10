@@ -145,17 +145,13 @@ public class EventService {
     #endregion
 
     #region POST
-
+    
     public async Task<object> AddEvent(string userName, EventDto frontendEvent) {
         try {
             User? user = await _organizationService._userService.FetchUserByEmail(userName);
             if (user == null) {
                 return "Could not find user by email";
             }
-            
-            // if (!CheckIfUserIsOrganizer(user.Id, frontendEvent.Event.OrganizationId).Result) {
-            //     return "User is not organizer";
-            // }
             
             Event eEvent = new Event() {
                 Title = frontendEvent.Event.Title,

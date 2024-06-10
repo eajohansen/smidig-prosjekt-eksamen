@@ -1,4 +1,5 @@
-﻿using agile_dev.Models;
+﻿using System.Security.Claims;
+using agile_dev.Models;
 using agile_dev.Repo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -49,15 +50,13 @@ public class UserService {
                 foundUser = AddRelationToUser(foundUser).Result;
                 return foundUser[0];
             }
-            else {
-                return "Could not find user with this id";
-            }
+            
+            return "Could not find user with this id";
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching user.", exception);
         }
     }
-
 
     public async Task<User?> FetchUserByEmail(string email) {
         try {
@@ -78,11 +77,9 @@ public class UserService {
 
     #endregion
 
-
     #region POST
 
-    public async Task<IdentityResult> AddUserAsOrganizer(string email) {
-        const int organizationId = 1;
+    public async Task<IdentityResult> AddUserAsOrganizer(int organizationId, string email) {
 
         User? user = await _userManager.FindByEmailAsync(email);
         if (user == null) {
@@ -98,21 +95,25 @@ public class UserService {
         IdentityResult result = await _userManager.AddToRoleAsync(user, "Organizer");
 
         Organizer newOrganizer = new() {
-            OrganizationId = organizationId
+            OrganizationId = organizationId,
+            UserId = user.Id
         };
         await _dbCon.Organizer.AddAsync(newOrganizer);
         await _dbCon.SaveChangesAsync();
         return result;
     }
 
-
-    public async Task<bool> AddUserAsFollower(string userEmail, int organizationId) {
+    public async Task<IdentityResult> AddUserAsFollower(int organizationId) {
         try {
             Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
-            User? user = await _userManager.FindByEmailAsync(userEmail);
+            User? user = await _userManager.FindByEmailAsync(ClaimTypes.Email);
 
-            if (foundOrganization == null || !IsUserFollowingOrganization(userEmail, foundOrganization).Result) {
-                return false;
+            if (user?.Email == null) {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+            }
+
+            if (foundOrganization == null || !IsUserFollowingOrganization(user.Email, foundOrganization).Result) {
+                return IdentityResult.Failed(new IdentityError { Description = "Organization not found" });
             }
 
             Follower newFollower = new() {
@@ -120,30 +121,44 @@ public class UserService {
             };
             await _dbCon.Follower.AddAsync(newFollower);
             await _dbCon.SaveChangesAsync();
-            return true;
+            return IdentityResult.Success;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user as follower.", exception);
         }
     }
 
-    public async Task<bool> AddUserToEvent(string userEmail, int eventId) {
+    public async Task<IdentityResult> AddUserToEvent(string userEmail, int eventId) {
         try {
             Event? foundEvent = await _dbCon.Event.FindAsync(eventId);
+
+            if (foundEvent == null) {
+                return IdentityResult.Failed(new IdentityError { Description = "Event not found" });
+            }
+            
             User? user = await _userManager.FindByEmailAsync(userEmail);
 
-            if (foundEvent != null && user != null && !IsUserAttendingEvent(user, foundEvent).Result) {
-                return false;
+            if (user == null) {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
             }
 
+            // if (!IsUserAttendingEvent(user, foundEvent).Result) {
+            //     return IdentityResult.Failed(new IdentityError { Description = "User is already attending event" });
+            // }
+
+            Console.WriteLine("1");
             UserEvent newUserEvent = new() {
                 Id = user.Id,
+                EventId = eventId,
                 Used = false
             };
+            Console.WriteLine("2");
 
             await _dbCon.UserEvent.AddAsync(newUserEvent);
+            Console.WriteLine("3");
             await _dbCon.SaveChangesAsync();
-            return true;
+            Console.WriteLine("4");
+            return IdentityResult.Success;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to event.", exception);
@@ -170,6 +185,9 @@ public class UserService {
     #region PUT
 
     public async Task<IdentityResult> UpdateUserAsync(User updatedUserInfo) {
+        
+        // Need to add check for received email matching logged-in user mail
+        
         User? user = await _userManager.FindByEmailAsync(updatedUserInfo.Email!);
 
         if (user == null) {
