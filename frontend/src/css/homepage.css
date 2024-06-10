@@ -8,10 +8,18 @@
     flex-wrap: wrap;
     gap:1rem;
 }
+.eventContainer{
+    width: 40%;
+}
 label {
     padding-top: 0.5rem;
     padding-bottom: 1rem;
 }
+.followerContainer{
+    width: 50%;
+    padding-left: 1rem;
+}
 .calendar{
-  
+    width: 40%;
+    
 }
