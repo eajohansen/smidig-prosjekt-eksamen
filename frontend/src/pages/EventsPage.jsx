@@ -9,7 +9,7 @@ export const EventsPage = () => {
 
   const loadEvents = async () => {
     const result = await getEvents();
-
+    console.log(result);
     setEvents(result);
   };
   return (
@@ -21,13 +21,13 @@ export const EventsPage = () => {
         {events != null &&
           events.map((event) => (
             <EventItem
-              key={event.eventId}
-              id={event.eventId}
-              title={event.title}
-              date={event.date}
-              sold={event.sold}
-              waitlist={event.waitlist}
-              available={event.available}
+              key={event?.eventId}
+              id={event?.eventId}
+              address={event?.place?.location}
+              start={event.startTime}
+              end={event.endTime}
+              title={event?.title}
+              capacity={event?.capacity}
             />
           ))}
       </main>
