@@ -27,7 +27,6 @@ export const HomePage = () => {
             <EventItem />
           </div>
         </div>
-
         <div className="followerContainer">
           <label htmlFor="">Vekst</label>
           <div className="vekstobject">
@@ -47,10 +46,14 @@ export const HomePage = () => {
           <label htmlFor="">Oversikt</label>
           <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />
         </div>
-        <label className="createEventTxt" htmlFor="">
-          Legg til nytt arrangement
-        </label>
-        <button className="createEventIcon">+</button>
+        <div className="createEventContainer">
+          <label className="createEventTxt" htmlFor="">
+            Legg til nytt arrangement
+          </label>
+          <button className="createEventButton">
+            <i className="bi bi-plus-circle circleIcon"></i>
+          </button>
+        </div>
       </main>
     </>
   );
