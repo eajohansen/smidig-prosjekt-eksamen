@@ -3,4 +3,15 @@
 }
 .homePageContainer {
     color: black;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap:1rem;
+}
+label {
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+}
+.calendar{
+  
 }
