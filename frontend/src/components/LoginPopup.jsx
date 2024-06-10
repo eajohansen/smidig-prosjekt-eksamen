@@ -1,8 +1,9 @@
-import { useState, useEffect, SyntheticEvent } from "react";
-import { validateEmail, validatePword } from "../validation";
+import { useState, useEffect } from "react";
+import { validateEmail } from "../validation";
 import { ProfileForm } from "./ProfileForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { sendLogin, sendRegister } from "../services/tempService";
+import {useNavigate} from "react-router-dom";
 
 const LoginPopup = () => {
   const navigate = useNavigate();
@@ -75,8 +76,12 @@ const LoginPopup = () => {
   };
 
   const handleLogin = async () => {
-    console.log(loginMail, loginPword);
     const result = await sendLogin(loginMail, loginPword);
+    if (result) {
+        console.log("login successful");
+        navigate("/");
+        window.location.reload();
+    }
     if (result >= 400) {
       console.log("username and password doesnt match database");
     }

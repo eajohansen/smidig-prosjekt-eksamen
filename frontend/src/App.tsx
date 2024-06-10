@@ -1,6 +1,6 @@
 import "./temp.css";
 import "./eventPage.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { MainNav } from "./components/shared/MainNav";
 import { HomePage } from "./pages/HomePage";
@@ -42,7 +42,6 @@ function App() {
     };
   }, []);
   return (
-    // <BrowserRouter>
     <>
       <MainNav version={navBar} />
       <main>
@@ -58,7 +57,6 @@ function App() {
         </Routes>
       </main>
     </>
-    // </BrowserRouter>
   );
 }
 
