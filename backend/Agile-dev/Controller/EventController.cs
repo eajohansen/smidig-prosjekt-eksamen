@@ -102,8 +102,8 @@ namespace Agile_dev.Controller {
             }
         }
 
-        // GET api/event/fetch/id/5
-        [HttpGet("fetch/id/{id}")]
+        // GET api/event/fetch/5
+        [HttpGet("fetch/{id}")]
         public async Task<IActionResult> FetchEventById(int id) {
             try {
                 Event? result = await _eventService.FetchEventById(id);
