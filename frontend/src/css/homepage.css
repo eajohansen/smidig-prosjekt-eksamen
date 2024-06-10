@@ -1,6 +1,23 @@
 .homePageHeader {
     color: black;
 }
+
+.createEventContainer {
+    width: 50%;
+    padding-left: 1rem;
+    border: black 0.3rem solid;
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+
+}
+.createEventTxt {
+    width: 50%;
+}
+.createEventIcon {
+    width: 30%;
+    justify-self: center;
+}
 .homePageContainer {
     color: black;
     display: flex;

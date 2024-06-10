@@ -27,7 +27,6 @@ export const HomePage = () => {
             <EventItem />
           </div>
         </div>
-
         <div className="followerContainer">
           <label htmlFor="">Vekst</label>
           <div>
@@ -46,8 +45,10 @@ export const HomePage = () => {
         </div>
 
         <div className="createEventContainer">
-          <label htmlFor="">Legg til nytt arrangement</label>
-          <button></button>
+          <label className="createEventTxt" htmlFor="">
+            Legg til nytt arrangement
+          </label>
+          <button className="createEventIcon">+</button>
         </div>
       </main>
     </>
