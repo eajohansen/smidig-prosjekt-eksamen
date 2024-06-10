@@ -10,9 +10,13 @@ namespace agile_dev.Repo;
 public class InitContext : IdentityDbContext<User> {
     private readonly IConfiguration _configuration;
     
-    public InitContext(IConfiguration configuration) {
+    // Constructor that accepts DbContextOptions<InitContext>
+    public InitContext(DbContextOptions<InitContext> options, IConfiguration configuration) 
+        : base(options)
+    {
         _configuration = configuration;
     }
+  
     public InitContext() {
         _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
     }
