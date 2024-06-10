@@ -9,7 +9,15 @@
     display: flex;
     flex-direction: column;
     /*justify-content: center;*/
+}
 
+.createEventTxt {
+    width: 50%;
+}
+
+.createEventIcon {
+    width: 30%;
+    justify-self: center;
 }
 .createEventTxt {
     width: 50%;
@@ -34,8 +42,20 @@ label {
 }
 .followerContainer{
     width: 50%;
-    padding-left: 1rem;
+    padding-left: 1rem; 
+    
 }
+.vekstobject{
+    display: flex;
+    flex-direction: column;
+    
+        
+}
+.showFollowers {
+    width: 30%;
+    font-size: 0.8rem;
+}
+
 .calendar{
     width: 40%;
     
