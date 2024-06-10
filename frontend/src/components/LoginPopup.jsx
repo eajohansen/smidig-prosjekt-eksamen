@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { sendLogin, sendRegister } from "../services/tempService";
 
 const LoginPopup = () => {
+  const navigate = useNavigate();
   const [loginMail, setLoginMail] = useState("");
   const [loginPword, setLoginPword] = useState("");
 

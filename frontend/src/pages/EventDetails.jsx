@@ -6,6 +6,7 @@ import { getEventById } from "../services/tempService";
 export const EventDetails = () => {
   const { id } = useParams();
   const [event, setEvent] = useState([{}]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     loadEvent();
   }, []);
@@ -14,11 +15,14 @@ export const EventDetails = () => {
     const result = await getEventById(id);
 
     setEvent(result);
+    if (result != undefined && result != null) {
+      setLoading(false);
+    }
   };
 
-  const lorem =
-    "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!";
-  // const event = events.find((event) => event.id === parseInt(id));
+  if (loading) {
+    return <p>loading....</p>;
+  }
   return (
     <div className="eventDetailsContainer">
       <div className="eventDetailsLeft">

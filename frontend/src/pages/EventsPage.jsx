@@ -3,6 +3,7 @@ import { EventItem } from "../components/EventItem";
 import { getEvents } from "../services/tempService";
 export const EventsPage = () => {
   const [events, setEvents] = useState([{}]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     loadEvents();
   }, []);
@@ -11,7 +12,11 @@ export const EventsPage = () => {
     const result = await getEvents();
     console.log(result);
     setEvents(result);
+    if (result != undefined && result != null) {
+      setLoading(false);
+    }
   };
+
   return (
     <>
       <div className="pageHeader">
@@ -24,8 +29,8 @@ export const EventsPage = () => {
               key={key}
               id={event?.eventId}
               address={event?.place?.location}
-              start={event.startTime}
-              end={event.endTime}
+              start={event?.startTime}
+              end={event?.endTime}
               title={event?.title}
               capacity={event?.capacity}
             />

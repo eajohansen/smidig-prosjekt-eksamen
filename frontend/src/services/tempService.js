@@ -3,7 +3,9 @@ import { axiosInstance } from "./helpers";
 export const sendRegister = async (email, password) => {
   try {
     const result = await axiosInstance.post("register", { email, password });
-    return result.status === 200;
+    if (result.status === 200) {
+      return result.status === 200;
+    }
   } catch (err) {
     console.log(err.response.data.errors);
     return err.response.data.errors;
@@ -19,7 +21,9 @@ export const sendUser = async (user, allergyList) => {
       birthdate: user.birthdate,
       allergies: allergyList,
     });
-    return result.status === 200;
+    if (result.status === 200) {
+      return result.status === 200;
+    }
   } catch (err) {
     console.log(err);
     return err;
@@ -46,7 +50,7 @@ export const sendLogin = async (email, password) => {
         localStorage.setItem("organizator", organizator);
       }
     }
-    return;
+    return result.status === 200;
   } catch (err) {
     console.log(err);
     return err;

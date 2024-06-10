@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 export const MainNav = ({ version }) => {
-  console.log(version)
+  console.log(version);
   switch (version) {
     case "user":
       return (
@@ -61,7 +61,7 @@ export const MainNav = ({ version }) => {
       return (
         <header>
           <div className="navHeader">
-            <Link to="/" className="navItem">
+            <Link to="login" className="navItem">
               <i className="bi bi-box-arrow-right"></i> <p>Logg inn</p>
             </Link>
           </div>
