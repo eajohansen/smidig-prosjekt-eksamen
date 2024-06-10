@@ -384,14 +384,41 @@ public class EventService {
                     }
                 } else if (databaseEvent.EventCustomFields != null && eEvent.EventCustomFields != null) {
 
-                    ICollection<EventCustomField> customFields = eEvent.EventCustomFields.ToList();
+                    ICollection<EventCustomField> eventCustomFields = eEvent.EventCustomFields.ToList();
                     eEvent.EventCustomFields.Clear();
                     
-                    foreach (EventCustomField customField in databaseEvent.EventCustomFields) {
-                        CustomField? cField = await _dbCon.CustomField.FindAsync(customField.CustomFieldId);
-                        
+                    foreach (EventCustomField eventCustomField in databaseEvent.EventCustomFields) {
+                        if (!eventCustomFields.Contains(eventCustomField)) {
+                            _dbCon.EventCustomField.Remove(eventCustomField);
+                        }
                     }
 
+                    foreach (EventCustomField eventCustomField in eventCustomFields) {
+                        if (!databaseEvent.EventCustomFields.Contains(eventCustomField)) {
+                            CustomField? newCustomField = await CheckIfCustomFieldExists(eventCustomField);
+                            EventCustomField newEventCustomField;
+                            if (newCustomField == null) {
+                                newCustomField = new CustomField {
+                                    Description = eventCustomField.CustomField!.Description,
+                                    Value = eventCustomField.CustomField.Value
+                                };
+                                await _dbCon.CustomField.AddAsync(newCustomField);
+                                await _dbCon.SaveChangesAsync();
+                                newEventCustomField = new EventCustomField {
+                                    CustomFieldId = newCustomField.CustomFieldId,
+                                    EventId = eEvent.EventId
+                                };
+                            } else {
+                                newEventCustomField = new EventCustomField {
+                                    CustomFieldId = newCustomField.CustomFieldId,
+                                    EventId = eEvent.EventId
+                                };
+                            }
+
+                            await _dbCon.EventCustomField.AddAsync(newEventCustomField);
+                        }
+                    }
+                    await _dbCon.SaveChangesAsync();
                 } else if (databaseEvent.EventCustomFields != null && eEvent.EventCustomFields == null) {
                     foreach (EventCustomField eventCustomField in databaseEvent.EventCustomFields) {
                         _dbCon.Remove(eventCustomField);
