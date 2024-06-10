@@ -1,9 +1,9 @@
 import React from "react";
 import { EventItem } from "../components/EventItem.jsx";
 //import {events} from "./EventsPage.jsx";
-import { MainNav } from "../components/shared/MainNav";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import "../css/homepage.css"
 // const follower= [
 //   {
 //     followersTotal: 122,
@@ -15,13 +15,8 @@ export const HomePage = () => {
   //  return <LoginPopup />;
   return (
     <>
-      <MainNav />
-      <header className="homePageHeader">
-        <h1 className="homePageTitle">Hjem</h1>
-      </header>
-
-      <main className="homePageContainer">
-        <div className="eventContainer">
+     <main className="homePageContainer">
+        <div className="eventHomeContainer">
           <label htmlFor="">Førstkommende Arrangement</label>
           <div className="eventObject">
             <EventItem />
