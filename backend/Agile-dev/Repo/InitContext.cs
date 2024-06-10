@@ -46,7 +46,7 @@ public class InitContext : IdentityDbContext<User> {
         modelBuilder.Entity<UserEvent>()
             .HasOne(userEvent => userEvent.Event)
             .WithMany(eEvent => eEvent.UserEvents)
-            .HasForeignKey(userEvent => userEvent.Id);
+            .HasForeignKey(userEvent => userEvent.EventId);
         
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

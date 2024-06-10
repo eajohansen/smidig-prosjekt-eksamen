@@ -149,13 +149,18 @@ public class UserService {
             //     return IdentityResult.Failed(new IdentityError { Description = "User is already attending event" });
             // }
 
+            Console.WriteLine("1");
             UserEvent newUserEvent = new() {
                 Id = user.Id,
+                EventId = eventId,
                 Used = false
             };
+            Console.WriteLine("2");
 
             await _dbCon.UserEvent.AddAsync(newUserEvent);
+            Console.WriteLine("3");
             await _dbCon.SaveChangesAsync();
+            Console.WriteLine("4");
             return IdentityResult.Success;
         }
         catch (Exception exception) {
