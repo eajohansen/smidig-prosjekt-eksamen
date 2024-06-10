@@ -406,6 +406,9 @@ public class EventService {
             .Where(eEvent => eventsId.Contains(eEvent.EventId))
             .Include(eEvent => eEvent.EventCustomFields)
             .Include(eEvent => eEvent.UserEvents)
+            .Include(eEvent => eEvent.Place)
+            .Include(eEvent => eEvent.ContactPerson)
+            .Include(eEvent => eEvent.Organization)
             .ToListAsync();
 
         return newEvents;
