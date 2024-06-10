@@ -184,7 +184,7 @@ const LoginPopup = () => {
         );
       case 3:
         // return <ProfileForm userEmail={mailCheck} />;
-        navigate("register");
+        navigate("/register");
     }
   };
   return loginOrRegister();
