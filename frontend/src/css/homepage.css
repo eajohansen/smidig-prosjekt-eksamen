@@ -1,0 +1,76 @@
+.homePageHeader {
+    color: black;
+}
+
+.homePageContainer {
+    color: black;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap:1rem;
+}
+.eventContainer{
+    width: 40%;
+}
+label {
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+}
+.followerContainer{
+    width: 50%;
+    padding-left: 1rem;
+    height: 50%;
+        .infoFollowers {
+            width: 50%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            font-size: 0rem;
+        }
+}
+.vekstobject {
+    display: flex;
+    flex-direction: column;
+    border: black 0.1rem solid;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    padding-left: 1rem;
+
+}
+.showFollowers {
+    width: 30%;
+    font-size: 0.8rem;
+}
+.calendar{
+    width: 40%;
+    
+}
+
+.createEventContainer {
+    width: 50%;
+    padding-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.createEventTxt {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.createEventButton {
+    justify-self: center;
+    background-color: white;
+}
+
+.createEventButton:hover {
+   color: #497d95;
+}
+
+
+.circleIcon {
+    font-size: 8rem;
+}

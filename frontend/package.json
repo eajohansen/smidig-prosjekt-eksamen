@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.14",
+    "@fullcalendar/daygrid": "^6.1.14",
+    "@fullcalendar/react": "^6.1.14",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
@@ -30,8 +33,8 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "typescript": "^5.2.2",
     "vite": "^5.2.11"
-      },
+  },
   "optionalDependencies": {
-   "@rollup/rollup-linux-x64-gnu": "4.9.5"
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
   }
 }

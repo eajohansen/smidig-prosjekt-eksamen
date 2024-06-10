@@ -6,31 +6,29 @@ import { HomePage } from "./pages/HomePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { TicketsPage } from "./pages/TicketsPage";
 import { EventsPage } from "./pages/EventsPage";
-import {CreateEventPage} from "./pages/CreateEventPage";
+import { CreateEventPage } from "./pages/CreateEventPage";
 import { OrgProfilePage } from "./pages/OrgProfilePage";
 import { EventDetails } from "./pages/EventDetails";
 
 function App() {
-
   return (
-      <BrowserRouter>
-        <MainNav version={"user"} />
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="tickets" element={<TicketsPage />} />
-            <Route path="events" element={<EventsPage />} />
-            <Route path="createEvent" element={<CreateEventPage />} />
-            <Route path="events/details/:id" element={<EventDetails />} />
-            <Route path="orgProfile" element={<OrgProfilePage/>} />
+    <BrowserRouter>
+      <MainNav version={"user"} />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="tickets" element={<TicketsPage />} />
+          <Route path="events" element={<EventsPage />} />
+          <Route path="createEvent" element={<CreateEventPage />} />
+          <Route path="events/details/:id" element={<EventDetails />} />
+          <Route path="orgProfile" element={<OrgProfilePage />} />
+        </Routes>
 
-          </Routes>
-
-          {/* <ProfileForm userEmail={"Eksempel@epost.no"} /> */}
-          {/* <button onClick={() => testClick()}> Test </button> */}
-        </main>
-      </BrowserRouter>
+        {/* <ProfileForm userEmail={"Eksempel@epost.no"} /> */}
+        {/* <button onClick={() => testClick()}> Test </button> */}
+      </main>
+    </BrowserRouter>
   );
 }
 
