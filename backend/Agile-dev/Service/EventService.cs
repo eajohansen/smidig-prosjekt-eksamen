@@ -34,7 +34,7 @@ public class EventService {
 
     public async Task<ICollection<Event>?> FetchAllEventsByAttending(string userName) {
         try {
-            User? user = await _organizationService._userService.FetchUserByEmail(userName);
+            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
             
             ICollection<Event> foundEvents = new List<Event>();
 
@@ -56,7 +56,7 @@ public class EventService {
     
     public async Task<ICollection<Event>?> FetchAllEventsByNotAttending(string userName) {
         try {
-            User? user = await _organizationService._userService.FetchUserByEmail(userName);
+            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
             
             ICollection<Event>? foundEvents = null;
             
@@ -148,7 +148,7 @@ public class EventService {
     
     public async Task<object> AddEvent(string userName, EventDto frontendEvent) {
         try {
-            User? user = await _organizationService._userService.FetchUserByEmail(userName);
+            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
             if (user == null) {
                 return "Could not find user by email";
             }
@@ -529,7 +529,6 @@ public class EventService {
         
         return DateTime.ParseExact($"{correctDate} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
     }
-
 
     #endregion
 }

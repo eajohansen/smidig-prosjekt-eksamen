@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
+using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Repo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace agile_dev.Service;
 
@@ -29,12 +31,28 @@ public class UserService {
 
     #region GET
 
-    public async Task<ICollection<User>> FetchAllUsers() {
+    public async Task<List<UserFrontendDto>> FetchAllUsers() {
         try {
-            ICollection<User> foundUsers = await _dbCon.User.ToListAsync();
-            ICollection<User> newUsers = AddRelationToUser(foundUsers.ToList()).Result;
+            List<User> foundUsers = await _dbCon.User.ToListAsync();
+            foundUsers = await AddRelationToUser(foundUsers);
+            ICollection<UserFrontendDto> userFrontendDtos = foundUsers.Select(user => new UserFrontendDto() {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Birthdate = user.Birthdate,
+                    ExtraInfo = user.ExtraInfo,
+                    FollowOrganization = user.FollowOrganization,
+                    OrganizerOrganization = user.OrganizerOrganization,
+                    UserEvents = user.UserEvents,
+                    Notices = user.Notices,
+                    Allergies = user.Allergies
+                })
+                .ToList();
 
-            return newUsers;
+            return userFrontendDtos.ToList();
+
+            //return foundUsers.Select(user => AddRelationToUser(user).Result).ToList();
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching users.", exception);
@@ -45,30 +63,48 @@ public class UserService {
     public async Task<object> FetchUserById(string id) {
         try {
             User? user = await _dbCon.User.FindAsync(id);
-            if (user != null) {
-                List<User> foundUser = [user];
-                foundUser = AddRelationToUser(foundUser).Result;
-                return foundUser[0];
-            }
-            
-            return "Could not find user with this id";
+            if (user == null) return "Could not find user with this id";
+            List<User> users = [user];
+            user = AddRelationToUser(users).Result[0];
+            return new UserFrontendDto() {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthdate = user.Birthdate,
+                ExtraInfo = user.ExtraInfo,
+                FollowOrganization = user.FollowOrganization,
+                OrganizerOrganization = user.OrganizerOrganization,
+                UserEvents = user.UserEvents,
+                Notices = user.Notices,
+                Allergies = user.Allergies
+            };
+
         }
         catch (Exception exception) {
+            Console.WriteLine(exception);
             throw new Exception("An error occurred while fetching user.", exception);
         }
     }
 
-    public async Task<User?> FetchUserByEmail(string email) {
+    public async Task<UserFrontendDto?> FetchUserByEmail(string email) {
         try {
             User? user = await _userManager.FindByEmailAsync(email);
-            if (user == null) {
-                return user;
-            }
-
-            List<User> listUser = [user];
-            List<User> newUsers = AddRelationToUser(listUser).Result;
-            user = newUsers[0];
-            return user;
+            List<User> users = [user];
+            user = AddRelationToUser(users).Result[0];
+            return new UserFrontendDto() {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthdate = user.Birthdate,
+                ExtraInfo = user.ExtraInfo,
+                FollowOrganization = user.FollowOrganization,
+                OrganizerOrganization = user.OrganizerOrganization,
+                UserEvents = user.UserEvents,
+                Notices = user.Notices,
+                Allergies = user.Allergies
+            };
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching user by email.", exception);
@@ -194,17 +230,14 @@ public class UserService {
             return IdentityResult.Failed(new IdentityError
                 { Description = $"User with email {updatedUserInfo.Email!} not found." });
         }
-
-        List<User> listUser = [user];
-        List<User> newUsers = AddRelationToUser(listUser).Result;
-
-        user = newUsers[0];
-
+        
+        user = AddRelationToUser([user]).Result[0];
+        
+        user.ExtraInfo = updatedUserInfo.Email;
         user.FirstName = updatedUserInfo.FirstName;
         user.LastName = updatedUserInfo.LastName;
         user.Birthdate = updatedUserInfo.Birthdate;
         user.ExtraInfo = updatedUserInfo.ExtraInfo;
-
 
         // Update allergies if provided
 
@@ -329,6 +362,34 @@ public class UserService {
 
         return newUsers;
     }
+    
+    private async Task<UserFrontendDto?> AddRelationToUsefr(User user) {
+        var newUser = await _dbCon.User
+            .Where(u => u.Id == user.Id)
+            .Include(userFrontendDto => user.FollowOrganization)
+            .Include(userFrontendDto => user.OrganizerOrganization)
+            .Include(userFrontendDto => user.UserEvents)
+            .Include(userFrontendDto => user.Notices)
+            .Include(userFrontendDto => user.Allergies)
+            .Select(u => new UserFrontendDto {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthdate = user.Birthdate,
+                ExtraInfo = user.ExtraInfo,
+                FollowOrganization = user.FollowOrganization,
+                OrganizerOrganization = user.OrganizerOrganization,
+                UserEvents = user.UserEvents,
+                Notices = user.Notices,
+                Allergies = user.Allergies
+            })
+            
+            .SingleOrDefaultAsync();
+        Console.WriteLine("hheheheheeheheheh");
+        return newUser;
+    }
+
 
     #endregion
 }

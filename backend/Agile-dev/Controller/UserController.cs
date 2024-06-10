@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,7 @@ namespace agile_dev.Controller {
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllUsers() {
             try {
-                ICollection<User> result = await _userService.FetchAllUsers();
+                List<UserFrontendDto> result = await _userService.FetchAllUsers();
                 if (result.Count == 0) {
                     return NoContent();
                 }
@@ -54,7 +55,7 @@ namespace agile_dev.Controller {
 
             try {
                 object result = await _userService.FetchUserById(id);
-                if (result is not User user) {
+                if (result is not UserFrontendDto user) {
                     return NoContent();
                 }
                 
@@ -92,7 +93,7 @@ namespace agile_dev.Controller {
             }
             
             try {
-                User? result = await _userService.FetchUserByEmail(email);
+                UserFrontendDto? result = await _userService.FetchUserByEmail(email);
                 if (result == null) {
                     return NoContent();
                 }

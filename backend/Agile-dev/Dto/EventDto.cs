@@ -9,5 +9,4 @@ public class EventDto {
     public string? StartTime { get; set; }
     public string? End { get; set; }
     public string? EndTime { get; set; }
-    
 }

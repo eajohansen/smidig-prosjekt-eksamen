@@ -169,12 +169,12 @@ namespace Agile_dev.Controller {
 
         #region PUT
 
-        // PUT api/event/update/5/6
+        // PUT api/event/update
         [Authorize(Roles = "Admin, Organizer")]
-        [HttpPut("update/{userId}/{organizationId}")]
-        public async Task<IActionResult> UpdateEvent([FromRoute] string userId, [FromRoute] int organizationId, [FromBody] Event eEvent) {
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateEvent([FromBody] Event eEvent) {
             try {
-                bool isAdded = await _eventService.UpdateEvent(userId, organizationId, eEvent);
+                bool isAdded = await _eventService.UpdateEvent(eEvent);
                 if (!isAdded) {
                     return BadRequest();
                 }
@@ -186,33 +186,16 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // PUT api/event/customField/update/5/6/3
-        [Authorize(Roles = "Admin, Organizer")]
-        [HttpPut("update/customField/{userId}/{organizationId}/{eventId}")]
-        public async Task<IActionResult> UpdateCustomField([FromRoute] string userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
-            try {
-                bool isAdded = await _eventService.UpdateCustomField(userId, organizationId, customFields);
-                if (!isAdded) {
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while updating eventDateTime.", exception);
-            }
-        }
-        
         #endregion
 
         #region DELETE
 
-        // DELETE api/event/delete/5/6
+        // DELETE api/event/delete
         [Authorize(Roles = "Admin, Organizer")]
-        [HttpDelete("delete/{userId}/{organizationId}")]
-        public async Task<IActionResult> DeleteEvent([FromRoute] string userId, [FromBody] Event eEvent, [FromRoute] int organizationId) {
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteEvent([FromBody] Event eEvent) {
             try {
-                bool isDeleted = await _eventService.DeleteEvent(userId, eEvent, organizationId);
+                bool isDeleted = await _eventService.DeleteEvent(eEvent);
                 if (!isDeleted) {
                     // Could not delete event, because request is bad
                     BadRequest();
