@@ -63,11 +63,13 @@ label {
 
 .createEventButton {
     justify-self: center;
-}
-
-.createEventButton {
     background-color: white;
 }
+
+.createEventButton:hover {
+   color: #497d95;
+}
+
 
 .circleIcon {
     font-size: 8rem;
