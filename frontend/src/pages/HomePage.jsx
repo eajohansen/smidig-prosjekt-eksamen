@@ -30,13 +30,24 @@ export const HomePage = () => {
         <div className="followerContainer">
           <label htmlFor="">Vekst</label>
           <div className="vekstobject">
-            <label htmlFor="">Følgere</label>
-            div
-            {/* <FollowersBox
+            <h4>Følgere</h4>
+            <div className="infoFollowers">
+              <div>
+                <p>Antall følgere</p>
+                <p>5</p>
+                <p>følgere forrige måned</p>
+                <p>5</p>
+              </div>
+              <div>
+                <p>vekst</p>
+                <p>9</p>
+              </div>
+              {/* <FollowersBox
                       followers={follower.followersTotal}
                       followersLM={follower.followersLastMonth}
                       growth={follower.growth}
                       /> */}
+            </div>
             <button className="seeEventButton showFollowers">
               Vis liste over følgere
             </button>
