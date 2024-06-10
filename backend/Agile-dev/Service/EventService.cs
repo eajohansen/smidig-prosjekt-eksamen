@@ -107,18 +107,18 @@ public class EventService {
 
     public async Task<Event?> FetchEventById(int id) {
         try {
-            Event? eEvent = await _dbCon.Event.FindAsync(id);
-            if (eEvent != null) {
-                List<Event> foundEvent = [eEvent];
-                foundEvent = AddRelationToEvent(foundEvent).Result;
-                return foundEvent[0];
-            } else {
-                return eEvent;
-            }
+                Event? eEvent = await _dbCon.Event.FindAsync(id);
+                if (eEvent != null) {
+                    Event? newEvent = await AddRelationToSingleEvent(eEvent);
+                    return newEvent;
+                } else {
+                    return eEvent;
+                }
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching event.", exception);
         }
+      
     }
 
     public async Task<ICollection<CustomField?>> FetchAllCustomFields(int eventId) {
@@ -401,7 +401,6 @@ public class EventService {
 
     private async Task<List<Event>> AddRelationToEvent(List<Event> events) {
         List<int> eventsId = events.Select(eEvent => eEvent.EventId).ToList();
-
         List<Event> newEvents = await _dbCon.Event
             .Where(eEvent => eventsId.Contains(eEvent.EventId))
             .Include(eEvent => eEvent.EventCustomFields)
@@ -410,8 +409,18 @@ public class EventService {
             .Include(eEvent => eEvent.ContactPerson)
             .Include(eEvent => eEvent.Organization)
             .ToListAsync();
-
         return newEvents;
+    }
+    private async Task<Event> AddRelationToSingleEvent(Event events) {
+        Event? newEvent = await _dbCon.Event
+            .Where(eEvent => eEvent.EventId.Equals(events.EventId))
+            .Include(eEvent => eEvent.EventCustomFields)
+            .Include(eEvent => eEvent.UserEvents)
+            .Include(eEvent => eEvent.Place)
+            .Include(eEvent => eEvent.ContactPerson)
+            .Include(eEvent => eEvent.Organization)
+            .FirstOrDefaultAsync();
+        return newEvent;
     }
     
     private async Task<ContactPerson?> CheckIfContactPersonExists(ContactPerson newContactPerson) {
