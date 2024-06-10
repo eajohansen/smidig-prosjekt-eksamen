@@ -18,17 +18,18 @@ export const EventsPage = () => {
         <h1 className="pageTitle">Kommende arrangementer</h1>
       </div>
       <main className="eventsPageContainer">
-        {events.map((event) => (
-          <EventItem
-            key={event.eventId}
-            id={event.eventId}
-            title={event.title}
-            date={event.date}
-            sold={event.sold}
-            waitlist={event.waitlist}
-            available={event.available}
-          />
-        ))}
+        {events != null &&
+          events.map((event) => (
+            <EventItem
+              key={event.eventId}
+              id={event.eventId}
+              title={event.title}
+              date={event.date}
+              sold={event.sold}
+              waitlist={event.waitlist}
+              available={event.available}
+            />
+          ))}
       </main>
     </>
   );

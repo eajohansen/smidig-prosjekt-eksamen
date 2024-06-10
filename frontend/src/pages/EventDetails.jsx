@@ -1,9 +1,21 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { getEventById } from "../services/tempService";
 // import { events } from "./EventsPage";
 
 export const EventDetails = () => {
   const { id } = useParams();
+  const [event, setEvent] = useState([{}]);
+  useEffect(() => {
+    loadEvent();
+  }, []);
+
+  const loadEvent = async () => {
+    const result = await getEventById(id);
+
+    setEvent(result);
+  };
+
   const lorem =
     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!";
   // const event = events.find((event) => event.id === parseInt(id));
@@ -16,9 +28,18 @@ export const EventDetails = () => {
         />
       </div>
       <div className="eventDetailsRight">
-        <h1>TITTEL</h1>
+        <h1>{event.title}</h1>
         <p>DATO</p>
-        <p>{lorem}</p>
+        <p>Beskrivelse: {event.description}</p>
+        <p>Antall plasser: {event.capacity}</p>
+        <p>Aldersgrense: {event.ageLimit}</p>
+        <p>privat?: {event.private ? "ja" : "nei"}</p>
+        <p>publisert?: {event.published ? "ja" : "nei"}</p>
+        <p>organisasjon: {event?.organization?.name}</p>
+        <p>lokasjon: {event?.place?.location}</p>
+        <p>kontaktperson: {event?.contactPerson?.name}</p>
+        <p>start: {event.startTime}</p>
+        <p>slutt: {event.endTime}</p>
         <div className="btnDiv">
           <button>Rediger</button>
           <button>Publiser</button>

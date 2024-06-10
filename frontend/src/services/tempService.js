@@ -36,13 +36,15 @@ export const sendLogin = async (email, password) => {
       axiosInstance.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.getItem("accessToken")}`;
-      const adminPrivileges = await axiosInstance.get("/api/user/checkAdminPrivileges");
-        if (adminPrivileges.status === 200) {
-          const adminRight = adminPrivileges.data.admin ? "true" : "false";
-          const organizator = adminPrivileges.data.organizator ? "true" : "false";
-            localStorage.setItem("admin", adminRight);
-            localStorage.setItem("organizator", organizator);
-        }
+      const adminPrivileges = await axiosInstance.get(
+        "/api/user/checkAdminPrivileges"
+      );
+      if (adminPrivileges.status === 200) {
+        const adminRight = adminPrivileges.data.admin ? "true" : "false";
+        const organizator = adminPrivileges.data.organizator ? "true" : "false";
+        localStorage.setItem("admin", adminRight);
+        localStorage.setItem("organizator", organizator);
+      }
     }
     return;
   } catch (err) {
@@ -96,6 +98,16 @@ export const getEvents = async () => {
     const result = await axiosInstance.get("api/event/fetchall");
     console.log(result);
     return result.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getEventById = async (id) => {
+  try {
+    const result = await axiosInstance.get(`api/event/fetch/${id}`);
+    console.log(result);
+    return result?.data;
   } catch (err) {
     console.log(err);
   }
