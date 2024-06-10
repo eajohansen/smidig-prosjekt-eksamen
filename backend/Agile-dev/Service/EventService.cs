@@ -24,7 +24,6 @@ public class EventService {
                 .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
                 .ToListAsync();
             ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
-            
             return newEvents;
         }
         catch (Exception exception) {
@@ -110,7 +109,7 @@ public class EventService {
             Event? eEvent = await _dbCon.Event.FindAsync(id);
             if (eEvent != null) {
                 List<Event> foundEvent = [eEvent];
-                foundEvent = AddRelationToEvent(foundEvent).Result;
+                foundEvent = await AddRelationToEvent(foundEvent);
                 return foundEvent[0];
             } else {
                 return eEvent;
@@ -181,10 +180,6 @@ public class EventService {
                 eEvent.Place = frontendEvent.Event.Place;
             }
 
-            if (frontendEvent.Event.ImageId != null) {
-                eEvent.ImageId = frontendEvent.Event.ImageId;
-            }
-
             if (frontendEvent.Event.Image != null) {
                 eEvent.Image = frontendEvent.Event.Image;
             }
@@ -237,8 +232,10 @@ public class EventService {
                 
                 eEvent.PlaceId = newPlace.PlaceId;
             }
+            
             await _dbCon.Event.AddAsync(eEvent);
             await _dbCon.SaveChangesAsync();
+            
             // ReSharper disable once InvertIf
             if (frontendEvent.Event.EventCustomFields != null) {
                 ICollection<EventCustomField> customFields = frontendEvent.Event.EventCustomFields.ToList();
@@ -293,64 +290,121 @@ public class EventService {
                 return false;
             }
 
-            _dbCon.Event.Update(eEvent);
+            databaseEvent.Title = eEvent.Title;
+            databaseEvent.Private = eEvent.Private;
+            databaseEvent.Published = eEvent.Published;
+            databaseEvent.OrganizationId = eEvent.OrganizationId;
+            databaseEvent.Description = eEvent.Description;
+            databaseEvent.Capacity = eEvent.Capacity;
+            databaseEvent.AgeLimit = eEvent.AgeLimit;
+            databaseEvent.StartTime = eEvent.StartTime;
+            databaseEvent.EndTime = eEvent.EndTime;
+            
+            if (eEvent.Published) {
+                eEvent.PublishedAt = DateTime.Now;
+            } else {
+                eEvent.PublishedAt = null;
+            }
+            
+            if (eEvent.ContactPerson != null) {
+                ContactPerson? newContactPerson = await CheckIfContactPersonExists(eEvent.ContactPerson);
+                if (newContactPerson == null) {
+                    await _dbCon.ContactPerson.AddAsync(eEvent.ContactPerson);
+                    await _dbCon.SaveChangesAsync();
+                    newContactPerson = eEvent.ContactPerson;
+                }
+
+                databaseEvent.ContactPerson = newContactPerson;
+                databaseEvent.ContactPersonId = newContactPerson.ContactPersonId;
+            } else {
+                databaseEvent.ContactPerson = null;
+                databaseEvent.ContactPersonId = null;
+            }
+            
+            if (eEvent.Image != null) {
+                Image? newImage = await _organizationService.CheckIfImageExists(eEvent.Image);
+                if (newImage == null) {
+                    await _dbCon.Image.AddAsync(eEvent.Image);
+                    await _dbCon.SaveChangesAsync();
+                    newImage = eEvent.Image;
+                }
+
+                databaseEvent.Image = newImage;
+                databaseEvent.ImageId = newImage.ImageId;
+            } else {
+                databaseEvent.Image = null;
+                databaseEvent.ImageId = null;
+            }
+
+            if (eEvent.Place != null) {
+                Place? newPlace = await CheckIfPlaceExists(eEvent.Place);
+                if (newPlace == null) { 
+                    await _dbCon.Place.AddAsync(eEvent.Place);
+                    await _dbCon.SaveChangesAsync();
+                    newPlace = eEvent.Place;
+                }
+
+                databaseEvent.Place = newPlace;
+                databaseEvent.PlaceId = newPlace.PlaceId;
+            } else {
+                databaseEvent.Place = null;
+                databaseEvent.PlaceId = null;
+            }
+
+            _dbCon.Event.Update(databaseEvent);
             await _dbCon.SaveChangesAsync();
+
+            if (!Equals(eEvent.EventCustomFields, databaseEvent.EventCustomFields)) {
+
+                if (databaseEvent.EventCustomFields == null && eEvent.EventCustomFields != null) {
+                    ICollection<EventCustomField> customFields = eEvent.EventCustomFields.ToList();
+                    eEvent.EventCustomFields.Clear();
+                    foreach (EventCustomField customField in customFields) {
+                        CustomField? newCustomField = await CheckIfCustomFieldExists(customField);
+                        EventCustomField newEventCustomField;
+                        if (newCustomField == null) {
+                            newCustomField = new CustomField {
+                                Description = customField.CustomField!.Description,
+                                Value = customField.CustomField.Value
+                            };
+                            await _dbCon.CustomField.AddAsync(newCustomField);
+                            await _dbCon.SaveChangesAsync();
+                            newEventCustomField = new EventCustomField {
+                                CustomFieldId = newCustomField.CustomFieldId,
+                                EventId = databaseEvent.EventId
+                            };
+                        } else {
+                            newEventCustomField = new EventCustomField {
+                                CustomFieldId = newCustomField.CustomFieldId,
+                                EventId = databaseEvent.EventId
+                            };
+                        }
+
+                        await _dbCon.EventCustomField.AddAsync(newEventCustomField);
+                    }
+                } else if (databaseEvent.EventCustomFields != null && eEvent.EventCustomFields != null) {
+
+                    ICollection<EventCustomField> customFields = eEvent.EventCustomFields.ToList();
+                    eEvent.EventCustomFields.Clear();
+                    
+                    foreach (EventCustomField customField in databaseEvent.EventCustomFields) {
+                        CustomField? cField = await _dbCon.CustomField.FindAsync(customField.CustomFieldId);
+                        
+                    }
+
+                } else if (databaseEvent.EventCustomFields != null && eEvent.EventCustomFields == null) {
+                    foreach (EventCustomField eventCustomField in databaseEvent.EventCustomFields) {
+                        _dbCon.Remove(eventCustomField);
+                    }
+
+                    await _dbCon.SaveChangesAsync();
+                }
+            }
+            
             return true;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while updating event.", exception);
-        }
-    }
-    
-    public async Task<bool> UpdatePlace(int userId, int organizationId, int eventId, Place place) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
-            
-            Event? eEvent = await _dbCon.Event.FindAsync(eventId);
-
-            if (eEvent == null) {
-                return false;
-            }
-
-            Place? databasePlace = await _dbCon.Place.FindAsync(eEvent.PlaceId);
-            if (databasePlace == null) {
-                return false;
-            }
-
-            _dbCon.Place.Update(databasePlace);
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while updating place.", exception);
-        }
-    }
-    
-    public async Task<bool> UpdateContactPerson(int userId, int organizationId, int eventId, ContactPerson contactPerson) {
-        try {
-            if (!_organizationService.CheckValidation(userId, organizationId).Result) {
-                return false;
-            }
-            
-            Event? eEvent = await _dbCon.Event.FindAsync(eventId);
-
-            if (eEvent == null) {
-                return false;
-            }
-
-            ContactPerson? databaseContactPerson = await _dbCon.ContactPerson.FindAsync(eEvent.ContactPersonId);
-            if (databaseContactPerson == null) {
-                return false;
-            }
-
-            _dbCon.ContactPerson.Update(databaseContactPerson);
-            await _dbCon.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception exception) {
-            throw new Exception("An error occurred while updating contactPerson.", exception);
         }
     }
 
