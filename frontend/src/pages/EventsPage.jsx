@@ -19,9 +19,9 @@ export const EventsPage = () => {
       </div>
       <main className="eventsPageContainer">
         {events != null &&
-          events.map((event) => (
+          events.map((event, key) => (
             <EventItem
-              key={event?.eventId}
+              key={key}
               id={event?.eventId}
               address={event?.place?.location}
               start={event.startTime}

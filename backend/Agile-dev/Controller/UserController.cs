@@ -111,7 +111,7 @@ namespace agile_dev.Controller {
                     return Unauthorized("No user found");
                 }
                 
-                var feedback = new {
+                object feedback = new {
                     Admin = result.Admin,
                     Organizer = result.OrganizerOrganization != null
                 };
