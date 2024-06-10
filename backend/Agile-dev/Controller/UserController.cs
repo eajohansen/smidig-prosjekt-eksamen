@@ -28,6 +28,17 @@ namespace agile_dev.Controller {
 
         #region GET
 
+        [Authorize]
+        [HttpGet("fetch/email")]
+        public ActionResult fetchUserEmail() {
+            try {
+               string userEmail = User.FindFirstValue(ClaimTypes.Name);
+               return Ok(userEmail);
+            }
+            catch (Exception e) {
+                return StatusCode(500 , "Internal server error: " + e.Message);
+            }
+        }
         // GET: api/user/fetchAll
         [Authorize]
         [HttpGet("fetchAll")]
