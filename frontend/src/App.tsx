@@ -12,6 +12,7 @@ import { OrgProfilePage } from "./pages/OrgProfilePage";
 import { EventDetails } from "./pages/EventDetails";
 import { LoginPage } from "./pages/LoginPage";
 import { useEffect, useState } from "react";
+import { RegisterUserProfilePage } from "./pages/RegisterUserProfilePage";
 
 function App() {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ function App() {
           <Route path="events/details/:id" element={<EventDetails />} />
           <Route path="orgProfile" element={<OrgProfilePage />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterUserProfilePage />} />
         </Routes>
       </main>
     </>
