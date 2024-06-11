@@ -41,12 +41,12 @@ export const ProfileForm = ({ userEmail }) => {
   };
 
   const handleAllergy = () => {
-      if (allergies.length > 5) {
-          alert("Beklager! Du kan ikke legge til fler enn 6 allergier.");
-      } else {
-          setAllergies([...allergies, {"name": newAllergy}]);
-          setNewAllergy("");
-      }
+    if (allergies.length > 5) {
+      alert("Beklager! Du kan ikke legge til fler enn 6 allergier.");
+    } else {
+      setAllergies([...allergies, { name: newAllergy }]);
+      setNewAllergy("");
+    }
   };
 
   const handleSubmit = async () => {
@@ -111,23 +111,25 @@ export const ProfileForm = ({ userEmail }) => {
               onChange={handleChange}
               value={newAllergy}
             />
-          <button className="addBtn" onClick={handleAllergy}>
-            Legg til
-          </button>
-        </div>
-        <label className="yourAllergies">Dine allergier</label>
-        <div className="allergyOutput">
-          <ul>
-            {allergies.map((item, i) => (
-              <li className="allergy" key={i}>
-                <span>{item.name}</span>
-                <i className="trash bi bi-trash3 "></i>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="disclaimerDiv">
-          <div><input className="checkBox" type="checkbox"/></div>
+            <button className="addBtn" onClick={handleAllergy}>
+              Legg til
+            </button>
+          </div>
+          <label className="yourAllergies">Dine allergier</label>
+          <div className="allergyOutput">
+            <ul>
+              {allergies.map((item, i) => (
+                <li className="allergy" key={i}>
+                  <span>{item.name}</span>
+                  <i className="trash bi bi-trash3 "></i>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="disclaimerDiv">
+            <div>
+              <input className="checkBox" type="checkbox" />
+            </div>
 
             <span className="disclaimer">
               Ved å registrere brukerprofil, samtykker du til at denne

@@ -3,22 +3,46 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getEventById } from "../services/tempService";
 // import { events } from "./EventsPage";
+import dayjs from "dayjs";
+import CustomParseFormat from "dayjs/plugin/customParseFormat";
 
 export const EventDetails = () => {
   const { id } = useParams();
   const [event, setEvent] = useState([{}]);
   const [loading, setLoading] = useState(true);
+  const [dateTime, setDateTime] = useState({
+    timeStart: "",
+    timeEnd: "",
+    dateStart: "",
+    dateEnd: "",
+  });
+
   useEffect(() => {
     loadEvent();
   }, []);
 
   const loadEvent = async () => {
     const result = await getEventById(id);
+    const testDate = dayjs(event.startTime).format("DD-MM-YYYY");
 
+    console.log(dateTime);
     setEvent(result);
     if (result != undefined && result != null) {
       setLoading(false);
+      splitDateTime(result);
     }
+  };
+
+  const splitDateTime = (eventevent) => {
+    dayjs.extend(CustomParseFormat);
+
+    setDateTime({
+      timeStart: dayjs(eventevent.startTime).format("HH:mm"),
+      timeEnd: dayjs(eventevent.endTime).format("HH:mm"),
+      dateStart: dayjs(eventevent.startTime).format("DD.MM.YYYY"),
+      dateEnd: dayjs(eventevent.endTime).format("DD.MM.YYYY"),
+    });
+    console.log(dateTime);
   };
 
   if (loading) {
@@ -58,20 +82,45 @@ export const EventDetails = () => {
         <div className="eventInfo">
           <h1>{event.title}</h1>
           <div className="dateTimePlace">
-            <div className="dateTime">
-              <div className="dateItem">
-                <i className="bi bi-calendar3 icon"></i>
-                <p>dATO</p>
-              </div>
-              <div className="timeItem">
-                <i className="bi bi-clock icon"></i>
-                <p>
-                  17:00 - 19:00
-                  {/* {event.startTime}
-                  {event.endTime} */}
-                </p>
-              </div>
-            </div>
+            {dateTime.dateStart === dateTime.dateEnd ? (
+              <>
+                <div className="dateTime">
+                  <div className="dateItem">
+                    <i className="bi bi-calendar3 icon"></i>
+                    <p>{dateTime.dateStart}</p>
+                  </div>
+                  <div className="timeItem">
+                    <i className="bi bi-clock icon"></i>
+                    <p>{`${dateTime.timeStart} - ${dateTime.timeEnd}`}</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="dateTime">
+                  <div>
+                    <div className="dateItem">
+                      <i className="bi bi-calendar3 icon"></i>
+                      <p>{dateTime.dateStart}</p>
+                    </div>
+                    <div className="dateItem">
+                      <i className="bi bi-calendar3 icon"></i>
+                      <p>{dateTime.dateEnd}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="timeItem">
+                      <i className="bi bi-clock icon"></i>
+                      <p>{`${dateTime.timeStart}`}</p>
+                    </div>
+                    <div className="timeItem">
+                      <i className="bi bi-clock icon"></i>
+                      <p>{`${dateTime.timeEnd} `}</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
             <div className="place">
               <i className="bi bi-geo-alt icon"></i>
               <p>{event.place.location}</p>
