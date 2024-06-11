@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Agile_dev.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,6 +69,21 @@ namespace Agile_dev.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ContactPerson", x => x.ContactPersonId);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "CustomField",
+                columns: table => new
+                {
+                    CustomFieldId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
+                    Value = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomField", x => x.CustomFieldId);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -304,6 +319,8 @@ namespace Agile_dev.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "varchar(3000)", maxLength: 3000, nullable: true),
+                    Capacity = table.Column<int>(type: "int", nullable: true),
+                    AgeLimit = table.Column<int>(type: "int", nullable: true),
                     Private = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Published = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     PlaceId = table.Column<int>(type: "int", nullable: true),
@@ -397,20 +414,24 @@ namespace Agile_dev.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CustomField",
+                name: "EventCustomField",
                 columns: table => new
                 {
-                    CustomFieldId = table.Column<int>(type: "int", nullable: false)
+                    EventCustomFieldId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    Value = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CustomFieldId = table.Column<int>(type: "int", nullable: true),
                     EventId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomField", x => x.CustomFieldId);
+                    table.PrimaryKey("PK_EventCustomField", x => x.EventCustomFieldId);
                     table.ForeignKey(
-                        name: "FK_CustomField_Event_EventId",
+                        name: "FK_EventCustomField_CustomField_CustomFieldId",
+                        column: x => x.CustomFieldId,
+                        principalTable: "CustomField",
+                        principalColumn: "CustomFieldId");
+                    table.ForeignKey(
+                        name: "FK_EventCustomField_Event_EventId",
                         column: x => x.EventId,
                         principalTable: "Event",
                         principalColumn: "EventId");
@@ -442,33 +463,6 @@ namespace Agile_dev.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "EventCustomField",
-                columns: table => new
-                {
-                    EventCustomFieldId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    CustomFieldId = table.Column<int>(type: "int", nullable: false),
-                    EventId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EventCustomField", x => x.EventCustomFieldId);
-                    table.ForeignKey(
-                        name: "FK_EventCustomField_CustomField_CustomFieldId",
-                        column: x => x.CustomFieldId,
-                        principalTable: "CustomField",
-                        principalColumn: "CustomFieldId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EventCustomField_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "EventId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
@@ -514,11 +508,6 @@ namespace Agile_dev.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomField_EventId",
-                table: "CustomField",
-                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Event_ContactPersonId",
@@ -637,10 +626,10 @@ namespace Agile_dev.Migrations
                 name: "CustomField");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Event");
 
             migrationBuilder.DropTable(
-                name: "Event");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "ContactPerson");

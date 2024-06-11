@@ -11,8 +11,8 @@ using agile_dev.Repo;
 namespace Agile_dev.Migrations
 {
     [DbContext(typeof(InitContext))]
-    [Migration("20240607202458_Init")]
-    partial class Init
+    [Migration("20240611200258_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -274,15 +274,10 @@ namespace Agile_dev.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<int?>("EventId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Value")
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("CustomFieldId");
-
-                    b.HasIndex("EventId");
 
                     b.ToTable("CustomField");
                 });
@@ -291,6 +286,12 @@ namespace Agile_dev.Migrations
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AgeLimit")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Capacity")
                         .HasColumnType("int");
 
                     b.Property<int?>("ContactPersonId")
@@ -351,10 +352,10 @@ namespace Agile_dev.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomFieldId")
+                    b.Property<int?>("CustomFieldId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EventId")
+                    b.Property<int?>("EventId")
                         .HasColumnType("int");
 
                     b.HasKey("EventCustomFieldId");
@@ -615,13 +616,6 @@ namespace Agile_dev.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("agile_dev.Models.CustomField", b =>
-                {
-                    b.HasOne("agile_dev.Models.Event", null)
-                        .WithMany("CustomFields")
-                        .HasForeignKey("EventId");
-                });
-
             modelBuilder.Entity("agile_dev.Models.Event", b =>
                 {
                     b.HasOne("agile_dev.Models.ContactPerson", "ContactPerson")
@@ -653,17 +647,15 @@ namespace Agile_dev.Migrations
 
             modelBuilder.Entity("agile_dev.Models.EventCustomField", b =>
                 {
-                    b.HasOne("agile_dev.Models.CustomField", null)
+                    b.HasOne("agile_dev.Models.CustomField", "CustomField")
                         .WithMany("EventCustomFields")
-                        .HasForeignKey("CustomFieldId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomFieldId");
 
                     b.HasOne("agile_dev.Models.Event", null)
                         .WithMany("EventCustomFields")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EventId");
+
+                    b.Navigation("CustomField");
                 });
 
             modelBuilder.Entity("agile_dev.Models.Follower", b =>
@@ -741,8 +733,6 @@ namespace Agile_dev.Migrations
 
             modelBuilder.Entity("agile_dev.Models.Event", b =>
                 {
-                    b.Navigation("CustomFields");
-
                     b.Navigation("EventCustomFields");
 
                     b.Navigation("UserEvents");
