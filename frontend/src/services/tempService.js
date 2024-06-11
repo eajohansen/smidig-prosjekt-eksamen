@@ -4,6 +4,10 @@ export const sendRegister = async (email, password) => {
   try {
     const result = await axiosInstance.post("register", { email, password });
     if (result.status === 200) {
+     /* const res = await sendLogin(email, password);
+        if (res?.status === 200) {
+            return email;
+        }*/
       return result.status === 200;
     }
   } catch (err) {
@@ -22,6 +26,7 @@ export const sendUser = async (user, allergyList) => {
       allergies: allergyList,
     });
     if (result.status === 200) {
+
       return result.status === 200;
     }
   } catch (err) {
@@ -129,3 +134,29 @@ export const sendOrg = async (name, description) => {
     console.log(err);
   }
 };
+
+export const fetchOrg = async () => {
+  try {
+    const result = await axiosInstance.get("api/organization/fetch/id/1");
+    if(result?.status === 200) {
+      return result;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export const editOrg = async (orgInfo) => {
+  try {
+    const result = await axiosInstance.put("api/organization/update", {
+      OrganizationId: 1,
+      Name: orgInfo.name,
+      Description: orgInfo.description,
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+}
