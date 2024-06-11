@@ -41,7 +41,7 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEventsByAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<Event> result = await _eventService.FetchAllEventsByAttending(userName!);
+                ICollection<EventDtoBackend> result = await _eventService.FetchAllEventsByAttending(userName!);
                 if (result.Count == 0) {
                     return NoContent();
                 }
@@ -59,7 +59,7 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEventsByNotAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<Event>? result = await _eventService.FetchAllEventsByNotAttending(userName!);
+                ICollection<EventDtoBackend>? result = await _eventService.FetchAllEventsByNotAttending(userName!);
                 if (result == null) {
                     return NoContent();
                 }
@@ -109,12 +109,12 @@ namespace Agile_dev.Controller {
         [HttpGet("fetch/id/{id}")]
         public async Task<IActionResult> FetchEventById(int id) {
             try {
-                Event? result = await _eventService.FetchEventById(id);
-                if (result == null) {
+                object result = await _eventService.FetchEventById(id);
+                if (result is not EventDtoBackend eventDtoBackend) {
                     return NoContent();
                 }
 
-                return Ok(result);
+                return Ok(eventDtoBackend);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);

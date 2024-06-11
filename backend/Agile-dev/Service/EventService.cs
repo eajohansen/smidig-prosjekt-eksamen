@@ -33,85 +33,43 @@ public class EventService {
     }
 
     // Fetch all the events that the user is attending
-    public async Task<ICollection<Event>>? FetchAllEventsByAttending(string userName) {
+    public async Task<ICollection<EventDtoBackend>>? FetchAllEventsByAttending(string userName) {
         try {
-            /*UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
+            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
             
-            // Get the user's userEvents
             ICollection<UserEvent> userEvents = _dbCon.UserEvent
                 .Where(userEvent => userEvent.Id.Equals(user.Id))
                 .ToList();
-
-            // Extract the EventIds from the user's userEvents
+            
             List<int> eventIds = userEvents.Select(userEvent => userEvent.EventId).ToList();
-
-            // Retrieve the events without the UserEvents property
-            var foundEvents = _dbCon.Event
-                .Where(eEvent => eventIds.Contains(eEvent.EventId))
-                .Select(eEvent => new {
-                    eEvent.EventId,
-                    eEvent.Title,
-                    eEvent.Description,
-                    eEvent.Capacity,
-                    eEvent.AgeLimit,
-                    eEvent.Private,
-                    eEvent.Published,
-                    eEvent.PlaceId,
-                    eEvent.ImageId,
-                    eEvent.ContactPersonId,
-                    eEvent.OrganizationId,
-                    eEvent.CreatedAt,
-                    eEvent.PublishedAt,
-                    eEvent.StartTime,
-                    eEvent.EndTime,
-                    // Include other properties as needed
-                })
-                .ToList();
-
+            List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend(eventIds);
             
-        
-            //ICollection<Event> newEvents = AddRelationToEvent(attendingEvents.ToList()).Result;
-            return null;*/
-            
-            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
-            
-            ICollection<Event>? foundEvents = null;
-            
-            if (user == null) {
-                return foundEvents;
-            }
-            
-            foundEvents = await _dbCon.Event
-                .Where(eEvent =>
-                    (eEvent.UserEvents.Any(userEvent => userEvent.Id == user.Id)) && eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
-                .ToListAsync();
-        
-            ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
-            return newEvents;
+            return foundEvents;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events that the user is attending.", exception);
         }
     }
-    
+
     // Fetch all events that the user is not attending
-    public async Task<ICollection<Event>?> FetchAllEventsByNotAttending(string userName) {
+    public async Task<ICollection<EventDtoBackend>?> FetchAllEventsByNotAttending(string userName) {
         try {
             UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
-            
-            ICollection<Event>? foundEvents = null;
-            
-            if (user == null) {
-                return foundEvents;
-            }
-            
-            foundEvents = await _dbCon.Event
-                .Where(eEvent =>
-                    (eEvent.UserEvents.Count == 0 || eEvent.UserEvents.Any(userEvent => userEvent.Id != user.Id)) && eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
-                .ToListAsync();
         
-            ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
-            return newEvents;
+            List<int> attendedEventIds = _dbCon.UserEvent
+                .Where(userEvent => userEvent.Id == user.Id)
+                .Select(userEvent => userEvent.EventId)
+                .ToList();
+        
+            List<Event> allEvents = _dbCon.Event.ToList();
+
+            List<int> notAttendingEventIds = allEvents
+                .Where(eEvent => !attendedEventIds.Contains(eEvent.EventId))
+                .ToList().Select(userEvent => userEvent.EventId).ToList();
+            
+            List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend(notAttendingEventIds);
+        
+            return foundEvents;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events that the user is not attending.", exception);
@@ -150,16 +108,18 @@ public class EventService {
     }
     */
 
-    public async Task<Event?> FetchEventById(int id) {
+    public async Task<object> FetchEventById(int id) {
         try {
             Event? eEvent = await _dbCon.Event.FindAsync(id);
             if (eEvent != null) {
-                List<Event> foundEvent = [eEvent];
-                foundEvent = await AddRelationToEvent(foundEvent);
-                return foundEvent[0];
+                List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend([id]);
+                return foundEvents[0];
             } else {
-                return eEvent;
+                return "Could not find event";
             }
+            
+            
+            
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching event.", exception);
@@ -338,7 +298,7 @@ public class EventService {
 
     public async Task<bool> UpdateEvent(Event eEvent) {
         try {
-            Event? databaseEvent = await FetchEventById(eEvent.EventId);
+            Event? databaseEvent = await _dbCon.Event.Where(vEvent => vEvent.EventId.Equals(eEvent.EventId)).Include(eEvent => eEvent.EventCustomFields).FirstOrDefaultAsync();
             if (databaseEvent == null) {
                 return false;
             }
@@ -352,13 +312,9 @@ public class EventService {
             databaseEvent.AgeLimit = eEvent.AgeLimit;
             databaseEvent.StartTime = eEvent.StartTime;
             databaseEvent.EndTime = eEvent.EndTime;
-            
-            if (eEvent.Published) {
-                eEvent.PublishedAt = DateTime.Now;
-            } else {
-                eEvent.PublishedAt = null;
-            }
-            
+
+            databaseEvent.PublishedAt = databaseEvent.Published ? DateTime.Now : null;
+
             if (eEvent.ContactPerson != null) {
                 ContactPerson? newContactPerson = await CheckIfContactPersonExists(eEvent.ContactPerson);
                 if (newContactPerson == null) {
@@ -408,7 +364,6 @@ public class EventService {
             await _dbCon.SaveChangesAsync();
 
             if (!Equals(eEvent.EventCustomFields, databaseEvent.EventCustomFields)) {
-
                 if (databaseEvent.EventCustomFields == null && eEvent.EventCustomFields != null) {
                     ICollection<EventCustomField> customFields = eEvent.EventCustomFields.ToList();
                     eEvent.EventCustomFields.Clear();
@@ -436,7 +391,6 @@ public class EventService {
                         await _dbCon.EventCustomField.AddAsync(newEventCustomField);
                     }
                 } else if (databaseEvent.EventCustomFields != null && eEvent.EventCustomFields != null) {
-
                     ICollection<EventCustomField> eventCustomFields = eEvent.EventCustomFields.ToList();
                     eEvent.EventCustomFields.Clear();
                     
@@ -494,6 +448,12 @@ public class EventService {
 
     public async Task<bool> DeleteEvent(Event eEvent) {
         try {
+            /*
+            Event? deleteEvent = await _dbCon.Event.FindAsync(eEvent.EventId);
+            if (deleteEvent == null) {
+                return false;
+            }
+            _dbCon.Event.Remove(deleteEvent); */
             _dbCon.Event.Remove(eEvent);
             await _dbCon.SaveChangesAsync();
             return true;
@@ -594,6 +554,45 @@ public class EventService {
         string correctDate = DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy");
         
         return DateTime.ParseExact($"{correctDate} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+    }
+    
+    private List<EventDtoBackend> ConvertEventsToEventDtoBackend(List<int> eventIds) {
+        List<EventDtoBackend> foundEvents = _dbCon.Event
+            .Where(eEvent => eventIds.Contains(eEvent.EventId))
+            .Select(eEvent => new EventDtoBackend {
+                EventId = eEvent.EventId,
+                Title = eEvent.Title,
+                Description = eEvent.Description,
+                Capacity = eEvent.Capacity,
+                AgeLimit = eEvent.AgeLimit,
+                Private = eEvent.Private,
+                Published = eEvent.Published,
+                AvailableCapacity = eEvent.Capacity - eEvent.UserEvents.Count,
+                PlaceLocation = eEvent.Place.Location,
+                PlaceUrl = eEvent.Place.Url,
+                ImageLink = eEvent.Image.Link,
+                ImageDescription = eEvent.Image.ImageDescription,
+                ContactPersonName = eEvent.ContactPerson.Name,
+                ContactPersonEmail = eEvent.ContactPerson.Email,
+                ContactPersonNumber = eEvent.ContactPerson.Number,
+                OrganizationName = eEvent.Organization.Name,
+                EventCustomFields = eEvent.EventCustomFields
+                    .Select(ecf => new EventCustomField() {
+                        EventCustomFieldId = ecf.EventCustomFieldId,
+                        CustomFieldId = ecf.CustomFieldId,
+                        EventId = ecf.EventId,
+                        CustomField = new CustomField() {
+                            CustomFieldId = ecf.CustomField.CustomFieldId,
+                            Description = ecf.CustomField.Description,
+                            Value = ecf.CustomField.Value
+                        }
+                    }).ToList(),
+                StartTime = eEvent.StartTime,
+                EndTime = eEvent.EndTime,
+                // Include other properties as needed
+            })
+            .ToList();
+        return foundEvents;
     }
 
     #endregion

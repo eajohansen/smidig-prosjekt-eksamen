@@ -18,6 +18,7 @@ public class EventDtoBackend {
     public string? ContactPersonEmail { get; set; }
     public string? ContactPersonNumber { get; set; }
     public string OrganizationName { get; set; }
+    public int AvailableCapacity { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public ICollection<EventCustomField>? EventCustomFields { get; set; }

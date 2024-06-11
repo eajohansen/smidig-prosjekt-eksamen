@@ -30,15 +30,15 @@ public class Event {
     [Required]
     [Display(Name = "Description")]
     [StringLength(3000)]
-    public string? Description { get; set; }
+    public string Description { get; set; }
     
     [Required]
     [Display(Name = "Capacity")]
-    public int? Capacity { get; set; }
+    public int Capacity { get; set; }
     
     [Required]
     [Display(Name = "Age Limit")]
-    public int? AgeLimit { get; set; }
+    public int AgeLimit { get; set; }
     
     [Required]
     [Display(Name = "Private")]
@@ -84,12 +84,12 @@ public class Event {
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [Display(Name = "Start time")]
-    public DateTime? StartTime { get; set; }
+    public DateTime StartTime { get; set; }
     
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [Display(Name = "End time")]
-    public DateTime? EndTime { get; set; }
+    public DateTime EndTime { get; set; }
     
     // A HasSet of all EventCustomFields with this Event
     [JsonIgnore]
