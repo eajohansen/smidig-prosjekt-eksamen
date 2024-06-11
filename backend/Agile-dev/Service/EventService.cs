@@ -18,15 +18,19 @@ public class EventService {
 
     #region GET
 
-    public async Task<ICollection<EventDtoBackend>> FetchAllEvents() {
+    public async Task<HandleReturn<ICollection<EventDtoBackend>>> FetchAllEvents() {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
                 .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
             
+            if (foundEvents.Count == 0) {
+                return HandleReturn<ICollection<EventDtoBackend>>.Failure("Could not find any events");
+            }
+            
             List<int> eventIds = foundEvents.Select(userEvent => userEvent.EventId).ToList();
             List<EventDtoBackend> fetchedEvents = ConvertEventsToEventDtoBackend(eventIds);
-            return fetchedEvents;
+            return HandleReturn<ICollection<EventDtoBackend>>.Success(fetchedEvents);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events.", exception);
@@ -164,11 +168,11 @@ public class EventService {
 
     #region POST
     
-    public async Task<object> AddEvent(string userName, EventDtoFrontend frontendEvent) {
+    public async Task<HandleReturn<Event>> AddEvent(string userName, EventDtoFrontend frontendEvent) {
         try {
             HandleReturn<UserFrontendDto> user = await _organizationService._userService.FetchUserByEmail(userName);
             if (!user.IsSuccess) {
-                return "Could not find user by email";
+                return HandleReturn<Event>.Failure("Could not find user by email");
             }
             
             Event eEvent = new Event {
@@ -204,11 +208,21 @@ public class EventService {
             }
             
             if (frontendEvent is { Start: not null, StartTime: not null }) {
-                eEvent.StartTime = CombineDateTime(frontendEvent.Start, frontendEvent.StartTime);
+                try {
+                    eEvent.StartTime = CombineDateTime(frontendEvent.Start, frontendEvent.StartTime);
+                }
+                catch (Exception exception) {
+                    throw new Exception("An error occurred while combining date and time.", exception);
+                }
             }
             
             if (frontendEvent is { End: not null, EndTime: not null }) {
-                eEvent.EndTime = CombineDateTime(frontendEvent.End, frontendEvent.EndTime);
+                try {
+                    eEvent.EndTime = CombineDateTime(frontendEvent.End, frontendEvent.EndTime);
+                }
+                catch (Exception exception) {
+                    throw new Exception("An error occurred while combining date and time.", exception);
+                }
             }
 
             if (eEvent.Published) {
@@ -282,7 +296,7 @@ public class EventService {
                 await _dbCon.SaveChangesAsync();
             }
 
-            return eEvent;
+            return HandleReturn<Event>.Success(eEvent);
         }
         catch (Exception exception) {
             Console.WriteLine(exception);
@@ -294,12 +308,12 @@ public class EventService {
     
     #region PUT
 
-    public async Task<bool> UpdateEvent(Event eEvent) {
+    public async Task<HandleReturn<bool>> UpdateEvent(Event eEvent) {
         try {
             Event? databaseEvent = await _dbCon.Event.Where(vEvent => vEvent.EventId.Equals(eEvent.EventId))
                 .Include(eEvent => eEvent.EventCustomFields).FirstOrDefaultAsync();
             if (databaseEvent == null) {
-                return false;
+                return HandleReturn<bool>.Failure("Could not find event in database");
             }
 
             databaseEvent.Title = eEvent.Title;
@@ -435,7 +449,7 @@ public class EventService {
                 }
             }
             
-            return true;
+            return HandleReturn<bool>.Success();
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while updating event.", exception);
@@ -446,7 +460,7 @@ public class EventService {
     
     #region DELETE
 
-    public async Task<bool> DeleteEvent(Event eEvent) {
+    public async Task<HandleReturn<bool>> DeleteEvent(Event eEvent) {
         try {
             /*
             Event? deleteEvent = await _dbCon.Event.FindAsync(eEvent.EventId);
@@ -456,7 +470,7 @@ public class EventService {
             _dbCon.Event.Remove(deleteEvent); */
             _dbCon.Event.Remove(eEvent);
             await _dbCon.SaveChangesAsync();
-            return true;
+            return HandleReturn<bool>.Success();
         }
         catch (Exception exception) {
             Console.WriteLine(exception);
@@ -472,7 +486,7 @@ public class EventService {
         ContactPerson? contactPerson;
         
         if (newContactPerson.Email == null && newContactPerson.Number == null) {
-            //
+            // @Eirik
             // It just needs a name, mostly for testing. Should be deleted when frontend can demand number og email
             //
             contactPerson = await _dbCon.ContactPerson
@@ -504,7 +518,7 @@ public class EventService {
                                             newContactPerson.Number.Equals(loopContactPerson.Number))
                 .FirstOrDefaultAsync();
         }
-        
+
         return contactPerson;
     }
     
@@ -535,9 +549,14 @@ public class EventService {
     
     private DateTime CombineDateTime(string date, string time) {
         
-        string correctDate = DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy");
-        
-        return DateTime.ParseExact($"{correctDate} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+        try {
+            string correctDate = DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy");
+            return DateTime.ParseExact($"{correctDate} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while combining date and time.", exception);
+        }
+
     }
     
     private List<EventDtoBackend> ConvertEventsToEventDtoBackend(List<int> eventIds) {

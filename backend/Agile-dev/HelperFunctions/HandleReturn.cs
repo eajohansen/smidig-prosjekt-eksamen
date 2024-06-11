@@ -3,17 +3,17 @@ namespace agile_dev.Models;
 public class HandleReturn<T>
 {
     public bool IsSuccess { get; private set; }
-    public T Value { get; private set; }
+    public T? Value { get; private set; }
     public string ErrorMessage{ get; private set; }
 
-    private HandleReturn(bool isSuccess, T value, string errorMessage)
+    private HandleReturn(bool isSuccess, T? value, string errorMessage)
     {
         IsSuccess = isSuccess;
         Value = value;
         ErrorMessage = errorMessage;
     }
     
-    private HandleReturn(bool isSuccess, T value)
+    private HandleReturn(bool isSuccess, T? value)
     {
         IsSuccess = isSuccess;
         Value = value;
@@ -30,7 +30,7 @@ public class HandleReturn<T>
         IsSuccess = isSuccess;
     }
 
-    public static HandleReturn<T> Success(T value)
+    public static HandleReturn<T> Success(T? value)
     {
         return new HandleReturn<T>(true, value);
     }
@@ -44,7 +44,7 @@ public class HandleReturn<T>
         return new HandleReturn<T>(false, errorMessage);
     }
 
-    public static HandleReturn<T> Failure(T value, string errorMessage)
+    public static HandleReturn<T> Failure(T? value, string errorMessage)
     {
         return new HandleReturn<T>(true, value, errorMessage);
     }

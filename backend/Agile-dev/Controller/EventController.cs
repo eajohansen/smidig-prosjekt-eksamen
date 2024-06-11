@@ -23,12 +23,12 @@ namespace Agile_dev.Controller {
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllEvents() {
             try {
-                ICollection<EventDtoBackend> result = await _eventService.FetchAllEvents();
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEvents();
+                if (result.Value.Count == 0) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -46,7 +46,7 @@ namespace Agile_dev.Controller {
                     return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -64,7 +64,7 @@ namespace Agile_dev.Controller {
                     return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -81,7 +81,7 @@ namespace Agile_dev.Controller {
                     return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -175,9 +175,9 @@ namespace Agile_dev.Controller {
         [HttpPut("update")]
         public async Task<IActionResult> UpdateEvent([FromBody] Event eEvent) {
             try {
-                bool isAdded = await _eventService.UpdateEvent(eEvent);
-                if (!isAdded) {
-                    return BadRequest();
+                HandleReturn<bool> isAdded = await _eventService.UpdateEvent(eEvent);
+                if (!isAdded.IsSuccess) {
+                    return BadRequest(isAdded.ErrorMessage);
                 }
 
                 return Ok();
@@ -196,10 +196,10 @@ namespace Agile_dev.Controller {
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteEvent([FromBody] Event eEvent) {
             try {
-                bool isDeleted = await _eventService.DeleteEvent(eEvent);
-                if (!isDeleted) {
+                HandleReturn<bool> isDeleted = await _eventService.DeleteEvent(eEvent);
+                if (!isDeleted.IsSuccess) {
                     // Could not delete event, because request is bad
-                    BadRequest();
+                    BadRequest(isDeleted.ErrorMessage);
                 }
 
                 return Ok();
