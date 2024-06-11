@@ -52,6 +52,7 @@
 
 ## User Controller
 
+
 ### GET /api/user
 
 #### GET /api/user/fetchAll
@@ -60,16 +61,10 @@
 Fetches all the users in the database.
 
 #### Restriction
-Admin or Organizer
+Has to be Admin or Organizer.
 
 #### URL
 `GET /api/user/fetchAll`
-
-#### Parameters
-| Parameter | Type   | Required | Description           |
-|-----------|--------|----------|-----------------------|
-| param1    | string | Yes      | Description of param1 |
-| param2    | int    | No       | Description of param2 |
 
 #### Example Request
 ```http
@@ -117,18 +112,18 @@ Authorization: Bearer yourtoken
 #### GET /api/user/fetch/id/{userId}
 
 #### Description
-Fetches a user from the database by the Id.
+Fetches a user from the database by Id.
 
 #### Restriction
-Admin or Organizer
+Has to be logged in.
 
 #### URL
-`GET /api/user/fetchAll`
+`GET /api/user/fetch/id/{userId}`
 
 #### Parameters
-| Parameter | Type   | Required | Description    |
-|-----------|--------|----------|----------------|
-| userId    | string | Yes      | Id of the user |
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| userId    | string | Yes      | User's id   |
 
 #### Example Request
 ```http
@@ -168,32 +163,88 @@ Authorization: Bearer yourtoken
 }
 ```
 
+#### GET /api/user/fetch/email/{email}
+
+#### Description
+Fetches a user from the database by email.
+
+#### Restriction
+Has to be logged in.
+
+#### URL
+`GET /api/user/fetch/email/{email}`
+
+#### Parameters
+| Parameter | Type   | Required | Description  |
+|-----------|--------|----------|--------------|
+| email     | string | Yes      | User's email |
+
+#### Example Request
+```http
+GET /api/user/fetch/email/{email}
+Authorization: Bearer yourtoken
+```
+
+#### Response
+##### Success (200)
+```json
+{
+  "Id": "id",
+  "email": "admin@test.com",
+  "firstName": "name",
+  "lastName": "name",
+  "birthdate": "12-12-2020 00:00:00",
+  "extraInfo": "extra text",
+  "followOrganization": ["Follower Object"],
+  "organizerOrganization": ["Organizer Object"],
+  "userEvents": ["UserEvent Object"],
+  "notices": ["Notice Object"],
+  "allergies": ["Allergy Object"]
+}
+```
+
+##### NoContent (204)
+```json
+{
+  
+}
+```
+
+##### Error (500)
+```json
+{
+  "error": "Description of the error"
+}
+```
 
 
 ### POST /api/user
 
+#### POST /api/user/add/organizer/{organizationId}
+
 #### Description
-Briefly describe what this endpoint does.
+Makes a connection between user and organization as organizer.
+This is for when an admin wants to make a user into an organizer.
+
+#### Restriction
+Has to be logged in.
 
 #### URL
-`POST /api/user`
+`POST /api/user/add/organizer/{organizationId}`
 
 #### Request Body
-| Field   | Type   | Required | Description         |
-|---------|--------|----------|---------------------|
-| field1  | string | Yes      | Description of field1 |
-| field2  | int    | Yes      | Description of field2 |
+| Field          | Type   | Required | Description       |
+|----------------|--------|----------|-------------------|
+| email          | string | Yes      | User's email      |
 
 #### Example Request
 ```http
-POST /api/user HTTP/1.1
-Host: yourapi.com
+POST /api/user/add/organizer/{organizationId}
 Content-Type: application/json
 Authorization: Bearer yourtoken
 
 {
-  "field1": "value1",
-  "field2": value2
+  "email": "some@thing.com",
 }
 ```
 
@@ -201,9 +252,7 @@ Authorization: Bearer yourtoken
 ##### Success (201)
 ```json
 {
-  "id": "new-user-id",
-  "field1": "value1",
-  "field2": value2
+  "stuff": "works"
 }
 ```
 
@@ -214,40 +263,126 @@ Authorization: Bearer yourtoken
 }
 ```
 
-### PUT /api/user/{id}
+#### POST /api/user/add/follower/{organizationId}
 
 #### Description
-Briefly describe what this endpoint does.
+Makes a connection between user and organization as follower.
+This is for when a user wants to follow an organization.
+
+#### Restriction
+Has to be logged in.
 
 #### URL
-`PUT /api/user/{id}`
-
-#### Request Body
-| Field   | Type   | Required | Description         |
-|---------|--------|----------|---------------------|
-| field1  | string | Yes      | Description of field1 |
-| field2  | int    | Yes      | Description of field2 |
+`POST /api/user/add/follower/{organizationId}`
 
 #### Example Request
 ```http
-PUT /api/user/{id} HTTP/1.1
-Host: yourapi.com
+POST /api/user/add/follower/{organizationId}
 Content-Type: application/json
 Authorization: Bearer yourtoken
+```
 
+#### Response
+##### Success (201)
+```json
 {
-  "field1": "value1",
-  "field2": value2
+  "stuff": "works"
 }
+```
+
+##### Error (400)
+```json
+{
+  "error": "Description of the error"
+}
+```
+
+#### POST /api/user/add/event/{eventId}
+
+#### Description
+Makes a connection between user and event.
+This is for when a user is going to attend to an event.
+
+#### Restriction
+Has to be Admin.
+
+#### URL
+`POST /api/user/add/event/{eventId}`
+
+#### Example Request
+```http
+POST /api/user/add/event/{eventId}
+Content-Type: application/json
+Authorization: Bearer yourtoken
+```
+
+#### Response
+##### Success (201)
+```json
+{
+  "stuff": "works"
+}
+```
+
+##### Error (400)
+```json
+{
+  "error": "Description of the error"
+}
+```
+
+
+### PUT /api/user
+
+#### PUT /api/user/update
+
+#### Description
+Updates a user.
+This is what you want to use after registering a user.
+
+#### Restriction
+Has to be logged in.
+
+#### URL
+`PUT /api/user/update`
+
+#### Request Body
+| Field                 | Type                   | Required | Description                  |
+|-----------------------|------------------------|----------|------------------------------|
+| email                 | string                 | Yes      | user's email                 |
+| firstName             | string                 | No       | user's firstName             |
+| lastName              | string                 | No       | user's lastName              |
+| birthdate             | DateType               | No       | user's birthdate             |
+| extraInfo             | string                 | No       | user's extraInfo             |
+| followOrganization    | ICollection<Follower>  | No       | user's followOrganization    |
+| organizerOrganization | ICollection<Organizer> | No       | user's organizerOrganization |
+| userEvents            | ICollection<userEvent> | No       | user's userEvents            |
+| notices               | ICollection<Notice>    | No       | user's notices               |
+| allergies             | ICollection<Allergy>   | No       | user's allergies             |
+
+
+#### Example Request
+```http
+PUT /api/user/update
+Content-Type: application/json
+Authorization: Bearer yourtoken
 ```
 
 #### Response
 ##### Success (200)
 ```json
 {
-  "id": "user-id",
-  "field1": "updated value1",
-  "field2": updated value2
+  "Id": "id",
+  "email": "admin@test.com",
+  "firstName": "name",
+  "lastName": "name",
+  "birthdate": "12-12-2020 00:00:00",
+  "extraInfo": "extra text",
+  "followOrganization": ["Follower Object"],
+  "organizerOrganization": ["Organizer Object"],
+  "userEvents": ["UserEvent Object"],
+  "notices": ["Notice Object"],
+  "allergies": ["Allergy Object"]
 }
 ```
 
@@ -258,23 +393,65 @@ Authorization: Bearer yourtoken
 }
 ```
 
-### DELETE /api/user/{id}
+#### PUT /api/user/add/admin
 
 #### Description
-Briefly describe what this endpoint does.
+Makes another user to an admin.
+The user doing this action makes another one to an admin
+
+#### Restriction
+Has to be admin.
 
 #### URL
-`DELETE /api/user/{id}`
+`PUT /api/user/add/admin`
 
-#### Parameters
-| Parameter | Type | Required | Description         |
-|-----------|------|----------|---------------------|
-| id        | string | Yes    | ID of the user  |
+#### Request Body
+| Field | Type   | Required | Description  |
+|-------|--------|----------|--------------|
+| email | string | Yes      | user's email |
 
 #### Example Request
 ```http
-DELETE /api/user/{id} HTTP/1.1
-Host: yourapi.com
+PUT /api/useradd/admin
+Content-Type: application/json
+Authorization: Bearer yourtoken
+```
+
+#### Response
+##### Success (200)
+```json
+{
+  "true": true
+}
+```
+
+##### Error (400)
+```json
+{
+  "error": "Description of the error"
+}
+```
+
+### DELETE /api/user
+
+#### DELETE /api/user/delete
+
+#### Description
+Deletes a user.
+
+#### Restriction
+Has to be logged in.
+
+#### URL
+`DELETE /api/user/delete`
+
+#### Parameters
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+
+#### Example Request
+```http
+DELETE /api/user/delete
 Authorization: Bearer yourtoken
 ```
 

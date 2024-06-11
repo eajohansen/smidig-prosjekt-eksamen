@@ -252,7 +252,9 @@ public class UserService {
         user.ExtraInfo = updatedUserInfo.Email;
         user.FirstName = updatedUserInfo.FirstName;
         user.LastName = updatedUserInfo.LastName;
-        user.Birthdate = DateTime.Parse(updatedUserInfo.Birthdate.ToString());
+        if (updatedUserInfo.Birthdate != null) {
+            user.Birthdate = DateTime.Parse(updatedUserInfo.Birthdate.ToString());
+        }
         user.ExtraInfo = updatedUserInfo.ExtraInfo;
 
         // Update allergies if provided
