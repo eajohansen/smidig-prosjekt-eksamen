@@ -43,11 +43,18 @@ export const EventDetails = () => {
                 <h1>{event.title}</h1>
                 <div className="dateTimePlace">
                     <div className="dateTime">
-                        <p>{event.date}</p>
-                        <p>17:00 - 21:00</p>
+                        <div className="dateItem">
+                        <i className="bi bi-calendar3 icon"></i>
+                            <p>{event.date}</p>
+                        </div>
+                        <div className="timeItem">
+                            <i className="bi bi-clock icon"></i>
+                                <p>17:00 - 21:00</p>
+                        </div>
                     </div>
                     <div className="place">
-                    <p>Joachim Nielsens gang 17, 0000 Oslo</p>
+                        <i className="bi bi-geo-alt icon"></i>
+                        <p>Joachim Nielsens gang 17, 0000 Oslo</p>
                     </div>
                 </div>
             </div>
