@@ -8,13 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace agile_dev.Repo;
 
 public class InitContext : IdentityDbContext<IdentityUser> {
-    private readonly IConfiguration _configuration;
-    
-    public InitContext(IConfiguration configuration) {
-        _configuration = configuration;
-    }
-    public InitContext() {
-        _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+    public InitContext(DbContextOptions<InitContext> options) : base(options) {
     }
     public DbSet<User> User { get; set; }
     public DbSet<Allergy> Allergy { get; set; }
@@ -31,7 +25,7 @@ public class InitContext : IdentityDbContext<IdentityUser> {
     public DbSet<UserEvent> UserEvent { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;");
+            optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;Max Pool Size=1024;Connect Timeout=10;");
         }
     }
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export const EventItem = (props) => {
-  const { title, date, id, sold, waitlist, available } = props;
+  const { id, address, start, end, title, capacity } = props;
   return (
     <article key={id} className="eventItemContainer">
       <div className="eventImageContainer">
@@ -13,7 +13,7 @@ export const EventItem = (props) => {
         />
         <div className="eventDetails">
           <h3>{title}</h3>
-          <p>{date}</p>
+          <p>{start}</p>
         </div>
       </div>
       <div className="ticketInfoContainer">
@@ -21,13 +21,13 @@ export const EventItem = (props) => {
         <div className="ticketInfo">
           <div className="">
             <p>Solgt</p>
-            <h2>{sold}</h2>
+            <h2>solgt</h2>
             <p>Ledig</p>
-            <h2 className="available">{available}</h2>
+            <h2 className="available">{capacity}</h2>
           </div>
           <div className="WaitinglistContainer">
             <p>Venteliste</p>
-            <h2 className="waitlist">{waitlist}</h2>
+            <h2 className="waitlist">venteliste</h2>
           </div>
         </div>
         <div className="buttonContainer">

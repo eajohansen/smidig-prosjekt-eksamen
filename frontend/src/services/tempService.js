@@ -3,7 +3,13 @@ import { axiosInstance } from "./helpers";
 export const sendRegister = async (email, password) => {
   try {
     const result = await axiosInstance.post("register", { email, password });
-    return result.status === 200;
+    if (result.status === 200) {
+     /* const res = await sendLogin(email, password);
+        if (res?.status === 200) {
+            return email;
+        }*/
+      return result.status === 200;
+    }
   } catch (err) {
     console.log(err.response.data.errors);
     return err.response.data.errors;
@@ -19,7 +25,10 @@ export const sendUser = async (user, allergyList) => {
       birthdate: user.birthdate,
       allergies: allergyList,
     });
-    return result.status === 200;
+    if (result.status === 200) {
+
+      return result.status === 200;
+    }
   } catch (err) {
     console.log(err);
     return err;
@@ -32,11 +41,21 @@ export const sendLogin = async (email, password) => {
       console.log(result.data);
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.refreshToken);
+      localStorage.setItem("loggedIn", "true");
       axiosInstance.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.getItem("accessToken")}`;
+      const adminPrivileges = await axiosInstance.get(
+        "/api/user/checkAdminPrivileges"
+      );
+      if (adminPrivileges.status === 200) {
+        const adminRight = adminPrivileges.data.admin ? "true" : "false";
+        const organizator = adminPrivileges.data.organizator ? "true" : "false";
+        localStorage.setItem("admin", adminRight);
+        localStorage.setItem("organizator", organizator);
+      }
     }
-    return;
+    return result.status === 200;
   } catch (err) {
     console.log(err);
     return err;
@@ -47,7 +66,7 @@ export const sendEvent = async (event) => {
     const result = await axiosInstance.post("api/event/create", {
       Event: {
         Title: event.title,
-        OrganizationId: 8,
+        OrganizationId: 1,
         Description: event.description,
         Published: event.published,
         Private: event.private,
@@ -76,6 +95,7 @@ export const sendEvent = async (event) => {
     if (result?.status === 200) {
       console.log("result: ");
       console.log(result);
+      return result;
     }
     console.log(result);
   } catch (err) {
@@ -86,8 +106,57 @@ export const sendEvent = async (event) => {
 export const getEvents = async () => {
   try {
     const result = await axiosInstance.get("api/event/fetchall");
+    console.log(result);
+    return result.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getEventById = async (id) => {
+  try {
+    const result = await axiosInstance.get(`api/event/fetch/${id}`);
+    console.log(result);
+    return result?.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendOrg = async (name, description) => {
+  try {
+    const result = await axiosInstance.post("api/organization/create", {
+      name,
+      description,
+    });
     return result;
   } catch (err) {
     console.log(err);
   }
 };
+
+export const fetchOrg = async () => {
+  try {
+    const result = await axiosInstance.get("api/organization/fetch/id/1");
+    if(result?.status === 200) {
+      return result;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export const editOrg = async (orgInfo) => {
+  try {
+    const result = await axiosInstance.put("api/organization/update", {
+      OrganizationId: 1,
+      Name: orgInfo.name,
+      Description: orgInfo.description,
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+}

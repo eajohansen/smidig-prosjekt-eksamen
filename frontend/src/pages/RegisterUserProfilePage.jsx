@@ -1,7 +1,9 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { sendUser } from "../services/tempService";
-export const ProfileForm = ({ userEmail }) => {
+
+export const RegisterUserProfilePage = () => {
+  const userEmail = "epost";
   const [allergies, setAllergies] = useState([]);
   const [newAllergy, setNewAllergy] = useState("");
   const [dob, setDob] = useState();

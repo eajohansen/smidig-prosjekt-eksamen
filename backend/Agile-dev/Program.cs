@@ -37,8 +37,10 @@ public class Program
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<EventService>();
         builder.Services.AddScoped<OrganizationService>();
-        builder.Services.AddDbContext<InitContext>(options =>
-            options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddDbContextPool<InitContext>(options =>
+            options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"), mysqlOptions => {
+                mysqlOptions.EnableRetryOnFailure();
+            }));
         builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<InitContext>();
 
         builder.Services.AddAuthentication();

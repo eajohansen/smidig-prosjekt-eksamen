@@ -28,6 +28,17 @@ namespace agile_dev.Controller {
 
         #region GET
 
+        [Authorize]
+        [HttpGet("fetch/email")]
+        public ActionResult fetchUserEmail() {
+            try {
+               string userEmail = User.FindFirstValue(ClaimTypes.Name);
+               return Ok(userEmail);
+            }
+            catch (Exception e) {
+                return StatusCode(500 , "Internal server error: " + e.Message);
+            }
+        }
         // GET: api/user/fetchAll
         [Authorize]
         [HttpGet("fetchAll")]
@@ -92,6 +103,30 @@ namespace agile_dev.Controller {
                 }
 
                 return Ok(result);
+            }
+            catch (Exception exception) {
+                return StatusCode(500, "Internal server Error: " + exception.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("checkAdminPrivileges")]
+        public async Task<IActionResult> CheckIfUserIsAdminOrOrganizator() {
+            string? user = User.FindFirstValue(ClaimTypes.Name);
+            if(user == null) {
+                return Unauthorized("Login required");
+            }
+            try {
+                User? result = await _userService.FetchUserByEmail(user);
+                if (result == null) {
+                    return Unauthorized("No user found");
+                }
+                
+                object feedback = new {
+                    Admin = result.Admin,
+                    Organizer = result.OrganizerOrganization != null
+                };
+                return Ok(feedback);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
