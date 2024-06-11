@@ -1,0 +1,91 @@
+.eventDetailsContainer {
+    background: #497d95;
+    height: 92vh;
+    display: flex;
+    padding: 3rem;
+
+    .eventDetailsLeft {
+        padding-right: 4rem;
+        width: 60%;
+        flex-direction: column;
+        justify-content: right;
+
+
+        img {
+            /*padding: 1rem;*/
+            border-radius: 2rem;
+            width: 40rem;
+            height: 40rem;
+            object-fit: cover;
+        }
+
+        .infoContainer {
+            border: white solid 2px;
+            border-radius: 5%;
+            flex-direction: column;
+            margin-top: 5rem;
+            padding: 3rem;
+            /*gap: 3px;*/
+
+            .infoItem {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .infoItem p {
+                font-size: 2rem;
+                color: white;
+                margin: 0;
+                padding: 1rem;
+            }
+        }
+    }
+
+
+
+    .eventDetailsRight {
+        display: flex;
+        flex-direction: column;
+        color: white;
+
+        .eventInfo p {
+            font-size: 2rem;
+        }
+
+
+        .eventText p {
+            font-size: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .eventInfo h1 {
+            font-size: 6rem;
+            }
+
+
+        .dateTime {
+            display: flex;
+            flex-direction: row;
+            gap: 4rem;
+        }
+
+        .btnDiv {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15rem;
+
+            .buttons {
+                width: 12rem;
+                height: 4rem;
+                font-size: 1.5rem;
+            }
+
+            .publishBtn {
+                background-color: seagreen;
+            }
+
+        }
+
+    }
+}

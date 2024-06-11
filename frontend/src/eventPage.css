@@ -88,25 +88,3 @@
   color: white;
   margin-top: 0.5rem;
 }
-
-.eventDetailsContainer {
-  background: #497d95;
-  height: 92vh;
-  display: flex;
-
-  img {
-    padding: 1rem;
-    height: 20rem;
-    width: 20rem;
-    object-fit: cover;
-  }
-
-  .eventDetailsRight {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .btnDiv {
-    /* align-self: flex-end; */
-  }
-}
