@@ -1,5 +1,6 @@
 import "./temp.css";
 import "./eventPage.css";
+import "./css/EventDetails.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MainNav } from "./components/shared/MainNav";
 import { HomePage } from "./pages/HomePage";
