@@ -16,3 +16,28 @@ public class UserFrontendDto {
     public ICollection<Notice>? Notices { get; set; }
     public ICollection<Allergy>? Allergies { get; set; }
 }
+
+public class FollowerOrganizationDto {
+    public int OrganizationId { get; set; }
+}
+
+public class OrganizerOrganizationDto {
+    public int OrganizationId { get; set; }
+}
+
+public class UserEventsDto {
+    public int EventId { get; set; }
+    public int? QueueNumber { get; set; }
+    public int? Used { get; set; }
+}
+
+public class NoticesDto {
+    public int NoticeId { get; set; }
+    public DateTime Expire { get; set; }
+}
+
+public class AllergiesDto {
+    public int AllergyId { get; set; }
+    public string Name { get; set; }
+    public string? Description { get; set; }
+}
