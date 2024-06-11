@@ -82,7 +82,7 @@ public class EventService {
             
             List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend(notAttendingEventIds);
         
-            return HandleReturn<ICollection<EventDtoBackend>>.Success();
+            return HandleReturn<ICollection<EventDtoBackend>>.Success(foundEvents);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events that the user is not attending.", exception);

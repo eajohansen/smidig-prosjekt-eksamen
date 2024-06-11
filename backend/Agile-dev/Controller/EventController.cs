@@ -24,7 +24,7 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEvents() {
             try {
                 HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEvents();
-                if (result.Value.Count == 0) {
+                if (!result.IsSuccess) {
                     return NotFound(result.ErrorMessage);
                 }
 
@@ -42,7 +42,7 @@ namespace Agile_dev.Controller {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
                 HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByAttending(userName!);
-                if (result.Value.Count == 0) {
+                if (!result.IsSuccess) {
                     return NotFound(result.ErrorMessage);
                 }
 
@@ -77,7 +77,7 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationId) {
             try {
                 HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByOrganization(organizationId);
-                if (result.Value.Count == 0) {
+                if (!result.IsSuccess) {
                     return NotFound(result.ErrorMessage);
                 }
 
