@@ -1,11 +1,11 @@
-import { useState } from "react";
+//import { useState } from "react";
 import { EventItem } from "../components/EventItem";
-import { getEvents } from "../services/tempService";
+//import { getEvents } from "../services/tempService";
 export const events = [
   {
     id: 1,
     title: "Pils & Prog",
-    date: "14.mai.2002",
+    date: "14. Mai 2024",
     sold: 40,
     waitlist: 11,
     available: 0
@@ -13,7 +13,7 @@ export const events = [
   {
     id: 2,
     title: "Bedpress",
-    date: "14.mai.2002",
+    date: "14. April 2024",
     sold: 30,
     waitlist: 0,
     available: 4
@@ -21,7 +21,7 @@ export const events = [
   {
     id: 3,
     title: "Sommeravslutning",
-    date: "14.mai.2002",
+    date: "12. Juni 2024",
     sold: 240,
     waitlist: 0,
     available: 50
@@ -29,7 +29,7 @@ export const events = [
   {
     id: 4,
     title: "Kickoff",
-    date: "14.mai.2002",
+    date: "11. Januar 2024",
     sold: 190,
     waitlist: 22,
     available: 0
