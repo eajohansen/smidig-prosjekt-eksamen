@@ -15,26 +15,35 @@ public class OrganizationService {
 
     #region GET
 
-    public async Task<ICollection<Organization>> FetchAllOrganizations() {
+    public async Task<HandleReturn<ICollection<Organization>>> FetchAllOrganizations() {
         try {
             ICollection<Organization> foundOrganizations = await _dbCon.Organization.ToListAsync();
+            
+            if (foundOrganizations.Count == 0) {
+                return HandleReturn<ICollection<Organization>>.Failure(foundOrganizations, "No organizations found.");
+            }
+            
             ICollection<Organization> newOrganizations = await AddRelationToOrganization(foundOrganizations.ToList());
             
-            return newOrganizations;
+            return HandleReturn<ICollection<Organization>>.Success(newOrganizations);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching organizations.", exception);
         }
     }
 
-    public async Task<Organization?> FetchOrganizationById(int id) {
+    public async Task<HandleReturn<Organization>> FetchOrganizationById(int id) {
         try {
             Organization? organization = await _dbCon.Organization.FindAsync(id);
-            if (organization == null) return organization;
+            
+            if (organization == null) {
+                return HandleReturn<Organization>.Failure(organization, "No organization found with that id.");
+            }
+            
             List<Organization> foundOrganization = [organization];
             foundOrganization = await AddRelationToOrganization(foundOrganization);
-            return foundOrganization[0];
-
+            
+            return HandleReturn<Organization>.Success(foundOrganization[0]);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching organization.", exception);
@@ -45,7 +54,7 @@ public class OrganizationService {
 
     #region POST
 
-    public async Task<object> AddOrganization(Organization organization) {
+    public async Task<HandleReturn<Organization>> AddOrganization(Organization organization) {
         try {
             if (organization.Image != null) {
                 Image? newImage = await CheckIfImageExists(organization.Image);
@@ -62,7 +71,7 @@ public class OrganizationService {
             await _dbCon.SaveChangesAsync();
             
             
-            return organization;
+            return HandleReturn<Organization>.Success(organization);
         }
         catch (Exception exception) {
             Console.WriteLine(exception);
@@ -74,26 +83,28 @@ public class OrganizationService {
     
     #region PUT
 
-    public async Task<object> UpdateOrganization(Organization organization) {
+    public async Task<HandleReturn<Organization>> UpdateOrganization(Organization organization) {
         try {
-            Organization? databaseOrganization = await FetchOrganizationById(organization.OrganizationId);
-            if (databaseOrganization == null) {
-                return "Could not find the organization";
+            HandleReturn<Organization> databaseOrganization = await FetchOrganizationById(organization.OrganizationId);
+            if (!databaseOrganization.IsSuccess) {
+                return HandleReturn<Organization>.Failure("Could not find the organization");
             }
+            
+            Organization updatedOrganization = databaseOrganization.Value!;
 
             organization = AddRelationToOrganization([organization]).Result[0];
 
-            databaseOrganization.Name = organization.Name;
-            databaseOrganization.Description = organization.Description;
-            databaseOrganization.ImageId = organization.ImageId;
-            databaseOrganization.Image = organization.Image;
-            databaseOrganization.Followers = organization.Followers;
-            databaseOrganization.Organizers = organization.Organizers;
-            databaseOrganization.Events = organization.Events;
+            updatedOrganization.Name = organization.Name;
+            updatedOrganization.Description = organization.Description;
+            updatedOrganization.ImageId = organization.ImageId;
+            updatedOrganization.Image = organization.Image;
+            updatedOrganization.Followers = organization.Followers;
+            updatedOrganization.Organizers = organization.Organizers;
+            updatedOrganization.Events = organization.Events;
 
-            _dbCon.Organization.Update(databaseOrganization);
+            _dbCon.Organization.Update(updatedOrganization);
             await _dbCon.SaveChangesAsync();
-            return databaseOrganization;
+            return HandleReturn<Organization>.Success(updatedOrganization);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while updating organization.", exception);
@@ -104,11 +115,11 @@ public class OrganizationService {
 
     #region DELETE
 
-    public async Task<bool> DeleteOrganization(Organization organization) {
+    public async Task<HandleReturn<bool>> DeleteOrganization(Organization organization) {
          try {
             _dbCon.Organization.Remove(organization);
              await _dbCon.SaveChangesAsync();
-             return true;
+             return HandleReturn<bool>.Success();
          }
          catch (Exception exception) {
              throw new Exception("An error occurred while trying to delete organization.", exception);

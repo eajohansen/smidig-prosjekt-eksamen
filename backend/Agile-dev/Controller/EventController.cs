@@ -144,10 +144,6 @@ namespace Agile_dev.Controller {
         [HttpPost("create")]
         public async Task<IActionResult> AddEvent([FromBody] EventDtoFrontend? frontendEvent) {
             try {
-                if (frontendEvent == null) {
-                    return BadRequest("Event is required");
-                }
-                
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
                 if(userName == null) {
                     return Unauthorized("Invalid user");

@@ -36,12 +36,12 @@ namespace agile_dev.Controller {
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllUsers() {
             try {
-                List<UserFrontendDto> result = await _userService.FetchAllUsers();
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<List<UserFrontendDto>> result = await _userService.FetchAllUsers();
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -51,34 +51,26 @@ namespace agile_dev.Controller {
         // GET api/user/fetch/id
         [Authorize]
         [HttpGet("fetch/id/{id}")]
-        public async Task<IActionResult> FetchUserById(string? id) {
-            if (id == null) {
-                return BadRequest("Could not find id");
-            }
-
-            if (id.Length <= 5) {
-                return BadRequest("Id is too short");
-            }
-            
+        public async Task<IActionResult> FetchUserById(string id) {
             try {
-                object result = await _userService.FetchUserById(id);
-                if (result is not UserFrontendDto user) {
-                    return NoContent();
+                HandleReturn<UserFrontendDto> result = await _userService.FetchUserById(id);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
-                
-                string? userName = User.FindFirstValue(ClaimTypes.Name);
-                if (user.Email == null)
-                {
+
+                if (result.Value!.Email == null) {
                     return BadRequest("Email is null");
                 }
                 
-                bool isLoggedInUser = user.Email.Equals(userName);
+                string? userName = User.FindFirstValue(ClaimTypes.Name);
+                
+                bool isLoggedInUser = result.Value!.Email.Equals(userName);
 
                 if (!isLoggedInUser) {
                     return Unauthorized("You are not authorized to view this user, you can only view your own user");
                 }
 
-                return Ok(user);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -92,11 +84,7 @@ namespace agile_dev.Controller {
             //
             // Change to get by authorize?    // Do we really need this @Eirik
             //
-            if (email == null) {
-                return BadRequest("Could not find email");
-            }
-
-            if (email.Length <= 5) {
+            if (email!.Length <= 5) {
                 return BadRequest("Email is too short");
             }
             
@@ -113,7 +101,7 @@ namespace agile_dev.Controller {
                     return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -128,12 +116,8 @@ namespace agile_dev.Controller {
         [Authorize(Roles = "Admin")]
         [HttpPost("add/organizer/{orgId}")]
         public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
-            
-            if (userToAdd == null) {
-                return BadRequest("No user object provided in request");
-            }
 
-            if (userToAdd.Email == null) {
+            if (userToAdd!.Email == null) {
                 return BadRequest("No email provided in request");
             }
 

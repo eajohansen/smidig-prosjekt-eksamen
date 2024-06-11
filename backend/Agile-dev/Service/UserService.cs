@@ -32,14 +32,18 @@ public class UserService {
 
     #region GET
 
-    public async Task<List<UserFrontendDto>> FetchAllUsers() {
+    public async Task<HandleReturn<List<UserFrontendDto>>> FetchAllUsers() {
         try {
             List<User> foundUsers = await _dbCon.User.ToListAsync();
+
+            if (foundUsers.Count == 0) {
+                return HandleReturn<List<UserFrontendDto>>.Failure("No users found.");
+            }
 
             List<string> userIds = foundUsers.Select(user => user.Id).ToList();
             List<UserFrontendDto> fetchedUsers = ConvertUserToUserFrontendDtos(userIds);
 
-            return fetchedUsers;
+            return HandleReturn<List<UserFrontendDto>>.Success(fetchedUsers);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching users.", exception);
