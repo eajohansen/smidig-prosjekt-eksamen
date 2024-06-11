@@ -90,6 +90,7 @@ export const sendEvent = async (event) => {
     if (result?.status === 200) {
       console.log("result: ");
       console.log(result);
+      return result;
     }
     console.log(result);
   } catch (err) {

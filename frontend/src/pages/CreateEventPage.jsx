@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { sendEvent } from "../services/tempService";
+import { useNavigate } from "react-router-dom";
 import "../temp.css";
 import "../css/CreateEventPage.css";
 export const CreateEventPage = () => {
+  const navigate = useNavigate();
   const [checkedFree, setCheckedFree] = useState();
   const organization = 1;
   const [start, setStart] = useState();
@@ -82,7 +84,12 @@ export const CreateEventPage = () => {
     });
   };
   const handleSubmit = async () => {
-    await sendEvent(event);
+    const result = await sendEvent(event);
+    console.log("her kommer result");
+    console.log(result);
+    if (result?.status === 200) {
+      navigate("/events");
+    }
   };
 
   return (
