@@ -30,7 +30,7 @@ namespace agile_dev
             var powerUser = new User
             {
                 UserName = adminSettings["Username"],
-                Email = adminSettings["Email"],
+                Email = adminSettings["Email"]
             };
 
             string userPassword = adminSettings["Password"];

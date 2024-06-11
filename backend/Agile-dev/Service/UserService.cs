@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Globalization;
+using System.Security.Claims;
 using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Repo;
@@ -153,7 +154,7 @@ public class UserService {
             }
 
             Follower newFollower = new() {
-                Id = user.Id,
+                UserId = user.Id,
             };
             await _dbCon.Follower.AddAsync(newFollower);
             await _dbCon.SaveChangesAsync();
@@ -236,7 +237,7 @@ public class UserService {
         user.ExtraInfo = updatedUserInfo.Email;
         user.FirstName = updatedUserInfo.FirstName;
         user.LastName = updatedUserInfo.LastName;
-        user.Birthdate = updatedUserInfo.Birthdate;
+        user.Birthdate = DateTime.Parse(updatedUserInfo.Birthdate.ToString());
         user.ExtraInfo = updatedUserInfo.ExtraInfo;
 
         // Update allergies if provided
@@ -254,7 +255,6 @@ public class UserService {
             }
 
             await _dbCon.SaveChangesAsync();
-
 
             user.Allergies.Clear();
         }
@@ -363,33 +363,5 @@ public class UserService {
         return newUsers;
     }
     
-    private async Task<UserFrontendDto?> AddRelationToUsefr(User user) {
-        var newUser = await _dbCon.User
-            .Where(u => u.Id == user.Id)
-            .Include(userFrontendDto => user.FollowOrganization)
-            .Include(userFrontendDto => user.OrganizerOrganization)
-            .Include(userFrontendDto => user.UserEvents)
-            .Include(userFrontendDto => user.Notices)
-            .Include(userFrontendDto => user.Allergies)
-            .Select(u => new UserFrontendDto {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Birthdate = user.Birthdate,
-                ExtraInfo = user.ExtraInfo,
-                FollowOrganization = user.FollowOrganization,
-                OrganizerOrganization = user.OrganizerOrganization,
-                UserEvents = user.UserEvents,
-                Notices = user.Notices,
-                Allergies = user.Allergies
-            })
-            
-            .SingleOrDefaultAsync();
-        Console.WriteLine("hheheheheeheheheh");
-        return newUser;
-    }
-
-
     #endregion
 }

@@ -2,6 +2,7 @@ using agile_dev.Models;
 
 namespace agile_dev.Dto;
 
+// Dto to limit the amount of information backend sends when fetching user
 public class UserFrontendDto {
     public string? Id { get; set; }
     public string? Email { get; set; }

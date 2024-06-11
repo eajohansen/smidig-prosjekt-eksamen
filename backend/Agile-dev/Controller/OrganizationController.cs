@@ -78,14 +78,14 @@ namespace Agile_dev.Controller {
         // PUT api/organization/update/5
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPut("update/{userId}")]
-        public async Task<IActionResult> UpdateOrganization([FromBody] Organization organization) {
+        public async Task<object> UpdateOrganization([FromBody] Organization organization) {
             try {
-                bool isAdded = await _organizationService.UpdateOrganization(organization);
-                if (!isAdded) {
-                    return BadRequest();
+                object updatedOrganizationObject = await _organizationService.UpdateOrganization(organization);
+                if (updatedOrganizationObject is not Organization updatedOrganization) {
+                    return BadRequest(updatedOrganizationObject);
                 }
 
-                return Ok();
+                return Ok(updatedOrganization);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
@@ -97,26 +97,26 @@ namespace Agile_dev.Controller {
         #region DELETE
 
         // DELETE api/organization/delete/5
-        /*[Authorize]
-        [HttpDelete("delete/{userId}")]
-        public Task<IActionResult> DeleteOrganization([FromRoute] string userId, [FromBody] Organization? organization) {
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteOrganization([FromBody] Organization? organization) {
             if (organization == null) {
-                return Task.FromResult<IActionResult>(BadRequest("User is null"));
+                return BadRequest("User is null");
             }
 
             try {
-                bool isDeleted = _organizationService.DeleteOrganization(userId, organization).Result;
+                bool isDeleted = await _organizationService.DeleteOrganization(organization);
                 if (!isDeleted) {
                     // Could not delete user, because request is bad
-                    BadRequest();
+                    BadRequest("Could not delete organization");
                 }
 
-                return Task.FromResult<IActionResult>(Ok());
+                return Ok("Organization was deleted");
             }
             catch (Exception exception) {
-                return Task.FromResult<IActionResult>(StatusCode(500, "Internal server error: " + exception.Message));
+                return StatusCode(500, "Internal server error: " + exception.Message);
             }
-        }*/
+        }
         
         #endregion
     }

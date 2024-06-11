@@ -27,13 +27,16 @@ public class Event {
     [StringLength(200)]
     public string Title { get; set; }
     
+    [Required]
     [Display(Name = "Description")]
     [StringLength(3000)]
     public string? Description { get; set; }
     
+    [Required]
     [Display(Name = "Capacity")]
     public int? Capacity { get; set; }
     
+    [Required]
     [Display(Name = "Age Limit")]
     public int? AgeLimit { get; set; }
     
@@ -48,6 +51,7 @@ public class Event {
     [Display(Name = "Place id")]
     [ForeignKey("PlaceId")]
     public int? PlaceId { get; set; }
+    [Required]
     public Place? Place { get; set; }
     
     [Display(Name = "Image id")]
@@ -58,8 +62,10 @@ public class Event {
     [Display(Name = "Contact person id")]
     [ForeignKey("ContactPersonId")]
     public int? ContactPersonId  { get; set; }
+    [Required]
     public ContactPerson? ContactPerson { get;set; }
     
+    [Required]
     [Display(Name = "Organization id")]
     [ForeignKey("OrganizationId")]
     public int OrganizationId { get; set; }

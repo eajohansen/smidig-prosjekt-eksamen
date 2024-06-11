@@ -42,6 +42,11 @@ public class InitContext : IdentityDbContext<User> {
             .WithMany(u => u.OrganizerOrganization)
             .HasForeignKey(o => o.UserId);
         
+        modelBuilder.Entity<Follower>()
+            .HasOne(o => o.User)
+            .WithMany(u => u.FollowOrganization)
+            .HasForeignKey(o => o.UserId);
+        
         modelBuilder.Entity<UserEvent>()
             .HasOne(userEvent => userEvent.User)
             .WithMany(user => user.UserEvents)

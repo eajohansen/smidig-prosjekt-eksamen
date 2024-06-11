@@ -21,7 +21,7 @@ public class EventService {
     public async Task<ICollection<Event>> FetchAllEvents() {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
+                .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
             ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
             
@@ -32,6 +32,7 @@ public class EventService {
         }
     }
 
+    // Fetch all the events that the user is attending
     public async Task<ICollection<Event>?> FetchAllEventsByAttending(string userName) {
         try {
             UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
@@ -54,6 +55,7 @@ public class EventService {
         }
     }
     
+    // Fetch all events that the user is not attending
     public async Task<ICollection<Event>?> FetchAllEventsByNotAttending(string userName) {
         try {
             UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
@@ -65,7 +67,7 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id != user.Id) && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
+                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id != user.Id) && eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -76,6 +78,7 @@ public class EventService {
         }
     }
     
+    // Fetch for organizer to see all events that the organization has
     public async Task<ICollection<Event>> FetchAllEventsByOrganization(int organizationId) {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
@@ -90,10 +93,11 @@ public class EventService {
         }
     }
     
+    // Fetch all events by other organizations
     public async Task<ICollection<Event>> FetchAllEventsByOtherOrganizations(int organizationId) {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.OrganizationId != organizationId && eEvent.Private.Equals(false) && eEvent.Published.Equals(false))
+                .Where(eEvent => eEvent.OrganizationId != organizationId && eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -152,6 +156,20 @@ public class EventService {
             if (user == null) {
                 return "Could not find user by email";
             }
+
+            /*string requiredFields = "";
+
+            if (requiredFields.Length > 0 && (frontendEvent.Event.Title == null || frontendEvent.Event.Title.Length == 0)) {
+                requiredFields = "the event did not have any title";
+            } else if (frontendEvent.Event.Title == null || frontendEvent.Event.Title.Length == 0) {
+                requiredFields += ",\n the event did not have any title";
+            }
+            
+            if (requiredFields.Length > 0 && (frontendEvent.Event. == null || frontendEvent.Event..Length == 0)) {
+                requiredFields = "";
+            } else if (frontendEvent.Event. == null || frontendEvent.Event..Length == 0) {
+                requiredFields += ",\n ";
+            }*/
             
             Event eEvent = new Event() {
                 Title = frontendEvent.Event.Title,

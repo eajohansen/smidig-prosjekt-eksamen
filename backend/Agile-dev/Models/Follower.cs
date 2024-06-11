@@ -21,8 +21,15 @@ public class Follower {
     public int FollowerId { get; set; }
     
     [Required]
-    [ForeignKey("Id")]
-    [Display(Name = "User id")]
-    [StringLength(254)]
-    public string Id { get; set; }
+    [Display(Name = "Organization id")]
+    [ForeignKey("OrganizationId")]
+    public int OrganizationId { get; set; }
+    
+    // Navigation properties
+    public virtual User User { get; set; }
+    
+    [Required]
+    [Display(Name = "User Id")]
+    [ForeignKey("User")]
+    public string UserId { get; set; } // Assuming UserId is a string as per IdentityUser
 }
