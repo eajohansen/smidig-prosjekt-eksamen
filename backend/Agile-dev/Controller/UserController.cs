@@ -114,10 +114,38 @@ namespace agile_dev.Controller {
         #endregion
 
         #region POST
+        
+        // POST api/user/add/organizer/1
+        [Authorize(Roles = "Admin")]
+        [HttpPost("add/organizer/{orgId}")]
+        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
+            
+            if (userToAdd == null) {
+                return BadRequest("userToAdd is null");
+            }
 
-        // POST api/user/follower/add/1
+            if (userToAdd.Email == null) {
+                return BadRequest("No email provided in request");
+            }
+
+            try {
+                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(orgId, userToAdd.Email);
+
+                if (!makeUserOrganizer.Succeeded) {
+                    return BadRequest(makeUserOrganizer);
+                }
+
+                return Ok(makeUserOrganizer);
+            }
+            catch (Exception exception)
+            {
+                return StatusCode(500, "Internal server error: " + exception.Message);
+            }
+        }
+
+        // POST api/user/add/follower/1
         [Authorize]
-        [HttpPost("follower/add/{organizationId}")]
+        [HttpPost("add/follower/{organizationId}")]
         public async Task<IActionResult> AddFollower([FromRoute] int organizationId) {
             if (organizationId < 1) {
                 return BadRequest("No organizationId provided");
@@ -138,9 +166,9 @@ namespace agile_dev.Controller {
             }
         }
 
-        // POST api/user/event/add/3
+        // POST api/user/add/event/3
         [Authorize]
-        [HttpPost("event/add/{eventId}")]
+        [HttpPost("add/event/{eventId}")]
         public async Task<IActionResult> AddUserEvent([FromRoute] int eventId) {
             if (eventId < 1) {
                 return BadRequest("No eventId provided");
@@ -188,9 +216,9 @@ namespace agile_dev.Controller {
             }
         }
         
-        // PUT api/user/admin/add
+        // PUT api/user/add/admin
         [Authorize (Roles="Admin")]
-        [HttpPut("admin/add")]
+        [HttpPut("add/admin")]
         public async Task<IActionResult> MakeUserAdmin(User? newAdminUser) {
             if (newAdminUser == null) {
                 return BadRequest("AdminUser is null");
@@ -207,34 +235,6 @@ namespace agile_dev.Controller {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
-        
-        // PUT api/user/organizer/add/1
-        [Authorize(Roles = "Admin")]
-        [HttpPut("organizer/add/{orgId}")]
-        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
-            
-            if (userToAdd == null) {
-                return BadRequest("userToAdd is null");
-            }
-
-            if (userToAdd.Email == null) {
-                return BadRequest("No email provided in request");
-            }
-
-            try {
-                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(orgId, userToAdd.Email);
-
-                if (!makeUserOrganizer.Succeeded) {
-                    return BadRequest(makeUserOrganizer);
-                }
-
-                return Ok(makeUserOrganizer);
-            }
-            catch (Exception exception)
-            {
-                return StatusCode(500, "Internal server error: " + exception.Message);
-            }
-        }
 
         #endregion
     
@@ -243,7 +243,7 @@ namespace agile_dev.Controller {
         // DELETE api/user/delete
         [Authorize]
         [HttpDelete("delete")]
-        public IActionResult Delete() {
+        public IActionResult DeleteUser() {
             string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
             
             try {

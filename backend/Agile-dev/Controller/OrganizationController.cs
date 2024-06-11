@@ -96,7 +96,7 @@ namespace Agile_dev.Controller {
 
         #region DELETE
 
-        // DELETE api/organization/delete/5
+        // DELETE api/organization/delete
         [Authorize(Roles = "Admin")]
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteOrganization([FromBody] Organization? organization) {

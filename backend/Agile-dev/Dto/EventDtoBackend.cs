@@ -2,6 +2,7 @@ using agile_dev.Models;
 
 namespace agile_dev.Dto;
 
+// Dto, Data transfer Object, a class to limit the amount of information backend gives to frontend.
 public class EventDtoBackend {
     public int EventId { get; set; }
     public string Title { get; set; }
