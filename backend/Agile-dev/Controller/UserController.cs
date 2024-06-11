@@ -50,9 +50,11 @@ namespace agile_dev.Controller {
 
         // GET api/user/fetch/id
         [Authorize]
-        [HttpGet("fetch/{id}")]
-        public async Task<IActionResult> FetchUserById(string id) {
-
+        [HttpGet("fetch/id/{id}")]
+        public async Task<IActionResult> FetchUserById(string? id) {
+            if (id == null || id.Length <= 5) {
+                return BadRequest("Bad Id");
+            }
             try {
                 object result = await _userService.FetchUserById(id);
                 if (result is not UserFrontendDto user) {
@@ -64,6 +66,7 @@ namespace agile_dev.Controller {
                 {
                     return BadRequest("Email is null");
                 }
+                
                 bool isLoggedInUser = user.Email.Equals(userName);
 
                 if (!isLoggedInUser) {
@@ -81,8 +84,11 @@ namespace agile_dev.Controller {
         [Authorize]
         [HttpGet("fetch/email/{email}")]
         public async Task<IActionResult> FetchUserByEmail(string? email) {
-            if (email == null) {
-                return BadRequest("Email is null");
+            //
+            // Change to get by authorize?    // Do we really need this @Eirik
+            //
+            if (email == null || email.Length <= 5) {
+                return BadRequest("Bad email");
             }
             
             string? userName = User.FindFirstValue(ClaimTypes.Name);
@@ -109,13 +115,17 @@ namespace agile_dev.Controller {
 
         #region POST
 
-        // POST api/user/follower/create/1
+        // POST api/user/follower/add/1
         [Authorize]
-        [HttpPost("follower/create/{organizationId}")]
-        public async Task<IActionResult> AddFollower([FromRoute] int organizationId)
-        {
+        [HttpPost("follower/add/{organizationId}")]
+        public async Task<IActionResult> AddFollower([FromRoute] int organizationId) {
+            if (organizationId < 1) {
+                return BadRequest("No organizationId provided");
+            }
             try {
-                IdentityResult isAdded = await _userService.AddUserAsFollower(organizationId);
+                string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                
+                IdentityResult isAdded = await _userService.AddUserAsFollower(userEmail, organizationId);
                 if (!isAdded.Succeeded) {
                     // Could not add user as follower, because request is bad
                     return BadRequest(isAdded);
@@ -170,10 +180,6 @@ namespace agile_dev.Controller {
             }
             try {
                 IdentityResult updateUser = await _userService.UpdateUserAsync(updatedUserInfo);
-                
-                //if (updateUser is not Models.User) {
-                //    return Unauthorized(updateUser);
-                //}
 
                 return Ok(updateUser);
             }
@@ -205,26 +211,18 @@ namespace agile_dev.Controller {
         // PUT api/user/organizer/add/1
         [Authorize(Roles = "Admin")]
         [HttpPut("organizer/add/{orgId}")]
-        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd)
-        {
-            if (userToAdd == null)
-            {
+        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
+            
+            if (userToAdd == null) {
                 return BadRequest("userToAdd is null");
             }
 
-            if (userToAdd.Email == null)
-            {
+            if (userToAdd.Email == null) {
                 return BadRequest("No email provided in request");
             }
 
-            try
-            {
+            try {
                 IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(orgId, userToAdd.Email);
-                //if (makeUserOrganizer is not Models.User)
-                //{
-                    
-                //    return Unauthorized(makeUserOrganizer);
-                //}
 
                 if (!makeUserOrganizer.Succeeded) {
                     return BadRequest(makeUserOrganizer);

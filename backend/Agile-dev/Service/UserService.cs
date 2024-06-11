@@ -129,6 +129,10 @@ public class UserService {
             return IdentityResult.Failed(new IdentityError { Description = $"Could not find organization" });
         }
 
+        if (IsUserOrganizeForOrganizer(user.Id, foundOrganization.OrganizationId).Result) {
+            return IdentityResult.Failed(new IdentityError { Description = $"User is already organizer for this organization" });
+        }
+
         IdentityResult result = await _userManager.AddToRoleAsync(user, "Organizer");
 
         Organizer newOrganizer = new() {
@@ -140,22 +144,29 @@ public class UserService {
         return result;
     }
 
-    public async Task<IdentityResult> AddUserAsFollower(int organizationId) {
+    public async Task<IdentityResult> AddUserAsFollower(string email, int organizationId) {
         try {
-            Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
-            User? user = await _userManager.FindByEmailAsync(ClaimTypes.Email);
+            User? user = await _userManager.FindByEmailAsync(email);
 
-            if (user?.Email == null) {
+            if (user == null) {
                 return IdentityResult.Failed(new IdentityError { Description = "User not found" });
             }
+            
+            Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
 
-            if (foundOrganization == null || !IsUserFollowingOrganization(user.Email, foundOrganization).Result) {
+            if (foundOrganization == null) {
                 return IdentityResult.Failed(new IdentityError { Description = "Organization not found" });
+            }
+
+            if (IsUserFollowingOrganization(user.Id, foundOrganization.OrganizationId).Result) {
+                return IdentityResult.Failed(new IdentityError { Description = "User is already following the organization" });
             }
 
             Follower newFollower = new() {
                 UserId = user.Id,
+                OrganizationId = organizationId
             };
+            
             await _dbCon.Follower.AddAsync(newFollower);
             await _dbCon.SaveChangesAsync();
             return IdentityResult.Success;
@@ -167,34 +178,30 @@ public class UserService {
 
     public async Task<IdentityResult> AddUserToEvent(string userEmail, int eventId) {
         try {
-            Event? foundEvent = await _dbCon.Event.FindAsync(eventId);
-
-            if (foundEvent == null) {
-                return IdentityResult.Failed(new IdentityError { Description = "Event not found" });
-            }
-            
             User? user = await _userManager.FindByEmailAsync(userEmail);
 
             if (user == null) {
                 return IdentityResult.Failed(new IdentityError { Description = "User not found" });
             }
+            
+            Event? foundEvent = await _dbCon.Event.FindAsync(eventId);
 
-            // if (!IsUserAttendingEvent(user, foundEvent).Result) {
-            //     return IdentityResult.Failed(new IdentityError { Description = "User is already attending event" });
-            // }
+            if (foundEvent == null) {
+                return IdentityResult.Failed(new IdentityError { Description = "Event not found" });
+            }
 
-            Console.WriteLine("1");
+            if (IsUserAttendingEvent(user.Id, foundEvent.EventId).Result) {
+                return IdentityResult.Failed(new IdentityError { Description = "User is already attending event" });
+            }
+
             UserEvent newUserEvent = new() {
                 Id = user.Id,
                 EventId = eventId,
                 Used = false
             };
-            Console.WriteLine("2");
 
             await _dbCon.UserEvent.AddAsync(newUserEvent);
-            Console.WriteLine("3");
             await _dbCon.SaveChangesAsync();
-            Console.WriteLine("4");
             return IdentityResult.Success;
         }
         catch (Exception exception) {
@@ -313,39 +320,28 @@ public class UserService {
 
     #region MISCELLANEOUS
 
-    public async Task<bool> IsUserAdmin(User user) {
-        var identityUser = await _userManager.FindByIdAsync(user.Id);
-        if (identityUser == null) {
-            return false;
-        }
+    private async Task<bool> IsUserFollowingOrganization(string userId, int organizationId) {
 
-        return await _userManager.IsInRoleAsync(identityUser, "Admin");
+        Follower? isFollower = await _dbCon.Follower.Where(follower =>
+            follower.UserId.Equals(userId) && follower.OrganizationId.Equals(organizationId)).FirstOrDefaultAsync();
+
+        return isFollower != null;
     }
 
-    private async Task<bool> IsUserFollowingOrganization(string userEmail, Organization organization) {
-        object databaseUser = await FetchUserByEmail(userEmail);
-        if (databaseUser is not User realUser) {
-            return false;
-        }
+    private async Task<bool> IsUserAttendingEvent(string userId, int eventId) {
 
-        return true;
+        UserEvent? isAttending = await _dbCon.UserEvent.Where(userEvent =>
+            userEvent.Id.Equals(userId) && userEvent.EventId.Equals(eventId)).FirstOrDefaultAsync();
 
-        // Loops through all the organizations the user is following, and returns true if we find the id of the organization we are looking for
-        // We set return true temporary, for testing purposes
-        // return realUser.FollowOrganization != null && realUser.FollowOrganization.Any(organizations =>
-        //     organizations.OrganizationId.Equals(organization.OrganizationId));
+        return isAttending != null;
     }
+    
+    private async Task<bool> IsUserOrganizeForOrganizer(string userId, int organizationId) {
 
-    private async Task<bool> IsUserAttendingEvent(User user, Event eEvent) {
-        object databaseUser = await FetchUserById(user.Id);
-        if (databaseUser is not User realUser) {
-            return false;
-        }
+        Organizer? isOrganizer = await _dbCon.Organizer.Where(organizer =>
+            organizer.UserId.Equals(userId) && organizer.OrganizationId.Equals(organizationId)).FirstOrDefaultAsync();
 
-        // Loops through all the events the user is attending, and returns true if we find the id of the event we are looking for
-        // We set return true temporary, for testing purposes
-        // return realUser.UserEvents != null && realUser.UserEvents.Any(userEvent => userEvent.EventId.Equals(eEvent.EventId));
-        return true;
+        return isOrganizer != null;
     }
 
     private async Task<List<User>> AddRelationToUser(List<User> users) {

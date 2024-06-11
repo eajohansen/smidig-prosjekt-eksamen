@@ -33,18 +33,57 @@ public class EventService {
     }
 
     // Fetch all the events that the user is attending
-    public async Task<ICollection<Event>?> FetchAllEventsByAttending(string userName) {
+    public async Task<ICollection<Event>>? FetchAllEventsByAttending(string userName) {
         try {
+            /*UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
+            
+            // Get the user's userEvents
+            ICollection<UserEvent> userEvents = _dbCon.UserEvent
+                .Where(userEvent => userEvent.Id.Equals(user.Id))
+                .ToList();
+
+            // Extract the EventIds from the user's userEvents
+            List<int> eventIds = userEvents.Select(userEvent => userEvent.EventId).ToList();
+
+            // Retrieve the events without the UserEvents property
+            var foundEvents = _dbCon.Event
+                .Where(eEvent => eventIds.Contains(eEvent.EventId))
+                .Select(eEvent => new {
+                    eEvent.EventId,
+                    eEvent.Title,
+                    eEvent.Description,
+                    eEvent.Capacity,
+                    eEvent.AgeLimit,
+                    eEvent.Private,
+                    eEvent.Published,
+                    eEvent.PlaceId,
+                    eEvent.ImageId,
+                    eEvent.ContactPersonId,
+                    eEvent.OrganizationId,
+                    eEvent.CreatedAt,
+                    eEvent.PublishedAt,
+                    eEvent.StartTime,
+                    eEvent.EndTime,
+                    // Include other properties as needed
+                })
+                .ToList();
+
+            
+        
+            //ICollection<Event> newEvents = AddRelationToEvent(attendingEvents.ToList()).Result;
+            return null;*/
+            
             UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
             
-            ICollection<Event> foundEvents = new List<Event>();
-
+            ICollection<Event>? foundEvents = null;
+            
             if (user == null) {
                 return foundEvents;
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id == user.Id))
+                .Where(eEvent =>
+                    (eEvent.UserEvents.Any(userEvent => userEvent.Id == user.Id)) && eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -67,7 +106,8 @@ public class EventService {
             }
             
             foundEvents = await _dbCon.Event
-                .Where(eEvent => eEvent.UserEvents != null && eEvent.UserEvents.Any(userEvent => userEvent.Id != user.Id) && eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
+                .Where(eEvent =>
+                    (eEvent.UserEvents.Count == 0 || eEvent.UserEvents.Any(userEvent => userEvent.Id != user.Id)) && eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
         
             ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
@@ -93,6 +133,7 @@ public class EventService {
         }
     }
     
+    /*
     // Fetch all events by other organizations
     public async Task<ICollection<Event>> FetchAllEventsByOtherOrganizations(int organizationId) {
         try {
@@ -107,7 +148,7 @@ public class EventService {
             throw new Exception("An error occurred while fetching events not from this organization.", exception);
         }
     }
-
+    */
 
     public async Task<Event?> FetchEventById(int id) {
         try {
@@ -125,6 +166,7 @@ public class EventService {
         }
     }
 
+    /*
     public async Task<ICollection<CustomField?>> FetchAllCustomFields(int eventId) {
         try {
             List<CustomField?> customFields = [];
@@ -145,12 +187,13 @@ public class EventService {
             throw new Exception("An error occurred while fetching customFields.", exception);
         }
     }
+    */
 
     #endregion
 
     #region POST
     
-    public async Task<object> AddEvent(string userName, EventDto frontendEvent) {
+    public async Task<object> AddEvent(string userName, EventDtoFrontend frontendEvent) {
         try {
             UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
             if (user == null) {
@@ -456,6 +499,7 @@ public class EventService {
             return true;
         }
         catch (Exception exception) {
+            Console.WriteLine(exception);
             throw new Exception("An error occurred while trying to delete event.", exception);
         }
     }
@@ -469,6 +513,10 @@ public class EventService {
 
         List<Event> newEvents = await _dbCon.Event
             .Where(eEvent => eventsId.Contains(eEvent.EventId))
+            .Include(eEvent => eEvent.Place)
+            .Include(eEvent => eEvent.Image)
+            .Include(eEvent => eEvent.ContactPerson)
+            .Include(eEvent => eEvent.Organization)
             .Include(eEvent => eEvent.EventCustomFields)
             .Include(eEvent => eEvent.UserEvents)
             .ToListAsync();

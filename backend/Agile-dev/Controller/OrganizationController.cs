@@ -75,9 +75,9 @@ namespace Agile_dev.Controller {
 
         #region PUT
 
-        // PUT api/organization/update/5
+        // PUT api/organization/update
         [Authorize(Roles = "Admin, Organizer")]
-        [HttpPut("update/{userId}")]
+        [HttpPut("update")]
         public async Task<object> UpdateOrganization([FromBody] Organization organization) {
             try {
                 object updatedOrganizationObject = await _organizationService.UpdateOrganization(organization);

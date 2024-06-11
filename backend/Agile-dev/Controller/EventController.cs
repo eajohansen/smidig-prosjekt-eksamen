@@ -53,14 +53,14 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // GET: api/event/fetchAll/not/attending/1
+        // GET: api/event/fetchAll/not/attending
         [Authorize]
-        [HttpGet("fetchAll/not/attending/{userId}")]
-        public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] string userId) {
+        [HttpGet("fetchAll/not/attending")]
+        public async Task<ActionResult> FetchAllEventsByNotAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
                 ICollection<Event>? result = await _eventService.FetchAllEventsByNotAttending(userName!);
-                if (result != null) {
+                if (result == null) {
                     return NoContent();
                 }
 
@@ -121,6 +121,7 @@ namespace Agile_dev.Controller {
             }
         }
         
+        /*
         // GET: api/event/customField/fetchAll
         [HttpGet("customField/fetchAll/{eventId}")]
         public async Task<ActionResult> FetchAllCustomFields(int eventId) {
@@ -132,7 +133,7 @@ namespace Agile_dev.Controller {
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
             }
-        }
+        }*/
         
         #endregion
 
@@ -141,7 +142,7 @@ namespace Agile_dev.Controller {
         // POST api/event/create
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost("create")]
-        public async Task<IActionResult> AddEvent([FromBody] EventDto? frontendEvent) {
+        public async Task<IActionResult> AddEvent([FromBody] EventDtoFrontend? frontendEvent) {
             try {
                 if (frontendEvent == null) {
                     return BadRequest("Event is required");

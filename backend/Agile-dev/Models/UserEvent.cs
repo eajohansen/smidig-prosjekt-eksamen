@@ -37,6 +37,6 @@ public class UserEvent {
     public int EventId { get; set; }
     
     // Navigation properties
-    public virtual User User { get; set; }
-    public virtual Event Event { get; set; }
+    public User User { get; set; }
+    public Event Event { get; set; }
 }

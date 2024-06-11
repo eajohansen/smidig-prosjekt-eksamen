@@ -93,7 +93,7 @@ public class OrganizationService {
 
             _dbCon.Organization.Update(databaseOrganization);
             await _dbCon.SaveChangesAsync();
-            return true;
+            return databaseOrganization;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while updating organization.", exception);
