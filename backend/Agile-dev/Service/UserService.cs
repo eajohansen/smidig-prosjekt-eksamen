@@ -61,13 +61,15 @@ public class UserService {
     }
 
 
-    public async Task<object> FetchUserById(string id) {
+    public async Task<HandleReturn<UserFrontendDto>> FetchUserById(string id) {
         try {
             User? user = await _dbCon.User.FindAsync(id);
-            if (user == null) return "Could not find user with this id";
+            if (user == null) {
+                return HandleReturn<UserFrontendDto>.Failure("Could not find user with this id");
+            }
             List<User> users = [user];
             user = AddRelationToUser(users).Result[0];
-            return new UserFrontendDto() {
+            return HandleReturn<UserFrontendDto>.Success(new UserFrontendDto() {
                 Id = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
@@ -79,7 +81,7 @@ public class UserService {
                 UserEvents = user.UserEvents,
                 Notices = user.Notices,
                 Allergies = user.Allergies
-            };
+            });
 
         }
         catch (Exception exception) {
@@ -88,12 +90,15 @@ public class UserService {
         }
     }
 
-    public async Task<UserFrontendDto?> FetchUserByEmail(string email) {
+    public async Task<HandleReturn<UserFrontendDto>> FetchUserByEmail(string email) {
         try {
             User? user = await _userManager.FindByEmailAsync(email);
+            if (user == null) {
+                return HandleReturn<UserFrontendDto>.Failure("Could not find user with this email");
+            }
             List<User> users = [user];
             user = AddRelationToUser(users).Result[0];
-            return new UserFrontendDto() {
+            return HandleReturn<UserFrontendDto>.Success(new UserFrontendDto() {
                 Id = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
@@ -105,7 +110,7 @@ public class UserService {
                 UserEvents = user.UserEvents,
                 Notices = user.Notices,
                 Allergies = user.Allergies
-            };
+            });
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching user by email.", exception);

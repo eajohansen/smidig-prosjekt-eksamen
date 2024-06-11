@@ -52,9 +52,14 @@ namespace agile_dev.Controller {
         [Authorize]
         [HttpGet("fetch/id/{id}")]
         public async Task<IActionResult> FetchUserById(string? id) {
-            if (id == null || id.Length <= 5) {
-                return BadRequest("Bad Id");
+            if (id == null) {
+                return BadRequest("Could not find id");
             }
+
+            if (id.Length <= 5) {
+                return BadRequest("Id is too short");
+            }
+            
             try {
                 object result = await _userService.FetchUserById(id);
                 if (result is not UserFrontendDto user) {
@@ -70,7 +75,7 @@ namespace agile_dev.Controller {
                 bool isLoggedInUser = user.Email.Equals(userName);
 
                 if (!isLoggedInUser) {
-                    return Unauthorized();
+                    return Unauthorized("You are not authorized to view this user, you can only view your own user");
                 }
 
                 return Ok(user);
@@ -87,21 +92,25 @@ namespace agile_dev.Controller {
             //
             // Change to get by authorize?    // Do we really need this @Eirik
             //
-            if (email == null || email.Length <= 5) {
-                return BadRequest("Bad email");
+            if (email == null) {
+                return BadRequest("Could not find email");
+            }
+
+            if (email.Length <= 5) {
+                return BadRequest("Email is too short");
             }
             
             string? userName = User.FindFirstValue(ClaimTypes.Name);
             bool isLoggedInUser = email.Equals(userName);
 
             if (!isLoggedInUser) {
-                return Unauthorized();
+                return Unauthorized("You are not authorized to view this user, you can only view your own user");
             }
             
             try {
-                UserFrontendDto? result = await _userService.FetchUserByEmail(email);
-                if (result == null) {
-                    return NoContent();
+                HandleReturn<UserFrontendDto> result = await _userService.FetchUserByEmail(email);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
                 return Ok(result);
@@ -121,7 +130,7 @@ namespace agile_dev.Controller {
         public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
             
             if (userToAdd == null) {
-                return BadRequest("userToAdd is null");
+                return BadRequest("No user object provided in request");
             }
 
             if (userToAdd.Email == null) {

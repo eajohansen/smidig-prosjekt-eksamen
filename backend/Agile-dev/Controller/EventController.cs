@@ -41,9 +41,9 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEventsByAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<EventDtoBackend> result = await _eventService.FetchAllEventsByAttending(userName!);
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByAttending(userName!);
+                if (result.Value.Count == 0) {
+                    return NotFound(result.ErrorMessage);
                 }
 
                 return Ok(result);
@@ -59,9 +59,9 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEventsByNotAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<EventDtoBackend>? result = await _eventService.FetchAllEventsByNotAttending(userName!);
-                if (result == null) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByNotAttending(userName!);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
                 return Ok(result);

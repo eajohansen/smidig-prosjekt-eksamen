@@ -33,18 +33,22 @@ public class EventService {
     }
 
     // Fetch all the events that the user is attending
-    public async Task<ICollection<EventDtoBackend>>? FetchAllEventsByAttending(string userName) {
+    public async Task<HandleReturn<ICollection<EventDtoBackend>>>? FetchAllEventsByAttending(string userName) {
         try {
-            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
+            HandleReturn<UserFrontendDto> user = await _organizationService._userService.FetchUserByEmail(userName);
+            
+            if (!user.IsSuccess) {
+                return HandleReturn<ICollection<EventDtoBackend>>.Failure("Could not find user by email");
+            }
             
             ICollection<UserEvent> userEvents = _dbCon.UserEvent
-                .Where(userEvent => userEvent.Id.Equals(user.Id))
+                .Where(userEvent => userEvent.Id.Equals(user.Value.Id))
                 .ToList();
             
             List<int> eventIds = userEvents.Select(userEvent => userEvent.EventId).ToList();
             List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend(eventIds);
             
-            return foundEvents;
+            return HandleReturn<ICollection<EventDtoBackend>>.Success(foundEvents);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events that the user is attending.", exception);
@@ -52,12 +56,16 @@ public class EventService {
     }
 
     // Fetch all events that the user is not attending
-    public async Task<ICollection<EventDtoBackend>?> FetchAllEventsByNotAttending(string userName) {
+    public async Task<HandleReturn<ICollection<EventDtoBackend>>> FetchAllEventsByNotAttending(string userName) {
         try {
-            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
+            HandleReturn<UserFrontendDto> user = await _organizationService._userService.FetchUserByEmail(userName);
+
+            if (!user.IsSuccess) {
+                return HandleReturn<ICollection<EventDtoBackend>>.Failure("Could not find user by email");
+            }
         
             List<int> attendedEventIds = _dbCon.UserEvent
-                .Where(userEvent => userEvent.Id == user.Id)
+                .Where(userEvent => userEvent.Id == user.Value.Id)
                 .Select(userEvent => userEvent.EventId)
                 .ToList();
         
@@ -69,7 +77,7 @@ public class EventService {
             
             List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend(notAttendingEventIds);
         
-            return foundEvents;
+            return HandleReturn<ICollection<EventDtoBackend>>.Success();
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events that the user is not attending.", exception);
@@ -155,8 +163,8 @@ public class EventService {
     
     public async Task<object> AddEvent(string userName, EventDtoFrontend frontendEvent) {
         try {
-            UserFrontendDto? user = await _organizationService._userService.FetchUserByEmail(userName);
-            if (user == null) {
+            HandleReturn<UserFrontendDto> user = await _organizationService._userService.FetchUserByEmail(userName);
+            if (!user.IsSuccess) {
                 return "Could not find user by email";
             }
 
