@@ -35,25 +35,11 @@ public class UserService {
     public async Task<List<UserFrontendDto>> FetchAllUsers() {
         try {
             List<User> foundUsers = await _dbCon.User.ToListAsync();
-            foundUsers = await AddRelationToUser(foundUsers);
-            ICollection<UserFrontendDto> userFrontendDtos = foundUsers.Select(user => new UserFrontendDto() {
-                    Id = user.Id,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Birthdate = user.Birthdate,
-                    ExtraInfo = user.ExtraInfo,
-                    FollowOrganization = user.FollowOrganization,
-                    OrganizerOrganization = user.OrganizerOrganization,
-                    UserEvents = user.UserEvents,
-                    Notices = user.Notices,
-                    Allergies = user.Allergies
-                })
-                .ToList();
 
-            return userFrontendDtos.ToList();
+            List<string> userIds = foundUsers.Select(user => user.Id).ToList();
+            List<UserFrontendDto> fetchedUsers = ConvertUserToUserFrontendDtos(userIds);
 
-            //return foundUsers.Select(user => AddRelationToUser(user).Result).ToList();
+            return fetchedUsers;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching users.", exception);
@@ -68,21 +54,10 @@ public class UserService {
                 return HandleReturn<UserFrontendDto>.Failure("Could not find user with this id");
             }
             List<User> users = [user];
-            user = AddRelationToUser(users).Result[0];
-            return HandleReturn<UserFrontendDto>.Success(new UserFrontendDto() {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Birthdate = user.Birthdate,
-                ExtraInfo = user.ExtraInfo,
-                FollowOrganization = user.FollowOrganization,
-                OrganizerOrganization = user.OrganizerOrganization,
-                UserEvents = user.UserEvents,
-                Notices = user.Notices,
-                Allergies = user.Allergies
-            });
+            List<string> userIds = users.Select(user => user.Id).ToList();
+            List<UserFrontendDto> fetchedUsers = ConvertUserToUserFrontendDtos(userIds);
 
+            return HandleReturn<UserFrontendDto>.Success(fetchedUsers[0]);
         }
         catch (Exception exception) {
             Console.WriteLine(exception);
@@ -97,20 +72,10 @@ public class UserService {
                 return HandleReturn<UserFrontendDto>.Failure("Could not find user with this email");
             }
             List<User> users = [user];
-            user = AddRelationToUser(users).Result[0];
-            return HandleReturn<UserFrontendDto>.Success(new UserFrontendDto() {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Birthdate = user.Birthdate,
-                ExtraInfo = user.ExtraInfo,
-                FollowOrganization = user.FollowOrganization,
-                OrganizerOrganization = user.OrganizerOrganization,
-                UserEvents = user.UserEvents,
-                Notices = user.Notices,
-                Allergies = user.Allergies
-            });
+            List<string> userIds = users.Select(user => user.Id).ToList();
+            List<UserFrontendDto> fetchedUsers = ConvertUserToUserFrontendDtos(userIds);
+
+            return HandleReturn<UserFrontendDto>.Success(fetchedUsers[0]);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching user by email.", exception);
@@ -367,6 +332,41 @@ public class UserService {
             .ToListAsync();
 
         return newUsers;
+    }
+
+    private List<UserFrontendDto> ConvertUserToUserFrontendDtos(List<string> userIds) {
+        List<UserFrontendDto> foundUsers = _dbCon.User
+            .Where(user => userIds.Contains(user.Id))
+            .Select(user => new UserFrontendDto {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthdate = user.Birthdate,
+                ExtraInfo = user.ExtraInfo,
+                FollowOrganization = user.FollowOrganization
+                    .Select(fo => new Follower {
+                        OrganizationId = fo.OrganizationId
+                    }).ToList(),
+                OrganizerOrganization = user.OrganizerOrganization
+                    .Select(oo => new Organizer {
+                        OrganizationId = oo.OrganizationId
+                    }).ToList(),
+                UserEvents = user.UserEvents
+                    .Select(ue => new UserEvent {
+                        EventId = ue.EventId
+                    }).ToList(),
+                Notices = user.Notices
+                    .Select(n => new Notice {
+                        Expire = n.Expire
+                    }).ToList(),
+                Allergies = user.Allergies
+                    .Select(a => new Allergy {
+                        Name = a.Name,
+                        Description = a.Description
+                    }).ToList()
+            }).ToList();
+        return foundUsers;
     }
     
     #endregion

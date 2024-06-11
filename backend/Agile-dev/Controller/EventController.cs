@@ -23,7 +23,7 @@ namespace Agile_dev.Controller {
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllEvents() {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEvents();
+                ICollection<EventDtoBackend> result = await _eventService.FetchAllEvents();
                 if (result.Count == 0) {
                     return NoContent();
                 }
@@ -76,7 +76,7 @@ namespace Agile_dev.Controller {
         [HttpGet("fetchAll/organization/{organizationId}")]
         public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationId) {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByOrganization(organizationId);
+                ICollection<EventDtoBackend> result = await _eventService.FetchAllEventsByOrganization(organizationId);
                 if (result.Count == 0) {
                     return NoContent();
                 }

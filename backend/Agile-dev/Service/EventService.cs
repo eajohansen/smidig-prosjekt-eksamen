@@ -18,14 +18,15 @@ public class EventService {
 
     #region GET
 
-    public async Task<ICollection<Event>> FetchAllEvents() {
+    public async Task<ICollection<EventDtoBackend>> FetchAllEvents() {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
                 .Where(eEvent => eEvent.Private.Equals(false) && eEvent.Published.Equals(true))
                 .ToListAsync();
-            ICollection<Event> newEvents = AddRelationToEvent(foundEvents.ToList()).Result;
             
-            return newEvents;
+            List<int> eventIds = foundEvents.Select(userEvent => userEvent.EventId).ToList();
+            List<EventDtoBackend> fetchedEvents = ConvertEventsToEventDtoBackend(eventIds);
+            return fetchedEvents;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events.", exception);
@@ -85,14 +86,15 @@ public class EventService {
     }
     
     // Fetch for organizer to see all events that the organization has
-    public async Task<ICollection<Event>> FetchAllEventsByOrganization(int organizationId) {
+    public async Task<ICollection<EventDtoBackend>> FetchAllEventsByOrganization(int organizationId) {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
                 .Where(eEvent => eEvent.OrganizationId.Equals(organizationId) && eEvent.Private.Equals(false))
                 .ToListAsync();
         
-            ICollection<Event> newEvents = await AddRelationToEvent(foundEvents.ToList());
-            return newEvents;
+            List<int> eventIds = foundEvents.Select(userEvent => userEvent.EventId).ToList();
+            List<EventDtoBackend> fetchedEvents = ConvertEventsToEventDtoBackend(eventIds);
+            return fetchedEvents;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events from this organization.", exception);
@@ -167,22 +169,8 @@ public class EventService {
             if (!user.IsSuccess) {
                 return "Could not find user by email";
             }
-
-            /*string requiredFields = "";
-
-            if (requiredFields.Length > 0 && (frontendEvent.Event.Title == null || frontendEvent.Event.Title.Length == 0)) {
-                requiredFields = "the event did not have any title";
-            } else if (frontendEvent.Event.Title == null || frontendEvent.Event.Title.Length == 0) {
-                requiredFields += ",\n the event did not have any title";
-            }
             
-            if (requiredFields.Length > 0 && (frontendEvent.Event. == null || frontendEvent.Event..Length == 0)) {
-                requiredFields = "";
-            } else if (frontendEvent.Event. == null || frontendEvent.Event..Length == 0) {
-                requiredFields += ",\n ";
-            }*/
-            
-            Event eEvent = new Event() {
+            Event eEvent = new Event {
                 Title = frontendEvent.Event.Title,
                 Private = frontendEvent.Event.Private,
                 Published = frontendEvent.Event.Published,
@@ -475,22 +463,6 @@ public class EventService {
     #endregion
     
     #region MISCELLANEOUS
-
-    private async Task<List<Event>> AddRelationToEvent(List<Event> events) {
-        List<int> eventsId = events.Select(eEvent => eEvent.EventId).ToList();
-
-        List<Event> newEvents = await _dbCon.Event
-            .Where(eEvent => eventsId.Contains(eEvent.EventId))
-            .Include(eEvent => eEvent.Place)
-            .Include(eEvent => eEvent.Image)
-            .Include(eEvent => eEvent.ContactPerson)
-            .Include(eEvent => eEvent.Organization)
-            .Include(eEvent => eEvent.EventCustomFields)
-            .Include(eEvent => eEvent.UserEvents)
-            .ToListAsync();
-
-        return newEvents;
-    }
     
     private async Task<ContactPerson?> CheckIfContactPersonExists(ContactPerson newContactPerson) {
         ContactPerson? contactPerson;
@@ -585,11 +557,11 @@ public class EventService {
                 ContactPersonNumber = eEvent.ContactPerson.Number,
                 OrganizationName = eEvent.Organization.Name,
                 EventCustomFields = eEvent.EventCustomFields
-                    .Select(ecf => new EventCustomField() {
+                    .Select(ecf => new EventCustomField {
                         EventCustomFieldId = ecf.EventCustomFieldId,
                         CustomFieldId = ecf.CustomFieldId,
                         EventId = ecf.EventId,
-                        CustomField = new CustomField() {
+                        CustomField = new CustomField {
                             CustomFieldId = ecf.CustomField.CustomFieldId,
                             Description = ecf.CustomField.Description,
                             Value = ecf.CustomField.Value
