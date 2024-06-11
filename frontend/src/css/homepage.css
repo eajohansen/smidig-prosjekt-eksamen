@@ -1,0 +1,60 @@
+.homePageContainer {
+  color: black;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2rem 8rem;
+  label {
+    font-size: x-large;
+  }
+}
+
+.infoFollowers {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  p {
+    padding-bottom: 0.3rem;
+    padding-top: 0.2rem;
+  }
+}
+.vekstobject {
+  display: flex;
+  flex-direction: column;
+  border: black 0.1rem solid;
+  border-radius: 1rem;
+  padding: 1rem;
+  gap: 1rem;
+}
+.calendar {
+  width: 40%;
+}
+
+.createEventContainer {
+  /* width: 50%; */
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.createEventTxt {
+  font-size: 2rem;
+  font-weight: bold;
+  padding-bottom: 1rem;
+}
+
+.createEventButton {
+  justify-self: center;
+  background-color: white;
+}
+
+.createEventButton:hover {
+  color: #497d95;
+}
+
+.circleIcon {
+  font-size: 7rem;
+}
