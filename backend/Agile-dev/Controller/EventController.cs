@@ -76,9 +76,9 @@ namespace Agile_dev.Controller {
         [HttpGet("fetchAll/organization/{organizationId}")]
         public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationId) {
             try {
-                ICollection<EventDtoBackend> result = await _eventService.FetchAllEventsByOrganization(organizationId);
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByOrganization(organizationId);
+                if (result.Value.Count == 0) {
+                    return NotFound(result.ErrorMessage);
                 }
 
                 return Ok(result);

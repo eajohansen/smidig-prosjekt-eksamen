@@ -37,18 +37,18 @@ public class EventService {
     public async Task<HandleReturn<ICollection<EventDtoBackend>>>? FetchAllEventsByAttending(string userName) {
         try {
             HandleReturn<UserFrontendDto> user = await _organizationService._userService.FetchUserByEmail(userName);
-            
+
             if (!user.IsSuccess) {
                 return HandleReturn<ICollection<EventDtoBackend>>.Failure("Could not find user by email");
             }
-            
+
             ICollection<UserEvent> userEvents = _dbCon.UserEvent
                 .Where(userEvent => userEvent.Id.Equals(user.Value.Id))
                 .ToList();
-            
+
             List<int> eventIds = userEvents.Select(userEvent => userEvent.EventId).ToList();
             List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend(eventIds);
-            
+
             return HandleReturn<ICollection<EventDtoBackend>>.Success(foundEvents);
         }
         catch (Exception exception) {
@@ -86,15 +86,19 @@ public class EventService {
     }
     
     // Fetch for organizer to see all events that the organization has
-    public async Task<ICollection<EventDtoBackend>> FetchAllEventsByOrganization(int organizationId) {
+    public async Task<HandleReturn<ICollection<EventDtoBackend>>> FetchAllEventsByOrganization(int organizationId) {
         try {
             ICollection<Event> foundEvents = await _dbCon.Event
                 .Where(eEvent => eEvent.OrganizationId.Equals(organizationId) && eEvent.Private.Equals(false))
                 .ToListAsync();
+            
+            if (foundEvents.Count == 0) {
+                return HandleReturn<ICollection<EventDtoBackend>>.Failure("Could not find any events for this organization");
+            }
         
             List<int> eventIds = foundEvents.Select(userEvent => userEvent.EventId).ToList();
             List<EventDtoBackend> fetchedEvents = ConvertEventsToEventDtoBackend(eventIds);
-            return fetchedEvents;
+            return HandleReturn<ICollection<EventDtoBackend>>.Success(fetchedEvents);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching events from this organization.", exception);
@@ -118,18 +122,15 @@ public class EventService {
     }
     */
 
-    public async Task<object> FetchEventById(int id) {
+    public async Task<HandleReturn<EventDtoBackend>> FetchEventById(int id) {
         try {
             Event? eEvent = await _dbCon.Event.FindAsync(id);
             if (eEvent != null) {
                 List<EventDtoBackend> foundEvents = ConvertEventsToEventDtoBackend([id]);
-                return foundEvents[0];
-            } else {
-                return "Could not find event";
+                return HandleReturn<EventDtoBackend>.Success(foundEvents[0]);
             }
-            
-            
-            
+
+            return HandleReturn<EventDtoBackend>.Failure("Could not find event");
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while fetching event.", exception);
@@ -280,6 +281,7 @@ public class EventService {
 
                 await _dbCon.SaveChangesAsync();
             }
+
             return eEvent;
         }
         catch (Exception exception) {
@@ -294,7 +296,8 @@ public class EventService {
 
     public async Task<bool> UpdateEvent(Event eEvent) {
         try {
-            Event? databaseEvent = await _dbCon.Event.Where(vEvent => vEvent.EventId.Equals(eEvent.EventId)).Include(eEvent => eEvent.EventCustomFields).FirstOrDefaultAsync();
+            Event? databaseEvent = await _dbCon.Event.Where(vEvent => vEvent.EventId.Equals(eEvent.EventId))
+                .Include(eEvent => eEvent.EventCustomFields).FirstOrDefaultAsync();
             if (databaseEvent == null) {
                 return false;
             }
@@ -343,7 +346,7 @@ public class EventService {
 
             if (eEvent.Place != null) {
                 Place? newPlace = await CheckIfPlaceExists(eEvent.Place);
-                if (newPlace == null) { 
+                if (newPlace == null) {
                     await _dbCon.Place.AddAsync(eEvent.Place);
                     await _dbCon.SaveChangesAsync();
                     newPlace = eEvent.Place;
@@ -421,6 +424,7 @@ public class EventService {
                             await _dbCon.EventCustomField.AddAsync(newEventCustomField);
                         }
                     }
+
                     await _dbCon.SaveChangesAsync();
                 } else if (databaseEvent.EventCustomFields != null && eEvent.EventCustomFields == null) {
                     foreach (EventCustomField eventCustomField in databaseEvent.EventCustomFields) {
@@ -472,31 +476,31 @@ public class EventService {
             // It just needs a name, mostly for testing. Should be deleted when frontend can demand number og email
             //
             contactPerson = await _dbCon.ContactPerson
-                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
-                                            loopContactPerson.Number == null && 
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) &&
+                                            loopContactPerson.Number == null &&
                                             loopContactPerson.Email == null)
                 .FirstOrDefaultAsync();
             
         } else if (newContactPerson.Email == null) {
             // Email can be null here, but not number. Frontend handles the logic that at least email or number have to exist
             contactPerson = await _dbCon.ContactPerson
-                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
-                                            newContactPerson.Number!.Equals(loopContactPerson.Number) && 
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) &&
+                                            newContactPerson.Number!.Equals(loopContactPerson.Number) &&
                                             loopContactPerson.Email == null)
                 .FirstOrDefaultAsync();
             
         } else if (newContactPerson.Number == null) {
             // Number can be null here, but not email. Frontend handles the logic that at least email or number have to exist
             contactPerson = await _dbCon.ContactPerson
-                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
-                                            newContactPerson.Email.Equals(loopContactPerson.Email) && 
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) &&
+                                            newContactPerson.Email.Equals(loopContactPerson.Email) &&
                                             loopContactPerson.Number == null)
                 .FirstOrDefaultAsync();
             
         } else {
             contactPerson = await _dbCon.ContactPerson
-                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) && 
-                                            newContactPerson.Email.Equals(loopContactPerson.Email) && 
+                .Where(loopContactPerson => newContactPerson.Name.Equals(loopContactPerson.Name) &&
+                                            newContactPerson.Email.Equals(loopContactPerson.Email) &&
                                             newContactPerson.Number.Equals(loopContactPerson.Number))
                 .FirstOrDefaultAsync();
         }
