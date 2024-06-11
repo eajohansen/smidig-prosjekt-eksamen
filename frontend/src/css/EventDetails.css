@@ -1,42 +1,31 @@
 .eventDetailsContainer {
     background: #497d95;
-    height: 92vh;
     display: flex;
     padding: 3rem;
+    border-radius: 3rem;
 
     .eventDetailsLeft {
         padding-right: 4rem;
-        width: 60%;
-        flex-direction: column;
-        justify-content: right;
-
 
         img {
-            /*padding: 1rem;*/
             border-radius: 2rem;
-            width: 40rem;
-            height: 30rem;
-            object-fit: cover;
+            width: 30rem;
         }
 
         .infoContainer {
             border: white solid 2px;
-            border-radius: 5%;
-            flex-direction: column;
+            border-radius: 2rem;
             margin-top: 4rem;
             padding: 3rem;
-            /*gap: 3px;*/
 
             .infoItem {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
             }
 
             .infoItem p {
-                font-size: 2rem;
+                font-size: 1.1rem;
                 color: white;
-                margin: 0;
                 padding: 0.5rem;
             }
         }
@@ -50,21 +39,21 @@
         color: white;
 
         .eventInfo p {
-            font-size: 2rem;
+            font-size: 1rem;
         }
-
-
+        
         .eventText p {
-            font-size: 1.5rem;
-            margin-top: 3rem;
+            font-size: 1rem;
+            padding-top: 3rem;
         }
 
         .eventInfo h1 {
-            font-size: 6rem;
+            font-size: 4rem;
+            padding-bottom: 1rem;
             }
 
         .dateTimePlace {
-            margin-top: 1rem;
+            padding-top: 1rem;
         }
 
 
@@ -77,11 +66,9 @@
         }
         .dateItem {
             display: flex;
-            /*align-items: center;*/
-            font-size: 4rem;
 
             .dateItem i {
-                margin-right: 2rem;
+                padding-right: 2rem;
             }
         }
 
@@ -91,33 +78,27 @@
         .place {
             display: flex;
             align-items: center;
-            font-size: 4rem;
-            padding-top: 1.1rem;
-
-            .place p {
-                margin: 0;
-            }
+            padding-top: 1rem;
         }
         .icon {
-            margin-right: 1rem;
-            font-size: 2rem;
-
+            padding-right: 1rem;
+            font-size: 1.5rem;
         }
-
 
         .btnDiv {
             display: flex;
             justify-content: space-between;
-            margin-top: 15rem;
+            padding-top: 5rem;
 
             .buttons {
-                width: 12rem;
-                height: 4rem;
-                font-size: 1.5rem;
+                width: 10rem;
+                height: 3rem;
+                font-size: 0.9rem;
             }
 
             .publishBtn {
                 background-color: #0C5F6C;
+                color: white;
             }
 
         }

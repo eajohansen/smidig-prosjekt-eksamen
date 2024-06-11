@@ -10,6 +10,7 @@ export const EventDetails = () => {
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!" +
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!" +
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!" +
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!" +
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur, nobis ipsa! Ad nemo cum atque assumenda accusantium magnam cumque pariatur nostrum delectus doloribus labore blanditiis saepe, incidunt doloremque temporibus possimus!";
   const event = events.find((event) => event.id === parseInt(id));
   return (
@@ -30,7 +31,7 @@ export const EventDetails = () => {
               </div>
               <div className="infoItem">
                   <p>Matservering:</p>
-                  <p>JA</p>
+                  <p>Ja</p>
               </div>
               <div className="infoItem">
                   <p>Gratis arrangement:</p>
