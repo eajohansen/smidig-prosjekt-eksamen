@@ -144,22 +144,24 @@ public class UserService {
         return result;
     }
 
-    public async Task<IdentityResult> AddUserAsFollower(string email, int organizationId) {
+    public async Task<HandleReturn<bool>> AddUserAsFollower(string email, int organizationId) {
         try {
             User? user = await _userManager.FindByEmailAsync(email);
 
             if (user == null) {
-                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+                HandleReturn<bool>.Failure("User not found");
             }
             
             Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
 
             if (foundOrganization == null) {
-                return IdentityResult.Failed(new IdentityError { Description = "Organization not found" });
+                HandleReturn<bool>.Failure("Organization not found");
+
             }
 
             if (IsUserFollowingOrganization(user.Id, foundOrganization.OrganizationId).Result) {
-                return IdentityResult.Failed(new IdentityError { Description = "User is already following the organization" });
+                HandleReturn<bool>.Failure("User is already following the organization");
+
             }
 
             Follower newFollower = new() {
@@ -169,29 +171,31 @@ public class UserService {
             
             await _dbCon.Follower.AddAsync(newFollower);
             await _dbCon.SaveChangesAsync();
-            return IdentityResult.Success;
+            return HandleReturn<bool>.Success();
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user as follower.", exception);
         }
     }
 
-    public async Task<IdentityResult> AddUserToEvent(string userEmail, int eventId) {
+    public async Task<HandleReturn<bool>> AddUserToEvent(string userEmail, int eventId) {
         try {
             User? user = await _userManager.FindByEmailAsync(userEmail);
 
             if (user == null) {
-                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+                return HandleReturn<bool>.Failure("User not found");
+
             }
             
             Event? foundEvent = await _dbCon.Event.FindAsync(eventId);
 
             if (foundEvent == null) {
-                return IdentityResult.Failed(new IdentityError { Description = "Event not found" });
+                return HandleReturn<bool>.Failure("Event not found");
+
             }
 
             if (IsUserAttendingEvent(user.Id, foundEvent.EventId).Result) {
-                return IdentityResult.Failed(new IdentityError { Description = "User is already attending event" });
+                return HandleReturn<bool>.Failure("User is already attending event");
             }
 
             UserEvent newUserEvent = new() {
@@ -202,14 +206,14 @@ public class UserService {
 
             await _dbCon.UserEvent.AddAsync(newUserEvent);
             await _dbCon.SaveChangesAsync();
-            return IdentityResult.Success;
+            return HandleReturn<bool>.Success();
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to event.", exception);
         }
     }
 
-    public async Task<bool> AddNoticeToUser(User user) {
+    public async void AddNoticeToUser(User user) {
         try {
             Notice newNotice = new() {
                 Expire = DateTime.Now.AddDays(30)
@@ -217,7 +221,6 @@ public class UserService {
 
             await _dbCon.Notice.AddAsync(newNotice);
             await _dbCon.SaveChangesAsync();
-            return true;
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while adding user to event.", exception);
@@ -298,18 +301,18 @@ public class UserService {
 
     #region DELETE
 
-    public async Task<bool> DeleteUser(string userEmail) {
+    public async Task<HandleReturn<bool>> DeleteUser(string userEmail) {
         try {
             User? deleteuser = await _userManager.FindByEmailAsync(userEmail);
 
             if (deleteuser == null) {
-                return false;
+                return HandleReturn<bool>.Failure("User not found");
             }
 
             _dbCon.User.Remove(deleteuser);
             await _dbCon.SaveChangesAsync();
 
-            return true;
+            return HandleReturn<bool>.Success();
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while deleting user.", exception);

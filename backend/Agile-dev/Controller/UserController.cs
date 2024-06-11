@@ -153,10 +153,10 @@ namespace agile_dev.Controller {
             try {
                 string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
                 
-                IdentityResult isAdded = await _userService.AddUserAsFollower(userEmail, organizationId);
-                if (!isAdded.Succeeded) {
+                HandleReturn<bool> isAdded = await _userService.AddUserAsFollower(userEmail, organizationId);
+                if (!isAdded.IsSuccess) {
                     // Could not add user as follower, because request is bad
-                    return BadRequest(isAdded);
+                    return BadRequest(isAdded.ErrorMessage);
                 }
 
                 return Ok();
@@ -175,10 +175,10 @@ namespace agile_dev.Controller {
             }
             try {
                 string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
-                IdentityResult isAdded = await _userService.AddUserToEvent(userEmail, eventId);
-                if (!isAdded.Succeeded) {
+                HandleReturn<bool> isAdded = await _userService.AddUserToEvent(userEmail, eventId);
+                if (!isAdded.IsSuccess) {
                     // Could not add user to event, because request is bad
-                    return BadRequest(isAdded);
+                    return BadRequest(isAdded.ErrorMessage);
                 }
 
                 return Ok();
@@ -247,10 +247,10 @@ namespace agile_dev.Controller {
             string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
             
             try {
-                bool isDeleted = _userService.DeleteUser(userEmail).Result;
-                if (!isDeleted) {
+                HandleReturn<bool> isDeleted = _userService.DeleteUser(userEmail).Result;
+                if (!isDeleted.IsSuccess) {
                     // Could not delete user, because request is bad
-                    BadRequest();
+                    BadRequest(isDeleted.ErrorMessage);
                 }
 
                 return Ok();
