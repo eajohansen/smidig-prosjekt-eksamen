@@ -311,7 +311,7 @@ public class EventService {
     public async Task<HandleReturn<bool>> UpdateEvent(Event eEvent) {
         try {
             Event? databaseEvent = await _dbCon.Event.Where(vEvent => vEvent.EventId.Equals(eEvent.EventId))
-                .Include(eEvent => eEvent.EventCustomFields).FirstOrDefaultAsync();
+                .Include(tEvent => tEvent.EventCustomFields).FirstOrDefaultAsync();
             if (databaseEvent == null) {
                 return HandleReturn<bool>.Failure("Could not find event in database");
             }
