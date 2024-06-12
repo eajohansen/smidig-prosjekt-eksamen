@@ -1,3 +1,4 @@
+
 .eventDetailsContainer {
     background: #497d95;
     display: flex;
@@ -104,4 +105,8 @@
         }
 
     }
+}
+.publisedEvent {
+    background-color: white;
+    color: black;
 }
