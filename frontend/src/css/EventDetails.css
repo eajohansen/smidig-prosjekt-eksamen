@@ -12,16 +12,17 @@
 
         img {
             border-radius: 2rem;
-            width: 30rem;
+            width: 40rem;
+            height: 30rem;
+            object-fit: cover;
         }
 
         .infoContainer {
             border: white solid 2px;
-            border-radius: 2rem;
+            border-radius: 5%;
+            flex-direction: column;
             margin-top: 4rem;
             padding: 3rem;
-            max-height: 25rem;
-            overflow-y: scroll;
 
             .infoItem {
                 display: flex;
@@ -29,7 +30,7 @@
             }
 
             .infoItem p {
-                font-size: 1.1rem;
+                font-size: 2rem;
                 color: white;
                 margin: 0;
                 padding: 0.5rem;
@@ -43,17 +44,16 @@
         color: white;
 
         .eventInfo p {
-            font-size: 1rem;
+            font-size: 2rem;
         }
         
         .eventText p {
-            font-size: 1rem;
-            padding-top: 3rem;
+            font-size: 1.5rem;
+            margin-top: 3rem;
         }
 
         .eventInfo h1 {
-            font-size: 4rem;
-            padding-bottom: 1rem;
+            font-size: 6rem;
             }
 
         .dateTimePlace {
