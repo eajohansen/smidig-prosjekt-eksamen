@@ -545,8 +545,8 @@ public class EventService {
     private DateTime CombineDateTime(string date, string time) {
         
         try {
-            string correctDate = DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString(CultureInfo.InvariantCulture);
-            return DateTime.ParseExact($"{correctDate} {time}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            string correctDate = DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy");
+            return DateTime.ParseExact($"{correctDate} {time}", "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
         }
         catch (Exception exception) {
             throw new Exception("An error occurred while combining date and time.", exception);
