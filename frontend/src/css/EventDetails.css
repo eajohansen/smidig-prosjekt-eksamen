@@ -17,6 +17,8 @@
             border-radius: 2rem;
             margin-top: 4rem;
             padding: 3rem;
+            max-height: 24rem;
+            overflow-y: scroll;
 
             .infoItem {
                 display: flex;

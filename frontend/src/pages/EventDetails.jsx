@@ -81,6 +81,12 @@ export const EventDetails = () => {
             <p>Kontaktperson:</p>
             <p> {event?.contactPersonName}</p>
           </div>
+          {event.eventCustomFields.map((CF, key) => (
+              <div className="infoItem" key={key}>
+                <p>{CF.customField.description}</p>
+                <p> {CF.customField.value ? "ja" : "nei"}</p>
+              </div>
+          ))}
         </div>
       </div>
       <div className="eventDetailsRight">
