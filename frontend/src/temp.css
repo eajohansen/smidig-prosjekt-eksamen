@@ -408,6 +408,9 @@ header {
   font-family: "Inter", sans-serif;
   font-size: 1rem;
   color: black;
+  label{
+    padding-top: 1rem;
+  }
   input {
     color: black;
   }
@@ -442,7 +445,7 @@ header {
    label{
     padding: 0.6rem;
     padding-left: 0;
-    padding-top: 0;
+    padding-top: 1rem;
    }
 
  }
