@@ -157,8 +157,10 @@ const LoginPage = () => {
               onMouseLeave={() => setIsHovered(false)}
             />
             <div className={isHovered ? "pwordDetails" : "dNone"}>
-              password needs: 1 capital letter, 1 lowercase letter, 1 number, 8
-              characters long
+              <label id="createInfoLabel" htmlFor="">Passordet trenger:</label>
+              <p id="createInfoP">
+                 1 stor bokstav, <br/> 1 liten bokstav, <br/> 1 tall, <br/> 1 spesialtegn <br/>og det må være minst 8 tegn langt.
+                </p>
             </div>
             <div className="errorDisplay">
               <ul>

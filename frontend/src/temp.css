@@ -144,19 +144,23 @@ input {
 .checkBox:checked {
   background-color: var(--main);
 }
-.createInfoBox{
-  border: 1px solid var(--secondary);
+.pwordDetails {
+  position: absolute;
+  top: 35%;
+  left: 60%;
   border-radius: 0.3rem;
-  display: flex;
-  flex-direction: column;
-  width: 5rem;
-  #createInfoLabel{
-    padding: 0;
-  }
-  #createInfoP{
-    font-size: 0.7rem;
-  }
+  background-color: white;
+  border: 1px solid var(--secondary);
+  color: black;
+  z-index: 100;
 
+  #createInfoLabel {
+      padding: 0;
+    }
+  
+    #createInfoP {
+      font-size: 0.7rem;
+    }
 }
 
 /* Registration form  */
@@ -391,18 +395,6 @@ header {
   .navItem:hover {
     color: var(--main);
   }
-}
-.pwordDetails {
-  position: absolute;
-  top: 45%;
-  left: 70%;
-  width: 10rem;
-  height: 8rem;
-  background-color: white;
-  border: 1px solid black;
-  color: black;
-  z-index: 100;
-  display: inline;
 }
 
 .dNone {
