@@ -105,15 +105,15 @@ namespace Agile_dev.Controller {
         // }
 
         // GET api/event/fetch/5
-        [HttpGet("fetch/{id}")]
+        [HttpGet("fetch/id/{id}")]
         public async Task<IActionResult> FetchEventById(int id) {
             try {
-                object result = await _eventService.FetchEventById(id);
-                if (result is not EventDtoBackend eventDtoBackend) {
-                    return NoContent();
+                HandleReturn<EventDtoBackend> result = await _eventService.FetchEventById(id);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(eventDtoBackend);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
