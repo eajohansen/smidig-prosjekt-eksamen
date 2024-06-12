@@ -4,7 +4,8 @@
   grid-auto-rows: auto;
   padding-top: 1rem;
   color: black;
-  gap: 9rem;
+  row-gap: 1rem;
+  column-gap: 8.5rem;
 }
 
 .pageHeader {

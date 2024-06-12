@@ -52,7 +52,7 @@ export const OrgProfilePage = () => {
                 <i className="bi bi-lock"></i>
               </span>
             </div>
-            <label htmlFor="nameRegister">Organization Name</label>
+            <label htmlFor="nameRegister">Organisasjons navn</label>
             <input
               type="text"
               id="nameRegister"
