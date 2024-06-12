@@ -13,7 +13,7 @@
   - [GET User](#get-user)
     - [GET /api/user/fetchAll](#get-apiUserfetchAll)
     - [GET /api/user/fetch/id/{userId}](#get-apiuserfetchiduserid)
-    - [GET /api/user/fetch/email/{email}](#get-apiuserfetchemailemail)
+    - [GET /api/user/fetch/email](#get-apiuserfetchemail)
     - [GET /api/user/checkAdminPrivileges](#get-apiusercheckadminprivileges)
   - [POST User](#post-user)
     - [POST /api/user/add/organizer/{organizationId}](#post-apiuseraddorganizerorganizationid)
@@ -362,25 +362,24 @@ Authorization: Bearer yourtoken
   Could not find user with this id
 ```
 
-#### GET /api/user/fetch/email/{email}
+#### GET /api/user/fetch/email
 
 #### Description
-Fetches a user from the database by email.
+Fetches a user's email
 
 #### Restriction
 Has to be logged in.
 
 #### URL
-`GET /api/user/fetch/email/{email}`
+`GET /api/user/fetch/email`
 
 #### Parameters
 | Parameter | Type   | Required | Description  |
 |-----------|--------|----------|--------------|
-| email     | string | Yes      | User's email |
 
 #### Example Request
 ```http
-GET /api/user/fetch/email/{email}
+GET /api/user/fetch/email
 Authorization: Bearer yourtoken
 ```
 
@@ -388,17 +387,7 @@ Authorization: Bearer yourtoken
 ##### Success (200)
 ```json
 {
-  "Id": "id",
-  "email": "admin@test.com",
-  "firstName": "name",
-  "lastName": "name",
-  "birthdate": "12-12-2020 00:00:00",
-  "extraInfo": "extra text",
-  "followOrganization": ["Follower Object"],
-  "organizerOrganization": ["Organizer Object"],
-  "userEvents": ["UserEvent Object"],
-  "notices": ["Notice Object"],
-  "allergies": ["Allergy Object"]
+  "Email": "yada@yada.com"
 }
 ```
 
@@ -412,18 +401,6 @@ Authorization: Bearer yourtoken
 ##### Unauthorized (401)
 ###### Not logged in
 ```
-```
-
-##### Unauthorized (401)
-###### Not user's email
-```
-  You are not authorized to view this user, you can only view your own user
-```
-
-##### BadRequest (400)
-###### Email is not valid
-```
-  Email is too short
 ```
 
 #### GET /api/user/checkAdminPrivileges
