@@ -3,7 +3,7 @@ import { validateEmail } from "../validation";
 import { ProfileForm } from "./ProfileForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { sendLogin, sendRegister } from "../services/tempService";
-import { useNavigate } from "react-router-dom";
+import { BrowserRouter, useNavigate } from "react-router-dom";
 
 const LoginPopup = () => {
   const navigate = useNavigate();
@@ -157,9 +157,11 @@ const LoginPopup = () => {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             />
-            <div className={isHovered ? "pwordDetails" : "dNone"}>
-              password needs: 1 capital letter, 1 lowercase letter, 1 number, 8
-              characters long
+            <div className={isHovered ? "pwordDetails createInfoBox" : "dNone"}>
+              <label id="createInfoLabel" htmlFor="">Passordet trenger:</label>
+              <p id="createInfoP">
+                 1 stor bokstav, <br/> 1 liten bokstav, <br/> 1 tall, <br/> 1 spesialtegn <br/>og det må være minst 8 tegn langt.
+                </p>
             </div>
             <div className="errorDisplay">
               <ul>

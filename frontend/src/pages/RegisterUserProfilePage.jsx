@@ -72,6 +72,7 @@ export const RegisterUserProfilePage = () => {
       <div className="headderDiv">
         <h2>Opprett Bruker</h2>
         <hr></hr>
+        <p id="requiredTxt">* Obligatoriske felt</p>
       </div>
       <div className="profileInfoContainer inputHover">
         <div className="userInfoContainer">
@@ -82,21 +83,21 @@ export const RegisterUserProfilePage = () => {
               <i className="bi bi-lock"></i>
             </span>
           </div>
-          <label htmlFor="fNameInput">Fornavn</label>
+          <label htmlFor="fNameInput">Fornavn*</label>
           <input
             type="text"
             id="fNameInput"
             name="fName"
             onChange={handleChange}
           />
-          <label htmlFor="lNameInput">Etternavn</label>
+          <label htmlFor="lNameInput">Etternavn*</label>
           <input
             type="text"
             id="lNameInput"
             name="lName"
             onChange={handleChange}
           />
-          <label htmlFor="dobInput">Fødselsdato</label>
+          <label htmlFor="dobInput">Fødselsdato*</label>
           <input
             className="date"
             type="date"
