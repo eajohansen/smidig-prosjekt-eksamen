@@ -21,13 +21,13 @@ export const EventItem = (props) => {
         <div className="ticketInfo">
           <div className="">
             <p>Solgt</p>
-            <h2>solgt</h2>
+            <h2>0</h2>
             <p>Ledig</p>
             <h2 className="available">{capacity}</h2>
           </div>
           <div className="WaitinglistContainer">
             <p>Venteliste</p>
-            <h2 className="waitlist">venteliste</h2>
+            <h2 className="waitlist">0</h2>
           </div>
         </div>
         <div className="buttonContainer">

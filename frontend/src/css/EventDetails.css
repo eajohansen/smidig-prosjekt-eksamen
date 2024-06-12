@@ -1,64 +1,66 @@
 .eventDetailsContainer {
-    background: #497d95;
-    display: flex;
-    padding: 3rem;
-    border-radius: 3rem;
+  background: #497d95;
+  display: flex;
+  padding: 3rem;
+  border-radius: 3rem;
 
-    .eventDetailsLeft {
-        padding-right: 4rem;
-        width: 60%;
-        flex-direction: column;
-        justify-content: right;
+  .eventDetailsLeft {
+    padding-right: 4rem;
+    width: 60%;
+    flex-direction: column;
+    justify-content: right;
 
-        img {
-            border-radius: 2rem;
-            width: 40rem;
-            height: 30rem;
-            object-fit: cover;
-        }
-
-        .infoContainer {
-            border: white solid 2px;
-            border-radius: 5%;
-            flex-direction: column;
-            margin-top: 4rem;
-            padding: 3rem;
-
-            .infoItem {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .infoItem p {
-                font-size: 2rem;
-                color: white;
-                margin: 0;
-                padding: 0.5rem;
-            }
-        }
+    img {
+      border-radius: 2rem;
+      width: 40rem;
+      height: 30rem;
+      object-fit: cover;
     }
 
-    .eventDetailsRight {
+    .infoContainer {
+      border: white solid 2px;
+      border-radius: 5%;
+      flex-direction: column;
+      margin-top: 4rem;
+      padding: 3rem;
+      max-height: 25rem;
+      overflow-y: scroll;
+
+      .infoItem {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .infoItem p {
+        font-size: 2rem;
         color: white;
+        margin: 0;
+        padding: 0.5rem;
+      }
+    }
+  }
 
-        .eventInfo p {
-            font-size: 2rem;
-        }
-        
-        .eventText p {
-            font-size: 1.5rem;
-            margin-top: 3rem;
-        }
+  .eventDetailsRight {
+    display: flex;
+    flex-direction: column;
+    color: white;
 
-        .eventInfo h1 {
-            font-size: 6rem;
-            }
+    .eventInfo p {
+      font-size: 2rem;
+    }
 
-        .dateTimePlace {
-            padding-top: 1rem;
-        }
+    .eventText p {
+      font-size: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .eventInfo h1 {
+      font-size: 6rem;
+    }
+
+    .dateTimePlace {
+      padding-top: 1rem;
+    }
 
     .dateTime {
       display: flex;
@@ -72,43 +74,43 @@
       /*align-items: center;*/
       font-size: 4rem;
 
-            .dateItem i {
-                margin-right: 2rem;
-            }
-        }
-
-        .timeItem {
-            display: flex;
-        }
-        .place {
-            display: flex;
-            align-items: center;
-            padding-top: 1rem;
-            font-size: 4rem;
-            p {
-                margin: 0;
-            }
-        }
-        .icon {
-            margin-right: 1rem;
-            font-size: 2rem;
-        }
-
-        .btnDiv {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 5rem;
-
-            .buttons {
-                width: 10rem;
-                height: 3rem;
-                font-size: 0.9rem;
-            }
-
-            .publishBtn {
-                background-color: #0c5f6c;
-                color: white;
-            }
-        }
+      .dateItem i {
+        margin-right: 2rem;
+      }
     }
+
+    .timeItem {
+      display: flex;
+    }
+    .place {
+      display: flex;
+      align-items: center;
+      padding-top: 1rem;
+      font-size: 4rem;
+      p {
+        margin: 0;
+      }
+    }
+    .icon {
+      margin-right: 1rem;
+      font-size: 2rem;
+    }
+
+    .btnDiv {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 5rem;
+
+      .buttons {
+        width: 10rem;
+        height: 3rem;
+        font-size: 0.9rem;
+      }
+
+      .publishBtn {
+        background-color: #0c5f6c;
+        color: white;
+      }
+    }
+  }
 }
