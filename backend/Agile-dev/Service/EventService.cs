@@ -168,13 +168,8 @@ public class EventService {
 
     #region POST
     
-    public async Task<HandleReturn<Event>> AddEvent(string userName, EventDtoFrontend frontendEvent) {
+    public async Task<HandleReturn<Event>> AddEvent(EventDtoFrontend frontendEvent) {
         try {
-            HandleReturn<UserFrontendDto> user = await _organizationService._userService.FetchUserByEmail(userName);
-            if (!user.IsSuccess) {
-                return HandleReturn<Event>.Failure("Could not find user by email");
-            }
-            
             Event eEvent = new Event {
                 Title = frontendEvent.Event.Title,
                 Private = frontendEvent.Event.Private,
