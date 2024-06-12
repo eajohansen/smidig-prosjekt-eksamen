@@ -63,7 +63,7 @@ export const EventDetails = () => {
         <div className="infoContainer">
           <div className="infoItem">
             <p>Ledige Plasser:</p>
-            <p>{event?.capacity}</p>
+            <p>{event?.availableCapacity}</p>
           </div>
           <div className="infoItem">
             <p>Aldersgrense:</p>
