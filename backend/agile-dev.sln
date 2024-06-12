@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile-dev", "Agile-dev\Agile-dev.csproj", "{F34738BD-3289-46B2-BC5F-6CBEED9B6AF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileDevTest", "AgileDevTest\AgileDevTest.csproj", "{EDB878F6-1FCC-4114-8DC6-8B8A4BBC3DB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile-dev-test", "Agile-dev-test\Agile-dev-test.csproj", "{EDB878F6-1FCC-4114-8DC6-8B8A4BBC3DB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

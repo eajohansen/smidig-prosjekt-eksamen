@@ -19,15 +19,16 @@ namespace Agile_dev.Controller {
         #region GET
         
         // GET: api/event/fetchAll
+        [Authorize]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllEvents() {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEvents();
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEvents();
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -40,30 +41,30 @@ namespace Agile_dev.Controller {
         public async Task<ActionResult> FetchAllEventsByAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<Event>? result = await _eventService.FetchAllEventsByAttending(userName!);
-                if (result != null) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByAttending(userName!);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
             }
         }
         
-        // GET: api/event/fetchAll/not/attending/1
+        // GET: api/event/fetchAll/not/attending
         [Authorize]
-        [HttpGet("fetchAll/not/attending/{userId}")]
-        public async Task<ActionResult> FetchAllEventsByNotAttending([FromRoute] int userId) {
+        [HttpGet("fetchAll/not/attending")]
+        public async Task<ActionResult> FetchAllEventsByNotAttending() {
             try {
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                ICollection<Event>? result = await _eventService.FetchAllEventsByNotAttending(userName!);
-                if (result != null) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByNotAttending(userName!);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -71,15 +72,16 @@ namespace Agile_dev.Controller {
         }
         
         // GET: api/event/fetchAll/organization/1
+        [Authorize]
         [HttpGet("fetchAll/organization/{organizationId}")]
         public async Task<ActionResult> FetchAllEventsByOrganization([FromRoute] int organizationId) {
             try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByOrganization(organizationId);
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByOrganization(organizationId);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -87,37 +89,39 @@ namespace Agile_dev.Controller {
         }
         
         // GET: api/event/fetchAll/not/organization/1
-        [HttpGet("fetchAll/not/organization/{organizationId}")]
-        public async Task<ActionResult> FetchAllEventsByOtherOrganizations([FromRoute] int organizationId) {
-            try {
-                ICollection<Event> result = await _eventService.FetchAllEventsByOtherOrganizations(organizationId);
-                if (result.Count == 0) {
-                    return NoContent();
-                }
-
-                return Ok(result);
-            }
-            catch (Exception exception) {
-                return StatusCode(500, "Internal server Error: " + exception.Message);
-            }
-        }
+        // [Authorize]
+        // [HttpGet("fetchAll/not/organization/{organizationId}")]
+        // public async Task<ActionResult> FetchAllEventsByOtherOrganizations([FromRoute] int organizationId) {
+        //     try {
+        //         ICollection<Event> result = await _eventService.FetchAllEventsByOtherOrganizations(organizationId);
+        //         if (result.Count == 0) {
+        //             return NoContent();
+        //         }
+        //
+        //         return Ok(result);
+        //     }
+        //     catch (Exception exception) {
+        //         return StatusCode(500, "Internal server Error: " + exception.Message);
+        //     }
+        // }
 
         // GET api/event/fetch/5
         [HttpGet("fetch/{id}")]
         public async Task<IActionResult> FetchEventById(int id) {
             try {
-                Event? result = await _eventService.FetchEventById(id);
-                if (result == null) {
+                object result = await _eventService.FetchEventById(id);
+                if (result is not EventDtoBackend eventDtoBackend) {
                     return NoContent();
                 }
 
-                return Ok(result);
+                return Ok(eventDtoBackend);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
             }
         }
         
+        /*
         // GET: api/event/customField/fetchAll
         [HttpGet("customField/fetchAll/{eventId}")]
         public async Task<ActionResult> FetchAllCustomFields(int eventId) {
@@ -129,21 +133,17 @@ namespace Agile_dev.Controller {
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
             }
-        }
+        }*/
         
         #endregion
 
         #region POST
         
         // POST api/event/create
-        [Authorize]
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpPost("create")]
-        public async Task<IActionResult> AddEvent([FromBody] EventDto? frontendEvent) {
+        public async Task<IActionResult> AddEvent([FromBody] EventDtoFrontend? frontendEvent) {
             try {
-                if (frontendEvent == null) {
-                    return BadRequest("Event is required");
-                }
-                
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
                 if(userName == null) {
                     return Unauthorized("Invalid user");
@@ -166,14 +166,14 @@ namespace Agile_dev.Controller {
 
         #region PUT
 
-        // PUT api/event/update/5/6
-        [Authorize]
-        [HttpPut("update/{userId}/{organizationId}")]
-        public async Task<IActionResult> UpdateEvent([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] Event eEvent) {
+        // PUT api/event/update
+        [Authorize(Roles = "Admin, Organizer")]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateEvent([FromBody] Event eEvent) {
             try {
-                bool isAdded = await _eventService.UpdateEvent(userId, organizationId, eEvent);
-                if (!isAdded) {
-                    return BadRequest();
+                HandleReturn<bool> isAdded = await _eventService.UpdateEvent(eEvent);
+                if (!isAdded.IsSuccess) {
+                    return BadRequest(isAdded.ErrorMessage);
                 }
 
                 return Ok();
@@ -183,36 +183,19 @@ namespace Agile_dev.Controller {
             }
         }
         
-        // PUT api/event/customField/update/5/6/3
-        [Authorize]
-        [HttpPut("update/customField/{userId}/{organizationId}/{eventId}")]
-        public async Task<IActionResult> UpdateCustomField([FromRoute] int userId, [FromRoute] int organizationId, [FromBody] List<CustomField> customFields) {
-            try {
-                bool isAdded = await _eventService.UpdateCustomField(userId, organizationId, customFields);
-                if (!isAdded) {
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                throw new Exception("An error occurred while updating eventDateTime.", exception);
-            }
-        }
-        
         #endregion
 
         #region DELETE
 
-        // DELETE api/event/delete/5/6
-        [Authorize]
-        [HttpDelete("delete/{userId}/{organizationId}")]
-        public async Task<IActionResult> DeleteEvent([FromRoute] int userId, [FromBody] Event eEvent, [FromRoute] int organizationId) {
+        // DELETE api/event/delete
+        [Authorize(Roles = "Admin, Organizer")]
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteEvent([FromBody] Event eEvent) {
             try {
-                bool isDeleted = await _eventService.DeleteEvent(userId, eEvent, organizationId);
-                if (!isDeleted) {
+                HandleReturn<bool> isDeleted = await _eventService.DeleteEvent(eEvent);
+                if (!isDeleted.IsSuccess) {
                     // Could not delete event, because request is bad
-                    BadRequest();
+                    BadRequest(isDeleted.ErrorMessage);
                 }
 
                 return Ok();

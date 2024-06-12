@@ -6,17 +6,6 @@ namespace agile_dev.Models;
 
 public class Organization {
     
-    /*
-       Data annotations
-
-       [KEY] = Data annotation for primary key of this model
-       [Required] = Data annotation for making it a necessary field for the row
-       [Display(Name = "*name*")] = Data annotation for which name is showing in when one looks at the database
-       [StringLength(*number*)] = Data annotation for setting a max length on the field
-       [ForeignKey("*key*")] = Data annotation for choosing which element to connect up a relationship
-
-    */
-    
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Display(Name = "Organization Id")]
@@ -37,8 +26,7 @@ public class Organization {
     public Image? Image { get; set; }
     
     // A HasSet of all Followers with this Organization
-    [JsonIgnore
-    ]
+    [JsonIgnore]
     public ICollection<Follower>? Followers { get; set; }
     
     // A HasSet of all Organizers with this Organization

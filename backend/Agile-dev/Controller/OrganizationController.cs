@@ -17,15 +17,16 @@ namespace Agile_dev.Controller {
         #region GET
         
         // GET: api/organization/fetchAll
+        [Authorize(Roles = "Admin")]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllOrganizations() {
             try {
-                ICollection<Organization> result = await _organizationService.FetchAllOrganizations();
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<ICollection<Organization>> result = await _organizationService.FetchAllOrganizations();
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -33,13 +34,16 @@ namespace Agile_dev.Controller {
         }
 
         // GET api/organization/fetch/id/5
+        [Authorize(Roles = "Admin, Organizer")]
         [HttpGet("fetch/id/{id}")]
         public async Task<IActionResult> FetchOrganizationById(int id) {
             try {
-                Organization? result = await _organizationService.FetchOrganizationById(id);
-                if (result == null) { return NoContent(); }
+                HandleReturn<Organization> result = await _organizationService.FetchOrganizationById(id);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage); 
+                }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -51,22 +55,17 @@ namespace Agile_dev.Controller {
         #region POST
         
         // POST api/organization/create
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> AddOrganization([FromBody] Organization organization) {
             try {
-                var userName = User.FindFirstValue(ClaimTypes.Name);
-                if(userName == null) {
-                    return Unauthorized("Invalid user");
-                }
-                
-                object newOrganization = await _organizationService.AddOrganization(userName, organization);
-                if (newOrganization is not Organization) {
+                HandleReturn<Organization> newOrganization = await _organizationService.AddOrganization(organization);
+                if (!newOrganization.IsSuccess) {
                     // Could not create organization, because request is bad
-                    return BadRequest(newOrganization);
+                    return BadRequest(newOrganization.ErrorMessage);
                 }
 
-                return Ok(newOrganization);
+                return Ok(newOrganization.Value);
             }
             catch (Exception exception) {
                 Console.WriteLine(exception);
@@ -78,17 +77,17 @@ namespace Agile_dev.Controller {
 
         #region PUT
 
-        // PUT api/organization/update/5
-        [Authorize]
-        [HttpPut("update/{userId}")]
-        public async Task<IActionResult> UpdateOrganization([FromRoute] int userId, [FromBody] Organization organization) {
+        // PUT api/organization/update
+        [Authorize(Roles = "Admin")]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateOrganization([FromBody] Organization organization) {
             try {
-                bool isAdded = await _organizationService.UpdateOrganization(userId, organization);
-                if (!isAdded) {
-                    return BadRequest();
+                HandleReturn<Organization> updatedOrganizationObject = await _organizationService.UpdateOrganization(organization);
+                if (!updatedOrganizationObject.IsSuccess) {
+                    return BadRequest(updatedOrganizationObject.ErrorMessage);
                 }
 
-                return Ok();
+                return Ok(updatedOrganizationObject.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
@@ -99,25 +98,21 @@ namespace Agile_dev.Controller {
 
         #region DELETE
 
-        // DELETE api/organization/delete/5
-        [Authorize]
-        [HttpDelete("delete/{userId}")]
-        public Task<IActionResult> DeleteOrganization([FromRoute] int userId, [FromBody] Organization? organization) {
-            if (organization == null) {
-                return Task.FromResult<IActionResult>(BadRequest("User is null"));
-            }
-
+        // DELETE api/organization/delete
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteOrganization([FromBody] Organization organization) {
             try {
-                bool isDeleted = _organizationService.DeleteOrganization(userId, organization).Result;
-                if (!isDeleted) {
+                HandleReturn<bool> isDeleted = await _organizationService.DeleteOrganization(organization);
+                if (!isDeleted.IsSuccess) {
                     // Could not delete user, because request is bad
-                    BadRequest();
+                    BadRequest("Could not delete organization");
                 }
 
-                return Task.FromResult<IActionResult>(Ok());
+                return Ok("Organization was deleted");
             }
             catch (Exception exception) {
-                return Task.FromResult<IActionResult>(StatusCode(500, "Internal server error: " + exception.Message));
+                return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
         

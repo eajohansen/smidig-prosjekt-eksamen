@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using agile_dev.Models;
 using agile_dev.Repo;
 using agile_dev.Service;
 using Microsoft.AspNetCore.HttpLogging;
@@ -37,12 +38,33 @@ public class Program
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<EventService>();
         builder.Services.AddScoped<OrganizationService>();
+        
         builder.Services.AddDbContextPool<InitContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"), mysqlOptions => {
                 mysqlOptions.EnableRetryOnFailure();
             }));
-        builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<InitContext>();
+        
+        builder.Services.AddIdentityApiEndpoints<User>(options =>
+                   {
+                       // Password settings.
+                       options.Password.RequireDigit = true;
+                       options.Password.RequireLowercase = true;
+                       options.Password.RequireNonAlphanumeric = true;
+                       options.Password.RequireUppercase = true;
+                       options.Password.RequiredLength = 8;
+                       options.Password.RequiredUniqueChars = 1;
 
+                       // Lockout settings.
+                       options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                       options.Lockout.MaxFailedAccessAttempts = 5;
+                       options.Lockout.AllowedForNewUsers = true;
+
+                       // User settings.
+                       options.User.RequireUniqueEmail = true;
+                   })
+                   .AddRoles<IdentityRole>()
+                   .AddEntityFrameworkStores<InitContext>();
+        
         builder.Services.AddAuthentication();
    
         builder.Services.AddAuthorization();
@@ -51,7 +73,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         var app = builder.Build();
-        app.MapIdentityApi<IdentityUser>();
+        app.MapIdentityApi<User>();
 
         //app.UseHttpsRedirection();
         app.UseRouting();
@@ -65,6 +87,10 @@ public class Program
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<InitContext>();
             context.Database.Migrate();
+            
+            // Call the SeedData to create roles and the first admin user
+            var configuration = services.GetRequiredService<IConfiguration>();
+            SeedData.Initialize(services, configuration).Wait();
         }
 
         app.UseEndpoints(endpoints =>

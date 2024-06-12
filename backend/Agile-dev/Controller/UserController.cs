@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace agile_dev.Controller {
@@ -26,6 +28,7 @@ namespace agile_dev.Controller {
             IActionResult is used because we are returning a response.
          */
 
+      
         #region GET
 
         [Authorize]
@@ -40,16 +43,16 @@ namespace agile_dev.Controller {
             }
         }
         // GET: api/user/fetchAll
-        [Authorize]
+        [Authorize (Roles="Admin, Organizer")]
         [HttpGet("fetchAll")]
         public async Task<ActionResult> FetchAllUsers() {
             try {
-                ICollection<User> result = await _userService.FetchAllUsers();
-                if (result.Count == 0) {
-                    return NoContent();
+                HandleReturn<List<UserFrontendDto>> result = await _userService.FetchAllUsers();
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -58,23 +61,27 @@ namespace agile_dev.Controller {
 
         // GET api/user/fetch/id
         [Authorize]
-        [HttpGet("fetch/{id}")]
-        public async Task<IActionResult> FetchUserById(int id) {
-
+        [HttpGet("fetch/id/{id}")]
+        public async Task<IActionResult> FetchUserById(string id) {
             try {
-                object result = await _userService.FetchUserById(id);
-                if (result is not User user) {
-                    return NoContent();
+                HandleReturn<UserFrontendDto> result = await _userService.FetchUserById(id);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
+                }
+
+                if (result.Value!.Email == null) {
+                    return BadRequest("Email is null");
                 }
                 
                 string? userName = User.FindFirstValue(ClaimTypes.Name);
-                bool isLoggedInUser = user.Email.Equals(userName);
+                
+                bool isLoggedInUser = result.Value!.Email.Equals(userName);
 
                 if (!isLoggedInUser) {
-                    return Unauthorized();
+                    return Unauthorized("You are not authorized to view this user, you can only view your own user");
                 }
 
-                return Ok(user);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -85,24 +92,27 @@ namespace agile_dev.Controller {
         [Authorize]
         [HttpGet("fetch/email/{email}")]
         public async Task<IActionResult> FetchUserByEmail(string? email) {
-            if (email == null) {
-                return BadRequest("Email is null");
+            //
+            // Change to get by authorize?    // Do we really need this @Eirik
+            //
+            if (email!.Length <= 5) {
+                return BadRequest("Email is too short");
             }
             
             string? userName = User.FindFirstValue(ClaimTypes.Name);
             bool isLoggedInUser = email.Equals(userName);
 
             if (!isLoggedInUser) {
-                return Unauthorized();
+                return Unauthorized("You are not authorized to view this user, you can only view your own user");
             }
             
             try {
-                User? result = await _userService.FetchUserByEmail(email);
-                if (result == null) {
-                    return NoContent();
+                HandleReturn<UserFrontendDto> result = await _userService.FetchUserByEmail(email);
+                if (!result.IsSuccess) {
+                    return NotFound(result.ErrorMessage);
                 }
 
-                return Ok(result);
+                return Ok(result.Value);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
@@ -111,21 +121,20 @@ namespace agile_dev.Controller {
 
         [Authorize]
         [HttpGet("checkAdminPrivileges")]
-        public async Task<IActionResult> CheckIfUserIsAdminOrOrganizator() {
-            string? user = User.FindFirstValue(ClaimTypes.Name);
-            if(user == null) {
-                return Unauthorized("Login required");
-            }
+        public async Task<IActionResult> CheckIfUserIsAdminOrOrganizer() {
             try {
-                User? result = await _userService.FetchUserByEmail(user);
-                if (result == null) {
-                    return Unauthorized("No user found");
+                string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                HandleReturn<UserFrontendDto> user = await _userService.FetchUserByEmail(userEmail);
+                
+                if (!user.IsSuccess) {
+                    return NotFound(user.ErrorMessage);
                 }
                 
                 object feedback = new {
-                    Admin = result.Admin,
-                    Organizer = result.OrganizerOrganization != null
+                    Admin = _userService.CheckIfUserIsAdmin(userEmail).Result.Value,
+                    Organizer = user.Value.OrganizerOrganization.Count != 0
                 };
+                
                 return Ok(feedback);
             }
             catch (Exception exception) {
@@ -136,59 +145,45 @@ namespace agile_dev.Controller {
         #endregion
 
         #region POST
+        
+        // POST api/user/add/organizer/1
+        [Authorize(Roles = "Admin")]
+        [HttpPost("add/organizer/{orgId}")]
+        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
 
-        // POST api/user/create
-        [HttpPost("create")]
-        public async Task<IActionResult> AddUser(User? user) {
-            if (user == null) {
-                return BadRequest("User is null");
+            if (userToAdd!.Email == null) {
+                return BadRequest("No email provided in request");
             }
+
             try {
-                object newUser = await _userService.AddUserToDatabase(user);
-                if (newUser is not Models.User) {
-                    return BadRequest(newUser);
+                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(orgId, userToAdd.Email);
+
+                if (!makeUserOrganizer.Succeeded) {
+                    return BadRequest(makeUserOrganizer);
                 }
-                return Ok(newUser);
+
+                return Ok(makeUserOrganizer);
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
 
-        // POST api/user/organizer/create/5
+        // POST api/user/add/follower/1
         [Authorize]
-        [HttpPost("organizer/create/{loggedInUserId}")]
-        public async Task<IActionResult> AddOrganizer([FromRoute] int loggedInUserId, [FromBody] User? user) {
-            int organizationId = 1;
-            if (user == null) {
-                return BadRequest("User is null");
+        [HttpPost("add/follower/{organizationId}")]
+        public async Task<IActionResult> AddFollower([FromRoute] int organizationId) {
+            if (organizationId < 1) {
+                return BadRequest("No organizationId provided");
             }
             try {
-                bool isAdded = await _userService.AddUserAsOrganizer(loggedInUserId, user, organizationId);
-                if (!isAdded) {
-                    // Could not add user as organizer, because request is bad
-                    return BadRequest();
-                }
-
-                return Ok();
-            }
-            catch (Exception exception) {
-                return StatusCode(500, "Internal server error: " + exception.Message);
-            }
-        }
-
-        // POST api/user/follower/create/1
-        [Authorize]
-        [HttpPost("follower/create/{organizationId}")]
-        public async Task<IActionResult> AddFollower([FromBody] User? user, [FromRoute] int organizationId) {
-            if (user == null) {
-                return BadRequest("User is null");
-            }
-            try {
-                bool isAdded = await _userService.AddUserAsFollower(user, organizationId);
-                if (!isAdded) {
+                string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                
+                HandleReturn<bool> isAdded = await _userService.AddUserAsFollower(userEmail, organizationId);
+                if (!isAdded.IsSuccess) {
                     // Could not add user as follower, because request is bad
-                    return BadRequest();
+                    return BadRequest(isAdded.ErrorMessage);
                 }
 
                 return Ok();
@@ -198,18 +193,19 @@ namespace agile_dev.Controller {
             }
         }
 
-        // POST api/user/event/add/3
+        // POST api/user/add/event/3
         [Authorize]
-        [HttpPost("event/add/{eventId}")]
-        public async Task<IActionResult> AddUserEvent([FromBody] User? user, [FromRoute] int eventId) {
-            if (user == null) {
-                return BadRequest("User is null");
+        [HttpPost("add/event/{eventId}")]
+        public async Task<IActionResult> AddUserEvent([FromRoute] int eventId) {
+            if (eventId < 1) {
+                return BadRequest("No eventId provided");
             }
             try {
-                bool isAdded = await _userService.AddUserToEvent(user, eventId);
-                if (!isAdded) {
+                string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                HandleReturn<bool> isAdded = await _userService.AddUserToEvent(userEmail, eventId);
+                if (!isAdded.IsSuccess) {
                     // Could not add user to event, because request is bad
-                    return BadRequest();
+                    return BadRequest(isAdded.ErrorMessage);
                 }
 
                 return Ok();
@@ -226,45 +222,39 @@ namespace agile_dev.Controller {
         // PUT api/user/update
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateUser(User? user) {
-            if (user == null) {
-                return BadRequest("User is null");
+        public async Task<IActionResult> UpdateUserInfo(User? updatedUserInfo){
+            if (updatedUserInfo == null) {
+                return BadRequest("User object is null");
+            }
+            if (updatedUserInfo.Email == null){
+                return BadRequest("No email provided in request");
             }
 
-            string? userName = User.FindFirstValue(ClaimTypes.Name);
-            bool isLoggedInUser = user.Email.Equals(userName);
-
-            if (!isLoggedInUser) {
-                return Unauthorized();
+            if (updatedUserInfo.Email != User.FindFirstValue(ClaimTypes.Email)) {
+                return Unauthorized("You are not authorized to update this user");
             }
-            
             try {
-                object updatedUser = await _userService.UpdateUser(user);
-                if (updatedUser is not Models.User) {
-                    return BadRequest(updatedUser);
-                }
+                IdentityResult updateUser = await _userService.UpdateUserAsync(updatedUserInfo);
 
-                return Ok(updatedUser);
+                return Ok(updateUser);
             }
             catch (Exception exception) {
                 return StatusCode(500, "Internal server error: " + exception.Message);
             }
         }
-
-        // PUT api/user/admin/update/5
-        // "AdminUser" in this context is the user that is making the request
-        // "id" is the id of the user that is being made admin
-        [Authorize]
-        [HttpPut("admin/update/{id}")]
-        public async Task<IActionResult> MakeUserAdmin([FromBody] User? adminUser, [FromRoute] int id) {
-            if (adminUser == null) {
+        
+        // PUT api/user/add/admin
+        [Authorize (Roles="Admin")]
+        [HttpPut("add/admin")]
+        public async Task<IActionResult> MakeUserAdmin(User? newAdminUser) {
+            if (newAdminUser == null) {
                 return BadRequest("AdminUser is null");
             }
+            if (newAdminUser.Email == null){
+                return BadRequest("No email provided in request");
+            }
             try {
-                object makeUserAdmin = await _userService.MakeUserAdmin(adminUser, id);
-                if (makeUserAdmin is not Models.User) {
-                    return Unauthorized(makeUserAdmin);
-                }
+                IdentityResult makeUserAdmin = await _userService.MakeUserAdmin(newAdminUser.Email);
 
                 return Ok(makeUserAdmin);
             }
@@ -274,29 +264,20 @@ namespace agile_dev.Controller {
         }
 
         #endregion
-
+    
         #region DELETE
 
-        // DELETE api/User/delete
+        // DELETE api/user/delete
         [Authorize]
         [HttpDelete("delete")]
-        public IActionResult Delete(User? user) {
-            if (user == null) {
-                return BadRequest("User is null");
-            }
+        public IActionResult DeleteUser() {
+            string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
             
-            string? userName = User.FindFirstValue(ClaimTypes.Name);
-            bool isLoggedInUser = user.Email.Equals(userName);
-
-            if (!isLoggedInUser) {
-                return Unauthorized();
-            }
-
             try {
-                bool isDeleted = _userService.DeleteUser(user).Result;
-                if (!isDeleted) {
+                HandleReturn<bool> isDeleted = _userService.DeleteUser(userEmail).Result;
+                if (!isDeleted.IsSuccess) {
                     // Could not delete user, because request is bad
-                    BadRequest();
+                    BadRequest(isDeleted.ErrorMessage);
                 }
 
                 return Ok();
