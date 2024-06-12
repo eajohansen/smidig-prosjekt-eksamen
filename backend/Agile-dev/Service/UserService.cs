@@ -1,11 +1,8 @@
-﻿using System.Globalization;
-using System.Security.Claims;
-using agile_dev.Dto;
+﻿using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Repo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace agile_dev.Service;
 
@@ -75,8 +72,9 @@ public class UserService {
             if (user == null) {
                 return HandleReturn<UserFrontendDto>.Failure("Could not find user with this email");
             }
+            
             List<User> users = [user];
-            List<string> userIds = users.Select(user => user.Id).ToList();
+            List<string> userIds = users.Select(userObject => user.Id).ToList();
             List<UserFrontendDto> fetchedUsers = ConvertUserToUserFrontendDtos(userIds);
 
             return HandleReturn<UserFrontendDto>.Success(fetchedUsers[0]);
@@ -172,14 +170,12 @@ public class UserService {
 
             if (user == null) {
                 return HandleReturn<bool>.Failure("User not found");
-
             }
             
             Event? foundEvent = await _dbCon.Event.FindAsync(eventId);
 
             if (foundEvent == null) {
                 return HandleReturn<bool>.Failure("Event not found");
-
             }
 
             if (IsUserAttendingEvent(user.Id, foundEvent.EventId).Result) {

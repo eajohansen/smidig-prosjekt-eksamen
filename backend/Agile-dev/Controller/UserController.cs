@@ -31,17 +31,21 @@ namespace agile_dev.Controller {
       
         #region GET
 
+        //
+        // WTF @Eirik
+        //
         [Authorize]
         [HttpGet("fetch/email")]
-        public ActionResult fetchUserEmail() {
+        public ActionResult FetchUserEmail() {
             try {
-               string userEmail = User.FindFirstValue(ClaimTypes.Name);
+               string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
                return Ok(userEmail);
             }
             catch (Exception e) {
                 return StatusCode(500 , "Internal server error: " + e.Message);
             }
         }
+        
         // GET: api/user/fetchAll
         [Authorize (Roles="Admin, Organizer")]
         [HttpGet("fetchAll")]
@@ -132,7 +136,7 @@ namespace agile_dev.Controller {
                 
                 object feedback = new {
                     Admin = _userService.CheckIfUserIsAdmin(userEmail).Result.Value,
-                    Organizer = user.Value.OrganizerOrganization.Count != 0
+                    Organizer = user.Value!.OrganizerOrganization!.Count != 0
                 };
                 
                 return Ok(feedback);

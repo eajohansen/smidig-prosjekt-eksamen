@@ -11,7 +11,6 @@ namespace Agile_dev.Controller {
     public class EventController : ControllerBase {
         private readonly EventService _eventService;
         
-
         public EventController(EventService eventService) {
             _eventService = eventService;
         }
@@ -40,8 +39,8 @@ namespace Agile_dev.Controller {
         [HttpGet("fetchAll/attending")]
         public async Task<ActionResult> FetchAllEventsByAttending() {
             try {
-                string? userName = User.FindFirstValue(ClaimTypes.Name);
-                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByAttending(userName!);
+                string userName = User.FindFirstValue(ClaimTypes.Name)!;
+                HandleReturn<ICollection<EventDtoBackend>> result = await _eventService.FetchAllEventsByAttending(userName);
                 if (!result.IsSuccess) {
                     return NotFound(result.ErrorMessage);
                 }
@@ -142,20 +141,15 @@ namespace Agile_dev.Controller {
         // POST api/event/create
         [Authorize(Roles = "Admin, Organizer")]
         [HttpPost("create")]
-        public async Task<IActionResult> AddEvent([FromBody] EventDtoFrontend? frontendEvent) {
+        public async Task<IActionResult> AddEvent([FromBody] EventDtoFrontend frontendEvent) {
             try {
-                string? userName = User.FindFirstValue(ClaimTypes.Name);
-                if(userName == null) {
-                    return Unauthorized("Invalid user");
-                }
-                
-                object newEvent = await _eventService.AddEvent(userName, frontendEvent);
-                if (newEvent is not Event) {
+                HandleReturn<Event> newEvent = await _eventService.AddEvent(frontendEvent);
+                if (!newEvent.IsSuccess) {
                     // Could not create event, because request is bad
-                    return BadRequest(newEvent);
+                    return BadRequest(newEvent.ErrorMessage);
                 }
 
-                return Ok(newEvent);
+                return Ok(newEvent.Value);
             }
             catch (Exception exception) {
                 throw new Exception("An error occurred while adding event to database.", exception);
