@@ -10,6 +10,7 @@ export const EventDetails = () => {
   const [event, setEvent] = useState([{}]);
   const [loading, setLoading] = useState(true);
   const [isAdminOrOrg, setIsAdminOrOrg] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
   const [dateTime, setDateTime] = useState({
     timeStart: "",
     timeEnd: "",
@@ -137,8 +138,8 @@ export const EventDetails = () => {
         </div>
         <div className="btnDiv">
           <button className="buttons">Rediger</button>
-          <button className="publishBtn buttons">
-            {isAdminOrOrg ? "Publiser" : "Meld deg på"}
+          <button className=/*{isPublished ? "unPublishBtn" :*/ "publishBtn buttons"/*}*/>
+            {isAdminOrOrg ? "Publiser" /*|| "Avpubliser"*/ : "Meld deg på"}
           </button>
         </div>
       </div>
@@ -146,7 +147,7 @@ export const EventDetails = () => {
   );
 };
 
-// {
+// {className={isHovered ? "pwordDetails" : "dNone"}
 //   "eventId": 1,
 //   "title": "Sample Event",
 //   "description": "This is a sample description for the event.",

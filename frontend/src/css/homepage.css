@@ -1,5 +1,4 @@
 .homePageContainer {
-  /* color: black; */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -23,7 +22,8 @@
     border: black 0.1rem solid;
     border-radius: 1rem;
     padding: 1rem;
-    gap: 1rem;
+    gap: 0.8rem;
+    width: 110%;
 }
 .calendar{
     width: 50%;

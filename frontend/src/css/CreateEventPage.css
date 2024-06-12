@@ -144,3 +144,7 @@ main {
     width: 64%;
    padding-bottom: 1rem;
 }
+.unPublishBtn{
+    background-color: #cb4353;
+    color: black;
+}
