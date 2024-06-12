@@ -32,6 +32,7 @@ export const EventDetails = () => {
     console.log(adminResult.data.admin);
     console.log(adminResult.data.organizer);
     setEvent(result);
+    console.log(result.eventCustomFields[0].customField.description);
     if (result != undefined && result != null) {
       setLoading(false);
       splitDateTime(result);
@@ -81,6 +82,12 @@ export const EventDetails = () => {
             <p>Kontaktperson:</p>
             <p> {event?.contactPersonName}</p>
           </div>
+          {event.eventCustomFields.map((CF, key) => (
+            <div className="infoItem" key={key}>
+              <p>{CF.customField.description}</p>
+              <p> {CF.customField.value ? "ja" : "nei"}</p>
+            </div>
+          ))}
         </div>
       </div>
       <div className="eventDetailsRight">
