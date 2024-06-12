@@ -85,6 +85,20 @@ public class UserService {
             throw new Exception("An error occurred while fetching user by email.", exception);
         }
     }
+    
+    public async Task<HandleReturn<bool>> CheckIfUserIsAdmin(string email) {
+        try {
+            User? user = await _userManager.FindByEmailAsync(email);
+            if (user == null) {
+                return HandleReturn<bool>.Failure("Could not find user with this email");
+            }
+
+            return HandleReturn<bool>.Success(await _userManager.IsInRoleAsync(user, "Admin"));
+        }
+        catch (Exception exception) {
+            throw new Exception("An error occurred while fetching user by email.", exception);
+        }
+    }
 
     #endregion
 

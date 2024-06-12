@@ -121,21 +121,20 @@ namespace agile_dev.Controller {
 
         [Authorize]
         [HttpGet("checkAdminPrivileges")]
-        public async Task<IActionResult> CheckIfUserIsAdminOrOrganizator() {
-            string? user = User.FindFirstValue(ClaimTypes.Name);
-            if(user == null) {
-                return Unauthorized("Login required");
-            }
+        public async Task<IActionResult> CheckIfUserIsAdminOrOrganizer() {
             try {
-                User? result = await _userService.FetchUserByEmail(user);
-                if (result == null) {
-                    return Unauthorized("No user found");
+                string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                HandleReturn<UserFrontendDto> user = await _userService.FetchUserByEmail(userEmail);
+                
+                if (!user.IsSuccess) {
+                    return NotFound(user.ErrorMessage);
                 }
                 
                 object feedback = new {
-                    Admin = result.Admin,
-                    Organizer = result.OrganizerOrganization != null
+                    Admin = _userService.CheckIfUserIsAdmin(userEmail).Result.Value,
+                    Organizer = user.Value.OrganizerOrganization.Count != 0
                 };
+                
                 return Ok(feedback);
             }
             catch (Exception exception) {

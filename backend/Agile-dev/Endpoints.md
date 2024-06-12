@@ -9,6 +9,7 @@
     - [GET /api/user/fetchAll](#get-apiUserfetchAll)
     - [GET /api/user/fetch/id/{userId}](#get-apiuserfetchiduserid)
     - [GET /api/user/fetch/email/{email}](#get-apiuserfetchemailemail)
+    - [GET /api/user/checkAdminPrivileges](#get-apiusercheckadminprivileges)
   - [POST /api/user](#post-apiuser)
     - [POST /api/user/add/organizer/{organizationId}](#post-apiuseraddorganizerorganizationid)
     - [POST /api/user/add/follower/{organizationId}](#post-apiuseraddfollowerorganizationid)
@@ -216,6 +217,50 @@ Authorization: Bearer yourtoken
   "userEvents": ["UserEvent Object"],
   "notices": ["Notice Object"],
   "allergies": ["Allergy Object"]
+}
+```
+
+##### NoContent (204)
+```json
+{
+  
+}
+```
+
+##### Error (500)
+```json
+{
+  "error": "Description of the error"
+}
+```
+
+#### GET /api/user/checkAdminPrivileges
+
+#### Description
+Checks if user has Admin or Organizer privileges. 
+
+#### Restriction
+Has to be logged in.
+
+#### URL
+`GET /api/user/checkAdminPrivileges`
+
+#### Parameters
+| Parameter | Type   | Required | Description  |
+|-----------|--------|----------|--------------|
+
+#### Example Request
+```http
+GET /api/user/checkAdminPrivileges
+Authorization: Bearer yourtoken
+```
+
+#### Response
+##### Success (200)
+```json
+{
+  "admin": false,
+  "organizer": true
 }
 ```
 
