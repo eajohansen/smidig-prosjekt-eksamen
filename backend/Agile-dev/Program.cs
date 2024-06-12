@@ -65,6 +65,8 @@ public class Program
                    .AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<InitContext>();
         
+        builder.Services.AddTransient<IUserValidator<IdentityUser>, FirstUserAdminValidator>();
+        
         builder.Services.AddAuthentication();
    
         builder.Services.AddAuthorization();
@@ -91,6 +93,7 @@ public class Program
             // Call the SeedData to create roles and the first admin user
             var configuration = services.GetRequiredService<IConfiguration>();
             SeedData.Initialize(services, configuration).Wait();
+            var userManager = services.GetRequiredService<UserManager<User>>();
         }
 
         app.UseEndpoints(endpoints =>

@@ -221,11 +221,6 @@ public class UserService {
         // Need to add check for received email matching logged-in user mail
         
         User? user = await _userManager.FindByEmailAsync(updatedUserInfo.Email!);
-
-        if (user == null) {
-            return IdentityResult.Failed(new IdentityError
-                { Description = $"User with email {updatedUserInfo.Email!} not found." });
-        }
         
         user = AddRelationToUser([user]).Result[0];
         
