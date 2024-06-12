@@ -4,47 +4,52 @@
 - [General info](#general-info)
 
 
+- [Identity Controller](#identity-controller)
+  - [POST /register](#post-register)
+  - [POST /login](#post-login)
+
+
 - [User Controller](#user-controller)
-  - [GET /api/user](#get-apiuser)
+  - [GET User](#get-user)
     - [GET /api/user/fetchAll](#get-apiUserfetchAll)
     - [GET /api/user/fetch/id/{userId}](#get-apiuserfetchiduserid)
     - [GET /api/user/fetch/email/{email}](#get-apiuserfetchemailemail)
     - [GET /api/user/checkAdminPrivileges](#get-apiusercheckadminprivileges)
-  - [POST /api/user](#post-apiuser)
+  - [POST User](#post-user)
     - [POST /api/user/add/organizer/{organizationId}](#post-apiuseraddorganizerorganizationid)
     - [POST /api/user/add/follower/{organizationId}](#post-apiuseraddfollowerorganizationid)
     - [POST /api/user/add/event/{eventId}](#post-apiuseraddeventeventid)
-  - [PUT /api/user](#put-apiuser)
+  - [PUT User](#put-user)
     - [PUT /api/user/update](#put-apiuserupdate)
     - [PUT /api/user/add/admin](#put-apiuseraddadmin)
-  - [DELETE /api/user](#delete-apiuser)
+  - [DELETE User](#delete-user)
     - [DELETE /api/user/delete](#delete-apiuserdelete)
     
 
 - [Event Controller](#event-controller)
-  - [GET /api/event](#get-apievent)
+  - [GET Event](#get-event)
     - [GET /api/event/fetchAll](#get-apieventfetchall)
     - [GET /api/event/fetchAll/attending](#get-apieventfetchallattending)
     - [GET /api/event/fetchAll/not/attending](#get-apieventfetchallnotattending)
     - [GET /api/event/fetchAll/organization/{organizationId}](#get-apieventfetchallorganizationorganizationid)
-    - [GET /api/event/fetch/id/{userId}](#get-apieventfetchideventid)
-  - [POST /api/event](#post-apievent)
+    - [GET /api/event/fetch/id/{eventId}](#get-apieventfetchideventid)
+  - [POST Event](#post-event)
     - [POST /api/event/create](#post-apieventcreate)
-  - [PUT /api/event](#put-apievent)
+  - [PUT Event](#put-event)
     - [PUT /api/event/update](#put-apiuserupdate)
-  - [DELETE /api/event](#delete-apievent)
+  - [Delete Event](#delete-event)
     - [DELETE /api/event/delete](#delete-apieventdelete)
 
 
 - [Organization Controller](#organization-controller)
-  - [GET /api/organization](#get-apiorganization)
+  - [GET Organization](#get-organization)
     - [GET /api/organization/fetchAll](#get-apiorganizationfetchall)
     - [GET /api/organization/fetch/id/{organizationId}](#get-apiorganizationfetchidorganizationid)
-  - [POST /api/organization](#post-apiorganization)
+  - [POST Organization](#post-organization)
     - [POST /api/organization/create](#post-apiorganizationcreate)
-  - [PUT /api/organization](#put-apiorganization)
+  - [PUT Organization](#put-organization)
     - [PUT /api/organization/update](#put-apiorganizationupdate)
-  - [DELETE /api/organization](#delete-apiorganization)
+  - [DELETE Organization](#delete-organization)
     - [DELETE /api/organization/delete](#delete-apiorganizationdelete)
 
 
@@ -67,10 +72,171 @@
 
 ---
 
+## Identity Controller
+
+### POST /register
+
+#### Description
+Registers a user in the database.
+
+#### Restriction
+No restrictions.
+
+#### URL
+`GET /register`
+
+#### Request Body
+| Field    | Type   | Required | Description     |
+|----------|--------|----------|-----------------|
+| Email    | string | Yes      | User's email    |
+| Password | string | Yes      | User's password |
+
+#### Example Request
+```http
+POST /api/event/create
+Content-Type: application/json
+Authorization: Bearer yourtoken
+
+{
+    "email": "hey@to.no",
+    "Password": "1aAbc!dead"
+}
+```
+
+#### Response
+##### Ok (200)
+```
+```
+
+##### BadRequest (400)
+###### Email already in use
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "DuplicateUserName": [
+      "Username 'hey@to.no' is already taken."
+    ],
+    "DuplicateEmail": [
+      "Email 'hey@to.no' is already taken."
+    ]
+  }
+}
+```
+
+##### BadRequest (400)
+###### Email field is not a valid email
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "InvalidEmail": [
+      "Email 'hey' is invalid."
+    ]
+  }
+}
+```
+
+##### BadRequest (400)
+###### Password does not fit the criteria
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "PasswordTooShort": [
+      "Passwords must be at least 8 characters."
+    ],
+    "PasswordRequiresNonAlphanumeric": [
+      "Passwords must have at least one non alphanumeric character."
+    ],
+    "PasswordRequiresDigit": [
+      "Passwords must have at least one digit ('0'-'9')."
+    ],
+    "PasswordRequiresLower": [
+      "Passwords must have at least one lowercase ('a'-'z')."
+    ],
+    "PasswordRequiresUpper": [
+      "Passwords must have at least one uppercase ('A'-'Z')."
+    ],
+    "PasswordRequiresUniqueChars": [
+      "Passwords must use at least 1 different characters."
+    ]
+  }
+}
+```
+
+### POST /login
+
+#### Description
+Registers a user in the database.
+
+#### Restriction
+No restrictions.
+
+#### URL
+`GET /login`
+
+#### Request Body
+| Field    | Type   | Required | Description     |
+|----------|--------|----------|-----------------|
+| Email    | string | Yes      | User's email    |
+| Password | string | Yes      | User's password |
+
+#### Example Request
+```http
+POST /api/event/login
+Content-Type: application/json
+Authorization: Bearer yourtoken
+
+{
+    "email": "hey@to.no",
+    "Password": "1aAbc!dead"
+}
+```
+
+#### Response
+##### Ok (200)
+```json
+{
+    "tokenType": "Bearer",
+    "accessToken": "Long access token text",
+    "expiresIn": 3600,
+    "refreshToken": "Long refresh token text"
+}
+```
+
+##### Unauthorized (401)
+###### Wrong password or wrong email
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.2",
+  "title": "Unauthorized",
+  "status": 401,
+  "detail": "Failed"
+}
+```
+
+##### BadRequest (400)
+###### Empty object
+```
+```
+
+##### BadRequest (400)
+###### No object
+```
+```
+
+
 ## User Controller
 
 
-### GET /api/user
+### GET User
 
 #### GET /api/user/fetchAll
 
@@ -112,18 +278,24 @@ Authorization: Bearer yourtoken
 ]
 ```
 
-##### NoContent (204)
-```json
-{
-  
-}
+##### NotFound (404)
+```
+No users found.
 ```
 
-##### Error (500)
+##### Unauthorized (401)
+###### Not Admin or Organizer
+```
+```
+
+##### InternalServerError (500)
+###### Not logged in or wrong privileges
 ```json
 {
-  "error": "Description of the error"
+  "statusCode": 500,
+  "message": "Internal server error: An error occurred while fetching users."
 }
+
 ```
 
 #### GET /api/user/fetch/id/{userId}
@@ -166,18 +338,28 @@ Authorization: Bearer yourtoken
 }
 ```
 
-##### NoContent (204)
+##### InternalServerError (500)
 ```json
 {
-  
+  "error": "Don't know"
 }
 ```
 
-##### Error (500)
-```json
-{
-  "error": "Description of the error"
-}
+##### Unauthorized (401)
+###### Wrong userId
+```
+```
+
+##### Unauthorized (401)
+###### Not logged in
+```
+  You are not authorized to view this user, you can only view your own user
+```
+
+##### NotFound (404)
+###### UserId does not exist
+```
+  Could not find user with this id
 ```
 
 #### GET /api/user/fetch/email/{email}
@@ -220,18 +402,28 @@ Authorization: Bearer yourtoken
 }
 ```
 
-##### NoContent (204)
+##### InternalServerError (500)
 ```json
 {
-  
+  "error": "Don't know"
 }
 ```
 
-##### Error (500)
-```json
-{
-  "error": "Description of the error"
-}
+##### Unauthorized (401)
+###### Not logged in
+```
+```
+
+##### Unauthorized (401)
+###### Not user's email
+```
+  You are not authorized to view this user, you can only view your own user
+```
+
+##### BadRequest (400)
+###### Email is not valid
+```
+  Email is too short
 ```
 
 #### GET /api/user/checkAdminPrivileges
@@ -264,22 +456,20 @@ Authorization: Bearer yourtoken
 }
 ```
 
-##### NoContent (204)
+##### InternalServerError (500)
 ```json
 {
-  
+  "error": "Don't know"
 }
 ```
 
-##### Error (500)
-```json
-{
-  "error": "Description of the error"
-}
+##### Unauthorized (401)
+###### Not logged in
+```
 ```
 
 
-### POST /api/user
+### POST User
 
 #### POST /api/user/add/organizer/{organizationId}
 
@@ -313,15 +503,67 @@ Authorization: Bearer yourtoken
 ##### Success (201)
 ```json
 {
-  "stuff": "works"
+  "succeeded": true,
+  "errors": []
 }
 ```
 
-##### Error (400)
+##### BadRequest (400)
 ```json
 {
-  "error": "Description of the error"
+  "succeeded": false,
+  "errors": [
+    {
+      "code": null,
+      "description": "User is already organizer for this organization"
+    }
+  ]
 }
+```
+
+##### BadRequest (400)
+###### Empty object
+```
+No email provided in request
+```
+
+##### BadRequest (400)
+###### Wrong Email
+```json
+{
+  "succeeded": false,
+  "errors": [
+    {
+      "code": null,
+      "description": "User with email hey@dto.no was not found."
+    }
+  ]
+}
+```
+
+##### BadRequest (400)
+###### Wrong OrganizationId
+```json
+{
+  "succeeded": false,
+  "errors": [
+    {
+      "code": null,
+      "description": "Could not find organization."
+    }
+  ]
+}
+```
+
+##### Forbidden (403)
+###### User is not Admin
+```
+```
+
+##### BadRequest (400)
+###### Wrong OrganizationId
+```
+No organizationId provided
 ```
 
 #### POST /api/user/add/follower/{organizationId}
@@ -345,17 +587,24 @@ Authorization: Bearer yourtoken
 
 #### Response
 ##### Success (201)
-```json
-{
-  "stuff": "works"
-}
+```
 ```
 
-##### Error (400)
-```json
-{
-  "error": "Description of the error"
-}
+##### BadRequest (400)
+```
+User is already following the organization
+```
+
+##### BadRequest (400)
+###### Wrong OrganizationId
+```
+Organization not found
+```
+
+##### BadRequest (400)
+###### Wrong OrganizationId
+```
+No organizationId provided
 ```
 
 #### POST /api/user/add/event/{eventId}
@@ -385,15 +634,19 @@ Authorization: Bearer yourtoken
 }
 ```
 
-##### Error (400)
-```json
-{
-  "error": "Description of the error"
-}
+##### BadRequest (400)
+```
+User is already attending event
+```
+
+##### BadRequest (400)
+###### Wrong EventId
+```
+Event not found
 ```
 
 
-### PUT /api/user
+### PUT User
 
 #### PUT /api/user/update
 
@@ -446,25 +699,19 @@ Authorization: Bearer yourtoken
 ##### Success (200)
 ```json
 {
-  "Id": "id",
-  "email": "admin@test.com",
-  "firstName": "name",
-  "lastName": "name",
-  "birthdate": "12-12-2020 00:00:00",
-  "extraInfo": "extra text",
-  "followOrganization": ["Follower Object"],
-  "organizerOrganization": ["Organizer Object"],
-  "userEvents": ["UserEvent Object"],
-  "notices": ["Notice Object"],
-  "allergies": ["Allergy Object"]
+  "succeeded": true,
+  "errors": []
 }
 ```
 
-##### Error (400)
-```json
-{
-  "error": "Description of the error"
-}
+##### BadRequest (400)
+```
+No email provided in request
+```
+
+##### Unauthorized (400)
+```
+You are not authorized to update this user
 ```
 
 #### PUT /api/user/add/admin
@@ -495,18 +742,35 @@ Authorization: Bearer yourtoken
 ##### Success (200)
 ```json
 {
-  "true": true
+  "succeeded": true,
+  "errors": []
 }
 ```
 
-##### Error (400)
+##### BadRequest (400)
+###### No object in the request body
+```
+AdminUser is null
+```
+
+##### BadRequest (400)
+###### No Email in the Request body
+```
+No email provided in request
+```
+
+##### BadRequest (400)
+###### User has Admin rights from before
 ```json
-{
-  "error": "Description of the error"
-}
+[
+  {
+    "code": "UserAlreadyInRole",
+    "description": "User already in role 'Admin'."
+  }
+]
 ```
 
-### DELETE /api/user
+### DELETE User
 
 #### DELETE /api/user/delete
 
@@ -547,7 +811,7 @@ Authorization: Bearer yourtoken
 
 ## Event Controller
 
-### GET /api/event
+### GET Event
 
 #### GET /api/event/fetchAll
 
@@ -882,7 +1146,7 @@ Authorization: Bearer yourtoken
 ```
 
 
-### POST /api/event
+### POST Event
 
 #### POST /api/event/create
 
@@ -1051,7 +1315,7 @@ Authorization: Bearer yourtoken
 }
 ```
 
-### PUT /api/event
+### PUT Event
 
 #### PUT /api/event/update
 
@@ -1143,7 +1407,7 @@ Authorization: Bearer yourtoken
 }
 ```
 
-### DELETE /api/event
+### DELETE Event
 
 #### DELETE /api/event/delete
 
@@ -1184,7 +1448,7 @@ Authorization: Bearer yourtoken
 
 ## Organization Controller
 
-### GET /api/organization
+### GET Organization
 
 #### GET /api/organization/fetchAll
 
@@ -1277,7 +1541,7 @@ Authorization: Bearer yourtoken
 ```
 
 
-### POST /api/organization
+### POST Organization
 
 #### POST /api/organization/create
 
@@ -1340,7 +1604,7 @@ Authorization: Bearer yourtoken
 }
 ```
 
-### PUT /api/organization
+### PUT Organization
 
 #### PUT /api/organization/update
 
@@ -1397,9 +1661,9 @@ Authorization: Bearer yourtoken
 }
 ```
 
-### DELETE /api/organization
+### DELETE Organization
 
-### DELETE /api/organization/delete
+#### DELETE /api/organization/delete
 
 #### Description
 Deletes the organization.
