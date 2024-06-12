@@ -53,6 +53,16 @@
 
 ## General Info
 
+#### Data Annotations
+- [Key]: data annotation for the primary key of the table.
+- [Required]: data annotation for making a field necessary in the table.
+- [Display(name = {name)]: data annotation for choosing how a field looks in the database.
+- [StringLength({number)]: data annotation for setting the length of the string for the field.
+- [ForeignKey({foreignKey)]: data annotation for choosing which field connects up to another table.
+- [DataType({dataType)]: data annotation for specifying the dataType for this field.
+- [EmailAddress(ErrorMessage = "{errorMessage)]: data annotation for checking that the field is an email.
+- [DisplayFormat(DataFormatString = "{format)"]: data annotation for specifying the format for this field.
+- [DisplayFormat(ApplyFormatInEdit = "{bool)"]: data annotation for using the format in edit mode.
 
 ---
 
