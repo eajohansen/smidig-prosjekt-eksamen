@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using agile_dev.Models;
 using agile_dev.Service;
 using Microsoft.AspNetCore.Authorization;

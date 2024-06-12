@@ -38,7 +38,7 @@ public class EventService {
     }
 
     // Fetch all the events that the user is attending
-    public async Task<HandleReturn<ICollection<EventDtoBackend>>>? FetchAllEventsByAttending(string userName) {
+    public async Task<HandleReturn<ICollection<EventDtoBackend>>> FetchAllEventsByAttending(string userName) {
         try {
             HandleReturn<UserFrontendDto> user = await _organizationService._userService.FetchUserByEmail(userName);
 
