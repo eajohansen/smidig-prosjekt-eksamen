@@ -3,8 +3,23 @@ import { EventItem } from "../components/EventItem.jsx";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { Link } from "react-router-dom";
+import { isAdmin } from "../services/tempService.js";
+import { useState, useEffect } from "react";
 
 export const HomePage = () => {
+  const [isAdminOrOrg, setIsAdminOrOrg] = useState(false);
+
+  useEffect(() => {
+    isUserAdmin();
+  }, []);
+
+  const isUserAdmin = async () => {
+    const adminResult = await isAdmin();
+    if (adminResult.data.admin || adminResult.data.organizer) {
+      setIsAdminOrOrg(true);
+    }
+  };
+
   return (
     <>
       <main className="homePageContainer">
@@ -43,11 +58,26 @@ export const HomePage = () => {
           <label className="createEventTxt" htmlFor="">
             Legg til nytt arrangement
           </label>
-          <Link to={"createEvent"}>
-            <button className="createEventButton">
-              <i className="bi bi-plus-circle circleIcon"></i>
-            </button>
-          </Link>
+          {isAdminOrOrg ? (
+            <>
+              <Link to={"createEvent"}>
+                <button className="createEventButton">
+                  <i className="bi bi-plus-circle circleIcon"></i>
+                </button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <button
+                className="createEventButton"
+                onClick={() => {
+                  alert("you are not admin or organizer!");
+                }}
+              >
+                <i className="bi bi-plus-circle circleIcon"></i>
+              </button>
+            </>
+          )}
         </div>
       </main>
     </>

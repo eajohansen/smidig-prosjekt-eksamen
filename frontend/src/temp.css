@@ -125,8 +125,8 @@ input {
   button {
     padding-right: 2.5rem;
     padding-left: 2.5rem;
-    height: 3rem;
-    width: 80%;
+    height: 3.5rem;
+    width: 75%;
   }
   button:hover {
     border: 1px solid black;
@@ -143,6 +143,20 @@ input {
 }
 .checkBox:checked {
   background-color: var(--main);
+}
+.createInfoBox{
+  border: 1px solid var(--secondary);
+  border-radius: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  width: 5rem;
+  #createInfoLabel{
+    padding: 0;
+  }
+  #createInfoP{
+    font-size: 0.7rem;
+  }
+
 }
 
 /* Registration form  */
@@ -168,6 +182,11 @@ input {
   hr {
     width: 237%;
   }
+  
+}
+#requiredTxt {
+  font-size: 0.7rem;
+  font-style: italic;
 }
 .profileInfoContainer {
   display: flex;
