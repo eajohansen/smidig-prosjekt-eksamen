@@ -11,8 +11,8 @@ using agile_dev.Repo;
 namespace Agile_dev.Migrations
 {
     [DbContext(typeof(InitContext))]
-    [Migration("20240612104553_Identity roles Init merge")]
-    partial class IdentityrolesInitmerge
+    [Migration("20240612215435_test")]
+    partial class test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,7 +1,7 @@
 using agile_dev.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace agile_dev
+namespace Agile_dev.Service
 {
     public static class SeedData
     {
