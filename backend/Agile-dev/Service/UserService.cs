@@ -1,4 +1,5 @@
-﻿using agile_dev.Dto;
+﻿using System.Globalization;
+using agile_dev.Dto;
 using agile_dev.Models;
 using agile_dev.Repo;
 using Microsoft.AspNetCore.Identity;
@@ -112,11 +113,11 @@ public class UserService {
         Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
 
         if (foundOrganization == null) {
-            return IdentityResult.Failed(new IdentityError { Description = $"Could not find organization" });
+            return IdentityResult.Failed(new IdentityError { Description = "Could not find organization" });
         }
 
         if (IsUserOrganizeForOrganizer(user.Id, foundOrganization.OrganizationId).Result) {
-            return IdentityResult.Failed(new IdentityError { Description = $"User is already organizer for this organization" });
+            return IdentityResult.Failed(new IdentityError { Description = "User is already organizer for this organization" });
         }
 
         IdentityResult result = await _userManager.AddToRoleAsync(user, "Organizer");
@@ -135,18 +136,18 @@ public class UserService {
             User? user = await _userManager.FindByEmailAsync(email);
 
             if (user == null) {
-                HandleReturn<bool>.Failure("User not found");
+                return HandleReturn<bool>.Failure("User not found");
             }
             
             Organization? foundOrganization = await _dbCon.Organization.FindAsync(organizationId);
 
             if (foundOrganization == null) {
-                HandleReturn<bool>.Failure("Organization not found");
+                return HandleReturn<bool>.Failure("Organization not found");
 
             }
 
             if (IsUserFollowingOrganization(user.Id, foundOrganization.OrganizationId).Result) {
-                HandleReturn<bool>.Failure("User is already following the organization");
+                return HandleReturn<bool>.Failure("User is already following the organization");
 
             }
 
@@ -232,7 +233,8 @@ public class UserService {
         user.FirstName = updatedUserInfo.FirstName;
         user.LastName = updatedUserInfo.LastName;
         if (updatedUserInfo.Birthdate != null) {
-            user.Birthdate = DateTime.Parse(updatedUserInfo.Birthdate.ToString());
+            string yr = DateTime.Parse(updatedUserInfo.Birthdate.ToString()!).ToString(CultureInfo.InvariantCulture);
+            user.Birthdate = DateTime.ParseExact(yr, "dd-MM-yyyy", CultureInfo.InvariantCulture);
         }
         user.ExtraInfo = updatedUserInfo.ExtraInfo;
 

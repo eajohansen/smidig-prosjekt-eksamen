@@ -152,15 +152,19 @@ namespace agile_dev.Controller {
         
         // POST api/user/add/organizer/1
         [Authorize(Roles = "Admin")]
-        [HttpPost("add/organizer/{orgId}")]
-        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
+        [HttpPost("add/organizer/{organizationId}")]
+        public async Task<IActionResult> AddOrganizer([FromRoute] int organizationId, User? userToAdd) {
 
+            if (organizationId < 1) {
+                return BadRequest("No organizationId provided");
+            }
+            
             if (userToAdd!.Email == null) {
                 return BadRequest("No email provided in request");
             }
 
             try {
-                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(orgId, userToAdd.Email);
+                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(organizationId, userToAdd.Email);
 
                 if (!makeUserOrganizer.Succeeded) {
                     return BadRequest(makeUserOrganizer);
@@ -226,10 +230,7 @@ namespace agile_dev.Controller {
         // PUT api/user/update
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateUserInfo(User? updatedUserInfo){
-            if (updatedUserInfo == null) {
-                return BadRequest("User object is null");
-            }
+        public async Task<IActionResult> UpdateUserInfo(User updatedUserInfo){
             if (updatedUserInfo.Email == null){
                 return BadRequest("No email provided in request");
             }
@@ -260,6 +261,10 @@ namespace agile_dev.Controller {
             try {
                 IdentityResult makeUserAdmin = await _userService.MakeUserAdmin(newAdminUser.Email);
 
+                if (!makeUserAdmin.Succeeded) {
+                    return BadRequest(makeUserAdmin.Errors);
+                }
+                
                 return Ok(makeUserAdmin);
             }
             catch (Exception exception) {
