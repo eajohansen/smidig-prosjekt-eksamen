@@ -1,17 +1,17 @@
 import "./temp.css";
 import "./eventPage.css";
-import "./css/EventDetails.css"
-import {  Routes, Route } from "react-router-dom";
+import "./css/EventDetails.css";
+import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { MainNav } from "./components/shared/MainNav";
 import { HomePage } from "./pages/HomePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { TicketsPage } from "./pages/TicketsPage";
 import { EventsPage } from "./pages/EventsPage";
-import {CreateEventPage} from "./pages/CreateEventPage";
+import { CreateEventPage } from "./pages/CreateEventPage";
 import { OrgProfilePage } from "./pages/OrgProfilePage";
 import { EventDetails } from "./pages/EventDetails";
-import { LoginPage } from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage";
 import { useEffect, useState } from "react";
 import { RegisterUserProfilePage } from "./pages/RegisterUserProfilePage";
 

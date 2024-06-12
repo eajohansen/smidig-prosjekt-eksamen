@@ -1,9 +1,11 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { sendUser } from "../services/tempService";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterUserProfilePage = () => {
-  const userEmail = "epost";
+  const navigate = useNavigate();
+  const userEmail = localStorage.getItem("emailStore");
   const [allergies, setAllergies] = useState([]);
   const [newAllergy, setNewAllergy] = useState("");
   const [dob, setDob] = useState();
@@ -52,12 +54,14 @@ export const RegisterUserProfilePage = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("frontendlog" + user);
-    console.log("frontendlog" + allergies);
-    console.log("frontendlog" + dob);
     if (user.firstName != "" && user.lastName != "") {
       const result = await sendUser(user, allergies);
-      console.log("result: " + result);
+
+      console.log("result: ");
+      console.log(result);
+      console.log("ostepop");
+      navigate("/");
+      window.location.reload();
     } else {
       alert("First name and Last name are required fields");
     }

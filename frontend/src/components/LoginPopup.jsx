@@ -62,6 +62,7 @@ const LoginPopup = () => {
       const result = await sendRegister(mailCheck, pCheck);
       if (result === true) {
         setLogin(3);
+        localStorage.setItem("emailStore", mailCheck);
       } else {
         let tempArray = [];
         for (const [key, value] of Object.entries(result)) {
