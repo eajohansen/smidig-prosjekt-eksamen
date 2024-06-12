@@ -465,6 +465,9 @@ header {
   font-family: "Inter", sans-serif;
   font-size: 1rem;
   color: black;
+  input {
+    color: black;
+  }
 
   label{
     padding-top: 0.9rem;
