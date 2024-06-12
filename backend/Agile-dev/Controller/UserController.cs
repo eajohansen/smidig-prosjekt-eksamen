@@ -30,21 +30,6 @@ namespace agile_dev.Controller {
 
       
         #region GET
-
-        //
-        // WTF @Eirik
-        //
-        [Authorize]
-        [HttpGet("fetch/email")]
-        public ActionResult FetchUserEmail() {
-            try {
-               string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
-               return Ok(userEmail);
-            }
-            catch (Exception e) {
-                return StatusCode(500 , "Internal server error: " + e.Message);
-            }
-        }
         
         // GET: api/user/fetchAll
         [Authorize (Roles="Admin, Organizer")]
@@ -91,38 +76,21 @@ namespace agile_dev.Controller {
                 return StatusCode(500, "Internal server Error: " + exception.Message);
             }
         }
-
-        // GET api/user/fetch/email/gunnar@gunnarsen.no
+        
+        // GET: api/user/fetch/email
         [Authorize]
-        [HttpGet("fetch/email/{email}")]
-        public async Task<IActionResult> FetchUserByEmail(string? email) {
-            //
-            // Change to get by authorize?    // Do we really need this @Eirik
-            //
-            if (email!.Length <= 5) {
-                return BadRequest("Email is too short");
-            }
-            
-            string? userName = User.FindFirstValue(ClaimTypes.Name);
-            bool isLoggedInUser = email.Equals(userName);
-
-            if (!isLoggedInUser) {
-                return Unauthorized("You are not authorized to view this user, you can only view your own user");
-            }
-            
+        [HttpGet("fetch/email")]
+        public ActionResult FetchUserEmail() {
             try {
-                HandleReturn<UserFrontendDto> result = await _userService.FetchUserByEmail(email);
-                if (!result.IsSuccess) {
-                    return NotFound(result.ErrorMessage);
-                }
-
-                return Ok(result.Value);
+                string userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                return Ok(userEmail);
             }
-            catch (Exception exception) {
-                return StatusCode(500, "Internal server Error: " + exception.Message);
+            catch (Exception e) {
+                return StatusCode(500 , "Internal server error: " + e.Message);
             }
         }
 
+        // GET: api/user/checkAdminPrivileges
         [Authorize]
         [HttpGet("checkAdminPrivileges")]
         public async Task<IActionResult> CheckIfUserIsAdminOrOrganizer() {
@@ -152,15 +120,19 @@ namespace agile_dev.Controller {
         
         // POST api/user/add/organizer/1
         [Authorize(Roles = "Admin")]
-        [HttpPost("add/organizer/{orgId}")]
-        public async Task<IActionResult> AddOrganizer([FromRoute] int orgId, User? userToAdd) {
+        [HttpPost("add/organizer/{organizationId}")]
+        public async Task<IActionResult> AddOrganizer([FromRoute] int organizationId, User? userToAdd) {
 
+            if (organizationId < 1) {
+                return BadRequest("No organizationId provided");
+            }
+            
             if (userToAdd!.Email == null) {
                 return BadRequest("No email provided in request");
             }
 
             try {
-                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(orgId, userToAdd.Email);
+                IdentityResult makeUserOrganizer = await _userService.AddUserAsOrganizer(organizationId, userToAdd.Email);
 
                 if (!makeUserOrganizer.Succeeded) {
                     return BadRequest(makeUserOrganizer);
@@ -226,10 +198,7 @@ namespace agile_dev.Controller {
         // PUT api/user/update
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateUserInfo(User? updatedUserInfo){
-            if (updatedUserInfo == null) {
-                return BadRequest("User object is null");
-            }
+        public async Task<IActionResult> UpdateUserInfo(User updatedUserInfo){
             if (updatedUserInfo.Email == null){
                 return BadRequest("No email provided in request");
             }
@@ -260,6 +229,10 @@ namespace agile_dev.Controller {
             try {
                 IdentityResult makeUserAdmin = await _userService.MakeUserAdmin(newAdminUser.Email);
 
+                if (!makeUserAdmin.Succeeded) {
+                    return BadRequest(makeUserAdmin.Errors);
+                }
+                
                 return Ok(makeUserAdmin);
             }
             catch (Exception exception) {
