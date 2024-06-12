@@ -551,7 +551,6 @@ public class EventService {
         catch (Exception exception) {
             throw new Exception("An error occurred while combining date and time.", exception);
         }
-
     }
     
     private List<EventDtoBackend> ConvertEventsToEventDtoBackend(List<int> eventIds) {
@@ -587,7 +586,6 @@ public class EventService {
                     }).ToList(),
                 StartTime = eEvent.StartTime,
                 EndTime = eEvent.EndTime,
-                // Include other properties as needed
             })
             .ToList();
         return foundEvents;
