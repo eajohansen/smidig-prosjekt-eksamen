@@ -60,7 +60,7 @@ public class InitContext : IdentityDbContext<User> {
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;");
+            optionsBuilder.UseMySQL("Server=database,9999;Database=agile-project;User=root;Password=agileavengers;Max Pool Size=1024;Connect Timeout=10;");
         }
     }
 }

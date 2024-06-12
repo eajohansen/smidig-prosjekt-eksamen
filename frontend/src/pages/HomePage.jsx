@@ -1,21 +1,13 @@
-import React from "react";
+import "../css/homepage.css";
 import { EventItem } from "../components/EventItem.jsx";
-//import {events} from "./EventsPage.jsx";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import "../css/homepage.css"
-// const follower= [
-//   {
-//     followersTotal: 122,
-//     followersLastMonth: 39,
-//     growth: 83
-//   }
-// ];
+import { Link } from "react-router-dom";
+
 export const HomePage = () => {
-  //  return <LoginPopup />;
   return (
     <>
-     <main className="homePageContainer">
+      <main className="homePageContainer">
         <div className="eventHomeContainer">
           <label htmlFor="">Førstkommende Arrangement</label>
           <div className="eventObject">
@@ -37,11 +29,6 @@ export const HomePage = () => {
                 <p>vekst</p>
                 <p>9</p>
               </div>
-              {/* <FollowersBox
-                      followers={follower.followersTotal}
-                      followersLM={follower.followersLastMonth}
-                      growth={follower.growth}
-                      /> */}
             </div>
             <button className="seeEventButton showFollowers">
               Vis liste over følgere
@@ -56,9 +43,11 @@ export const HomePage = () => {
           <label className="createEventTxt" htmlFor="">
             Legg til nytt arrangement
           </label>
-          <button className="createEventButton">
-            <i className="bi bi-plus-circle circleIcon"></i>
-          </button>
+          <Link to={"createEvent"}>
+            <button className="createEventButton">
+              <i className="bi bi-plus-circle circleIcon"></i>
+            </button>
+          </Link>
         </div>
       </main>
     </>

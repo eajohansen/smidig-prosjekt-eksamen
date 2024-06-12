@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { sendEvent } from "../services/tempService";
+import { useNavigate } from "react-router-dom";
 import "../temp.css";
 import "../css/CreateEventPage.css";
 export const CreateEventPage = () => {
+  const navigate = useNavigate();
   const [checkedFree, setCheckedFree] = useState();
   const organization = 1;
   const [start, setStart] = useState();
@@ -10,9 +12,10 @@ export const CreateEventPage = () => {
   const [customFields, setCustomFields] = useState([]);
   const [newCustomField, setNewCustomField] = useState({
     Description: "",
-    Value: false
-  });  const [event, setEvent] = useState({
-    organizationId: 0,
+    Value: false,
+  });
+  const [event, setEvent] = useState({
+    organizationId: 1,
     title: "",
     address: "",
     contactP: "",
@@ -21,7 +24,7 @@ export const CreateEventPage = () => {
     ageLimit: 0,
     food: false,
     free: false,
-    published: false,
+    published: true,
     private: false,
     start: "",
     startTime: "",
@@ -41,28 +44,32 @@ export const CreateEventPage = () => {
     const curTargetName = e?.currentTarget?.name;
     e.persist();
     if (curTargetVal != null) {
-      if (['customfieldsDesc', 'customfieldsValue'].includes(curTargetName)) {
-        let value = curTargetName === 'customfieldsValue' ? e.currentTarget.checked : curTargetVal;
-        setNewCustomField(prev => ({
+      if (["customfieldsDesc", "customfieldsValue"].includes(curTargetName)) {
+        let value =
+          curTargetName === "customfieldsValue"
+            ? e.currentTarget.checked
+            : curTargetVal;
+        setNewCustomField((prev) => ({
           ...prev,
-          [curTargetName === 'customfieldsDesc' ? 'Description' : 'Value']: value
+          [curTargetName === "customfieldsDesc" ? "Description" : "Value"]:
+            value,
         }));
       } else {
         setEvent({ ...event, [curTargetName]: curTargetVal });
       }
     }
-  }
-  const defaultValue = new Date().toISOString().split('T')[0]
+  };
+  const defaultValue = new Date().toISOString().split("T")[0];
 
   const handleCustomFields = () => {
     const newEventCustomField = {
-      "Description": newCustomField.Description,
-      "Value": newCustomField.Value
+      Description: newCustomField.Description,
+      Value: newCustomField.Value,
     };
 
-    setEvent(prev => {
+    setEvent((prev) => {
       let newEventCustomFields = [...prev.EventCustomFields];
-      newEventCustomFields.push({CustomField: newEventCustomField});
+      newEventCustomFields.push({ CustomField: newEventCustomField });
 
       // Clear the newCustomField state after adding it to the event
       setNewCustomField({
@@ -72,12 +79,17 @@ export const CreateEventPage = () => {
 
       return {
         ...prev,
-        EventCustomFields: newEventCustomFields
-      }
+        EventCustomFields: newEventCustomFields,
+      };
     });
-  }
+  };
   const handleSubmit = async () => {
-    await sendEvent(event);
+    const result = await sendEvent(event);
+    console.log("her kommer result");
+    console.log(result);
+    if (result?.status === 200) {
+      navigate("/events");
+    }
   };
 
   return (
@@ -184,7 +196,7 @@ export const CreateEventPage = () => {
                     Legg til
                   </button>
                 </div>
-                <label htmlFor="yourAllergiProfile">Dine egendefinerte felt</label>
+                <h3>Dine egendefinerte felt</h3>
                 <div className="allergyOutput">
                   <ul>
                     {event.EventCustomFields.map((item, i) => (
@@ -196,16 +208,15 @@ export const CreateEventPage = () => {
                   </ul>
                 </div>
               </div>
-              <div id="upLoad">
-                <label htmlFor="">Last opp bilde: </label>
-                 <button className="chooseBtn">Last opp bilde</button>
+                <div id="upLoad">
+                    <label htmlFor="">Last opp bilde: </label>
+                    <button className="chooseBtn">Last opp bilde</button>
+                </div>
+            </div>
+              <div className="event-page-button-div">
+                  <button className="canclBtn">Avbryt</button>
+                  <button onClick={handleSubmit} className="createBtn">Lagre og forhåndsvis</button>
               </div>
-            </div>
-            <div className="event-page-button-div">
-             
-              <button className="canclBtn">Avbryt</button>
-              <button onClick={handleSubmit} className="createBtn">Lagre og forhåndsvis</button>
-            </div>
           </section>
         </div>
       </div>

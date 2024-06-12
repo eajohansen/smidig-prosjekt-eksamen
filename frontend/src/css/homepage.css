@@ -1,12 +1,12 @@
 .homePageContainer {
-    color: black;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem 8rem;
-    label{
-        font-size: x-large;
-    }
+  color: black;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2rem 8rem;
+  label {
+    font-size: x-large;
+  }
 }
 
  .infoFollowers {
@@ -17,7 +17,6 @@
         padding-bottom: 0.3rem;
         padding-top: 0.2rem;
      }
-
  }
 .vekstobject {
     display: flex;
@@ -26,7 +25,6 @@
     border-radius: 1rem;
     padding: 1rem;
     gap: 1rem;
-
 }
 .calendar{
     width: 40%;

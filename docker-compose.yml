@@ -1,6 +1,7 @@
 services:
   database:
     image: mysql
+    command: [ "--max_connections=1000" ]
     restart: always
     ports:
       - '9999:3306'
