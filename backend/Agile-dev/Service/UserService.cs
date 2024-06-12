@@ -264,7 +264,6 @@ public class UserService {
                     Name = allergy.Name,
                     Description = allergy.Description
                 });
-                await _dbCon.Allergy.AddAsync(allergy);
             }
         }
 
