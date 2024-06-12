@@ -125,8 +125,8 @@ input {
   button {
     padding-right: 2.5rem;
     padding-left: 2.5rem;
-    height: 3rem;
-    width: 80%;
+    height: 3.5rem;
+    width: 75%;
   }
   button:hover {
     border: 1px solid black;
@@ -143,6 +143,24 @@ input {
 }
 .checkBox:checked {
   background-color: var(--main);
+}
+.pwordDetails {
+  position: absolute;
+  top: 35%;
+  left: 60%;
+  border-radius: 0.3rem;
+  background-color: white;
+  border: 1px solid var(--secondary);
+  color: black;
+  z-index: 100;
+
+  #createInfoLabel {
+      padding: 0;
+    }
+  
+    #createInfoP {
+      font-size: 0.7rem;
+    }
 }
 
 /* Registration form  */
@@ -168,6 +186,11 @@ input {
   hr {
     width: 237%;
   }
+  
+}
+#requiredTxt {
+  font-size: 0.7rem;
+  font-style: italic;
 }
 .profileInfoContainer {
   display: flex;
@@ -373,18 +396,6 @@ header {
     color: var(--main);
   }
 }
-.pwordDetails {
-  position: absolute;
-  top: 45%;
-  left: 70%;
-  width: 10rem;
-  height: 8rem;
-  background-color: white;
-  border: 1px solid black;
-  color: black;
-  z-index: 100;
-  display: inline;
-}
 
 .dNone {
   display: none;
@@ -397,6 +408,9 @@ header {
   font-family: "Inter", sans-serif;
   font-size: 1rem;
   color: black;
+  label{
+    padding-top: 1rem;
+  }
   input {
     color: black;
   }
@@ -431,7 +445,7 @@ header {
    label{
     padding: 0.6rem;
     padding-left: 0;
-    padding-top: 0;
+    padding-top: 1rem;
    }
 
  }

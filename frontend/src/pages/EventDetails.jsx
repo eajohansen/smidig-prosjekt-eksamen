@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../css/EventDetails.css";
 import { useParams } from "react-router-dom";
-import { getEventById } from "../services/tempService";
+import { getEventById, isAdmin } from "../services/tempService";
 import dayjs from "dayjs";
 import CustomParseFormat from "dayjs/plugin/customParseFormat";
 
@@ -9,6 +9,7 @@ export const EventDetails = () => {
   const { id } = useParams();
   const [event, setEvent] = useState([{}]);
   const [loading, setLoading] = useState(true);
+  const [isAdminOrOrg, setIsAdminOrOrg] = useState(false);
   const [dateTime, setDateTime] = useState({
     timeStart: "",
     timeEnd: "",
@@ -22,9 +23,14 @@ export const EventDetails = () => {
 
   const loadEvent = async () => {
     const result = await getEventById(id);
-    const testDate = dayjs(event.startTime).format("DD-MM-YYYY");
 
-    console.log(dateTime);
+    const adminResult = await isAdmin();
+    if (adminResult.data.admin || adminResult.data.organizer) {
+      setIsAdminOrOrg(true);
+    }
+    console.log("her kommer adminResult");
+    console.log(adminResult.data.admin);
+    console.log(adminResult.data.organizer);
     setEvent(result);
     if (result != undefined && result != null) {
       setLoading(false);
@@ -57,31 +63,31 @@ export const EventDetails = () => {
         <div className="infoContainer">
           <div className="infoItem">
             <p>Ledige Plasser:</p>
-            <p>{event.capacity}</p>
+            <p>{event?.availableCapacity}</p>
           </div>
           <div className="infoItem">
             <p>Aldersgrense:</p>
-            <p>{event.ageLimit}</p>
+            <p>{event?.ageLimit}</p>
           </div>
           <div className="infoItem">
-            <p>privat?: </p>
-            <p>{event.private ? "ja" : "nei"}</p>
+            <p>Åpent Arrangement: </p>
+            <p>{event?.private ? "nei" : "ja"}</p>
           </div>
           <div className="infoItem">
             <p>Organisasjon:</p>
-            <p> {event?.organization?.name}</p>
+            <p> {event?.organizationName}</p>
           </div>
           <div className="infoItem">
             <p>Kontaktperson:</p>
-            <p> {event?.contactPerson?.name}</p>
+            <p> {event?.contactPersonName}</p>
           </div>
         </div>
       </div>
       <div className="eventDetailsRight">
         <div className="eventInfo">
-          <h1>{event.title}</h1>
+          <h1>{event?.title}</h1>
           <div className="dateTimePlace">
-            {dateTime.dateStart === dateTime.dateEnd ? (
+            {dateTime?.dateStart === dateTime?.dateEnd ? (
               <>
                 <div className="dateTime">
                   <div className="dateItem">
@@ -90,7 +96,7 @@ export const EventDetails = () => {
                   </div>
                   <div className="timeItem">
                     <i className="bi bi-clock icon"></i>
-                    <p>{`${dateTime.timeStart} - ${dateTime.timeEnd}`}</p>
+                    <p>{`${dateTime?.timeStart} - ${dateTime?.timeEnd}`}</p>
                   </div>
                 </div>
               </>
@@ -100,21 +106,21 @@ export const EventDetails = () => {
                   <div>
                     <div className="dateItem">
                       <i className="bi bi-calendar3 icon"></i>
-                      <p>{dateTime.dateStart}</p>
+                      <p>{dateTime?.dateStart}</p>
                     </div>
                     <div className="dateItem">
                       <i className="bi bi-calendar3 icon"></i>
-                      <p>{dateTime.dateEnd}</p>
+                      <p>{dateTime?.dateEnd}</p>
                     </div>
                   </div>
                   <div>
                     <div className="timeItem">
                       <i className="bi bi-clock icon"></i>
-                      <p>{`${dateTime.timeStart}`}</p>
+                      <p>{`${dateTime?.timeStart}`}</p>
                     </div>
                     <div className="timeItem">
                       <i className="bi bi-clock icon"></i>
-                      <p>{`${dateTime.timeEnd} `}</p>
+                      <p>{`${dateTime?.timeEnd} `}</p>
                     </div>
                   </div>
                 </div>
@@ -122,7 +128,7 @@ export const EventDetails = () => {
             )}
             <div className="place">
               <i className="bi bi-geo-alt icon"></i>
-              <p>{event.place.location}</p>
+              <p>{event?.placeLocation}</p>
             </div>
           </div>
         </div>
@@ -131,24 +137,44 @@ export const EventDetails = () => {
         </div>
         <div className="btnDiv">
           <button className="buttons">Rediger</button>
-          <button className="publishBtn buttons">Publiser</button>
+          <button className="publishBtn buttons">
+            {isAdminOrOrg ? "Publiser" : "Meld deg på"}
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-{
-  /* <h1>{event.title}</h1>
-<p>DATO</p>
-<p>Beskrivelse: {event.description}</p>
-<p>Antall plasser: {event.capacity}</p>
-<p>Aldersgrense: {event.ageLimit}</p>
-<p>privat?: {event.private ? "ja" : "nei"}</p>
-<p>publisert?: {event.published ? "ja" : "nei"}</p>
-<p>organisasjon: {event?.organization?.name}</p>
-<p>lokasjon: {event?.place?.location}</p>
-<p>kontaktperson: {event?.contactPerson?.name}</p>
-<p>start: {event.startTime}</p>
-<p>slutt: {event.endTime}</p> */
-}
+// {
+//   "eventId": 1,
+//   "title": "Sample Event",
+//   "description": "This is a sample description for the event.",
+//   "capacity": 30,
+//   "ageLimit": 18,
+//   "private": false,
+//   "published": true,
+//   "placeLocation": "there",
+//   "placeUrl": "hye",
+//   "imageLink": "hey",
+//   "imageDescription": "fheyu",
+//   "contactPersonName": "tobias",
+//   "contactPersonEmail": "tobias@hto.no",
+//   "contactPersonNumber": null,
+//   "organizationName": "test",
+//   "availableCapacity": 27,
+//   "startTime": "2024-01-12T21:12:00",
+//   "endTime": "2024-02-13T23:50:00",
+//   "eventCustomFields": [
+//     {
+//       "EventCustomField": "Object"
+//     },
+//     {
+//       "EventCustomField": "Object"
+//     }
+//   ]
+// },
+// {
+//   "more event": "objects"
+// }
+// ]

@@ -1,24 +1,28 @@
 import { axiosInstance } from "./helpers";
+import { useNavigate } from "react-router-dom";
 
 export const sendRegister = async (email, password) => {
   try {
     const result = await axiosInstance.post("register", { email, password });
+    //[PUT /api/user/update
     if (result.status === 200) {
-     /* const res = await sendLogin(email, password);
-        if (res?.status === 200) {
-            return email;
-        }*/
+      const res = await sendLogin(email, password);
+      if (res.status === 200) {
+        //return email
+      }
+      console.log(res.status);
       return result.status === 200;
     }
   } catch (err) {
-    console.log(err.response.data.errors);
-    return err.response.data.errors;
+    console.log(err);
+    return err;
   }
 };
 export const sendUser = async (user, allergyList) => {
+  // const navigate = useNavigate();
   try {
     console.log(user, allergyList);
-    const result = await axiosInstance.post("api/user/create", {
+    const result = await axiosInstance.put("api/user/update", {
       email: user.email,
       firstname: user.firstName,
       lastname: user.lastName,
@@ -26,7 +30,6 @@ export const sendUser = async (user, allergyList) => {
       allergies: allergyList,
     });
     if (result.status === 200) {
-
       return result.status === 200;
     }
   } catch (err) {
@@ -72,13 +75,13 @@ export const sendEvent = async (event) => {
         Private: event.private,
         Place: {
           Location: event.address,
-          Url: null,
+          URL: null,
         },
         Image: {
           Link: "test link",
           Description: "",
         },
-        ContactPerson: {
+        contactPerson: {
           Name: event.contactP,
           Email: "test@test.no",
           Number: "",
@@ -115,7 +118,8 @@ export const getEvents = async () => {
 
 export const getEventById = async (id) => {
   try {
-    const result = await axiosInstance.get(`api/event/fetch/${id}`);
+    const result = await axiosInstance.get(`api/event/fetch/id/${id}`);
+    // `GET /api/event/fetch/id/{eventId}`
     console.log(result);
     return result?.data;
   } catch (err) {
@@ -138,7 +142,7 @@ export const sendOrg = async (name, description) => {
 export const fetchOrg = async () => {
   try {
     const result = await axiosInstance.get("api/organization/fetch/id/1");
-    if(result?.status === 200) {
+    if (result?.status === 200) {
       return result;
     } else {
       return null;
@@ -146,7 +150,7 @@ export const fetchOrg = async () => {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 export const editOrg = async (orgInfo) => {
   try {
@@ -159,4 +163,12 @@ export const editOrg = async (orgInfo) => {
   } catch (err) {
     console.log(err);
   }
-}
+};
+export const isAdmin = async () => {
+  try {
+    const result = await axiosInstance.get("api/user/checkAdminPrivileges");
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};

@@ -4,7 +4,8 @@
   grid-auto-rows: auto;
   padding-top: 1rem;
   color: black;
-  gap: 9rem;
+  row-gap: 1rem;
+  column-gap: 8.5rem;
 }
 
 .pageHeader {
@@ -61,10 +62,6 @@
   border-radius: 8px;
 }
 
-.ticketInfo p {
-  padding-top: 0.25rem;
-}
-
 .waitlist {
   color: green;
 }
@@ -84,7 +81,7 @@
 }
 
 .seeEventButton {
-  background-color: #007bff;
+  background-color: #497d95;
   color: white;
   margin-top: 0.5rem;
 }

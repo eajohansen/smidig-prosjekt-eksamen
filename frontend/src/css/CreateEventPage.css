@@ -62,7 +62,6 @@ main {
     > .right-box > div > div {
         display: flex;
         flex-direction: column;
-        /* gap: 2rem; */
         label{
             padding: 0;
         }
@@ -84,13 +83,18 @@ main {
 }
 .event-page-button-div {
     display: flex;
-    justify-content: start;
-    gap: 1rem;
+        flex-direction: row;
+        gap: 10rem;
+        padding-top: 1rem;
+        padding-top: 3rem;
+    
     button {
-        padding: 0.5rem 1rem;
-        border-radius: 0.2rem;
-        border: 1px solid white;
+        border-radius: 0.3rem;
         font-size: 0.8rem;
+        height: 2.8rem;
+        width: 8rem;
+        border: 1px solid black;
+       
     }
     .canclBtn{
         margin: 0;

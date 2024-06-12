@@ -1,9 +1,11 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { sendUser } from "../services/tempService";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterUserProfilePage = () => {
-  const userEmail = "epost";
+  const navigate = useNavigate();
+  const userEmail = localStorage.getItem("emailStore");
   const [allergies, setAllergies] = useState([]);
   const [newAllergy, setNewAllergy] = useState("");
   const [dob, setDob] = useState();
@@ -52,12 +54,14 @@ export const RegisterUserProfilePage = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("frontendlog" + user);
-    console.log("frontendlog" + allergies);
-    console.log("frontendlog" + dob);
     if (user.firstName != "" && user.lastName != "") {
       const result = await sendUser(user, allergies);
-      console.log("result: " + result);
+
+      console.log("result: ");
+      console.log(result);
+      console.log("ostepop");
+      navigate("/");
+      window.location.reload();
     } else {
       alert("First name and Last name are required fields");
     }
@@ -68,6 +72,7 @@ export const RegisterUserProfilePage = () => {
       <div className="headderDiv">
         <h2>Opprett Bruker</h2>
         <hr></hr>
+        <p id="requiredTxt">* Obligatoriske felt</p>
       </div>
       <div className="profileInfoContainer inputHover">
         <div className="userInfoContainer">
@@ -78,21 +83,21 @@ export const RegisterUserProfilePage = () => {
               <i className="bi bi-lock"></i>
             </span>
           </div>
-          <label htmlFor="fNameInput">Fornavn</label>
+          <label htmlFor="fNameInput">Fornavn*</label>
           <input
             type="text"
             id="fNameInput"
             name="fName"
             onChange={handleChange}
           />
-          <label htmlFor="lNameInput">Etternavn</label>
+          <label htmlFor="lNameInput">Etternavn*</label>
           <input
             type="text"
             id="lNameInput"
             name="lName"
             onChange={handleChange}
           />
-          <label htmlFor="dobInput">Fødselsdato</label>
+          <label htmlFor="dobInput">Fødselsdato*</label>
           <input
             className="date"
             type="date"
