@@ -2,8 +2,10 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { fetchOrg, sendOrg, editOrg } from "../services/tempService";
+import {useNavigate} from "react-router-dom";
 
 export const OrgProfilePage = () => {
+  const navigate = useNavigate();
   const [orgInfo, setOrgInfo] = useState({ name: "", description: "" });
   const [alreadyOrg, setAlreadyOrg] = useState(false);
   const userEmail = localStorage.getItem("emailStore");
@@ -15,7 +17,9 @@ export const OrgProfilePage = () => {
     console.log(orgInfo);
     if (orgInfo.name != "" && alreadyOrg === false) {
       const result = await sendOrg(orgInfo.name, orgInfo.description);
-      console.log(result);
+      if(result?.status === 200) {
+        navigate("/");
+      }
     } else {
       const result = await editOrg(orgInfo);
       console.log(result);
