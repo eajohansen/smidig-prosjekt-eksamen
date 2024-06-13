@@ -89,15 +89,8 @@ public class OrganizationService {
             if (!databaseOrganization.IsSuccess) {
                 return HandleReturn<Organization>.Failure("Could not find the organization");
             }
-            Console.WriteLine("------111"+organization.Name);
+            
             Organization updatedOrganization = databaseOrganization.Value!;
-            Console.WriteLine("------222"+organization.Name);
-            
-            //organization = AddRelationToOrganization([organization]).Result[0];
-            
-            Console.WriteLine(updatedOrganization.Name);
-            Console.WriteLine(databaseOrganization.Value.Name);
-            Console.WriteLine(organization.Name);
             updatedOrganization.Name = organization.Name;
             updatedOrganization.Description = organization.Description;
             updatedOrganization.ImageId = organization.ImageId;
