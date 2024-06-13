@@ -22,7 +22,7 @@ export const HomePage = () => {
 
   return (
     <>
-      <main className="homePageContainer">
+      {localStorage.getItem("organizator") === "true" || localStorage.getItem("admin") === "true" ? (<main className="homePageContainer">
         <div className="eventHomeContainer">
           <label htmlFor="">Førstkommende Arrangement</label>
           <div className="eventObject">
@@ -50,6 +50,7 @@ export const HomePage = () => {
             </button>
           </div>
         </div>
+
         <div className="calendar">
           <label htmlFor="">Oversikt</label>
           <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />
@@ -79,7 +80,7 @@ export const HomePage = () => {
             </>
           )}
         </div>
-      </main>
+      </main>) : (<main><h1>User dashboard</h1> </main>) }
     </>
   );
 };
