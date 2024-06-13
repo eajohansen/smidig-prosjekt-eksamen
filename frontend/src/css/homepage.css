@@ -9,51 +9,51 @@
   }
 }
 
- .infoFollowers {
-     display: flex;
-     flex-direction: row;
-     flex-wrap: wrap;
-     p{
-        padding-bottom: 0.1rem;
-     }
- }
-.vekstobject {
-    display: flex;
-    flex-direction: column;
-    border: black 0.1rem solid;
-    border-radius: 1rem;
-    padding: 1rem;
-    gap: 1rem;
+.infoFollowers {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  p {
+    padding-bottom: 0.1rem;
+  }
 }
-.calendar{
-    width: 50%;
+.vekstobject {
+  display: flex;
+  flex-direction: column;
+  border: black 0.1rem solid;
+  border-radius: 1rem;
+  padding: 1rem;
+  gap: 1rem;
+}
+.calendar {
+  width: 50%;
 }
 
 .createEventContainer {
-    /* width: 50%; */
-    padding-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  /* width: 50%; */
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .createEventTxt {
-    font-size: 2rem;
-    font-weight: bold;
-    padding-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  padding-bottom: 1rem;
 }
 
 .createEventButton {
-    justify-self: center;
-    background-color: white;
+  justify-self: center;
+  background-color: white;
 }
 
 .createEventButton:hover {
-   color: #497d95;
+  color: #497d95;
 }
 
 .circleIcon {
-    font-size: 7rem;
+  font-size: 7rem;
 }

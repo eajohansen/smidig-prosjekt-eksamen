@@ -1,11 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import {fetchOrg, sendOrg, editOrg} from "../services/tempService";
+import { fetchOrg, sendOrg, editOrg } from "../services/tempService";
 
 export const OrgProfilePage = () => {
   const [orgInfo, setOrgInfo] = useState({ name: "", description: "" });
   const [alreadyOrg, setAlreadyOrg] = useState(false);
+  const userEmail = localStorage.getItem("emailStore");
   const handleChange = (e) => {
     setOrgInfo({ ...orgInfo, [e.currentTarget.name]: e.currentTarget.value });
   };
@@ -17,18 +18,19 @@ export const OrgProfilePage = () => {
       console.log(result);
     } else {
       const result = await editOrg(orgInfo);
-        console.log(result);
+      console.log(result);
     }
   };
 
   const fetchOrganization = async () => {
     const result = await fetchOrg();
-    if(result?.status === 200) {
-        setAlreadyOrg(true); console.log(result?.data)
+    if (result?.status === 200) {
+      setAlreadyOrg(true);
+      console.log(result?.data);
       setOrgInfo(result.data);
-        console.log(alreadyOrg)
+      console.log(alreadyOrg);
     }
-  }
+  };
 
   useEffect(() => {
     fetchOrganization();
@@ -46,7 +48,12 @@ export const OrgProfilePage = () => {
           <div className="userInfoContainer">
             <label htmlFor="emailRegister">Epost</label>
             <div className="emailContainer">
-              <input type="email" id="emailRegister" value="epost" readOnly />
+              <input
+                type="email"
+                id="emailRegister"
+                value={userEmail}
+                readOnly
+              />
 
               <span className="icon-inside">
                 <i className="bi bi-lock"></i>
@@ -79,10 +86,12 @@ export const OrgProfilePage = () => {
               <p>Last opp bilde:</p>
               <button className="chooseBtn">Velg bilde</button>
             </div>
-             <div className="btnDiv">
+            <div className="btnDiv">
               <button className="canclBtn">Avbryt</button>
               <button className="createBtn" onClick={handleSubmit}>
-                {alreadyOrg === false ? "Opprett Organisasjon" : "Endre Organisasjon"}
+                {alreadyOrg === false
+                  ? "Opprett Organisasjon"
+                  : "Endre Organisasjon"}
               </button>
             </div>
           </div>
