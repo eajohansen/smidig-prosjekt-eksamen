@@ -3,11 +3,10 @@ using System.Text.Json.Serialization;
 using agile_dev.Models;
 using agile_dev.Repo;
 using agile_dev.Service;
+using Agile_dev.Service;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 namespace agile_dev;
 
@@ -39,6 +38,9 @@ public class Program
         builder.Services.AddScoped<EventService>();
         builder.Services.AddScoped<OrganizationService>();
         
+        // Register the custom UserManager
+        builder.Services.AddScoped<UserManager<User>, CustomUserManager>();
+        
         builder.Services.AddDbContextPool<InitContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"), mysqlOptions => {
                 mysqlOptions.EnableRetryOnFailure();
@@ -66,7 +68,6 @@ public class Program
                    .AddEntityFrameworkStores<InitContext>();
         
         builder.Services.AddAuthentication();
-   
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -92,7 +93,8 @@ public class Program
             var configuration = services.GetRequiredService<IConfiguration>();
             SeedData.Initialize(services, configuration).Wait();
         }
-
+        
+       
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();

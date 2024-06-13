@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Agile_dev.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityrolesInitmerge : Migration
+    public partial class test : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
