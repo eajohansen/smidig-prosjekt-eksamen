@@ -51,7 +51,7 @@ export const HomePage = () => {
           </div>
         </div>
 
-        <div className="calendar">
+        <div className="calender">
           <label htmlFor="">Oversikt</label>
           <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />
         </div>

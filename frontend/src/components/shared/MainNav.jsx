@@ -23,7 +23,7 @@ export const MainNav = ({ version }) => {
             </Link>
 
             <Link to="tickets" className="navItem">
-              <i className="bi bi-ticket"></i> <p>Biletter</p>
+              <i className="bi bi-ticket"></i> <p>Billett</p>
             </Link>
 
             <Link to="events" className="navItem">

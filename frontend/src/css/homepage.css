@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 2rem 9rem;
+  gap: 0rem 9rem;
   label {
     font-size: x-large;
   }
@@ -24,14 +24,15 @@
   border-radius: 1rem;
   padding: 1rem;
   gap: 1rem;
+  width: 120%;
 }
-.calendar {
-  width: 50%;
+.calender {
+  width: 44%;
 }
 
 .createEventContainer {
   /* width: 50%; */
-  padding-left: 1rem;
+  /* padding-left: 1rem; */
   display: flex;
   flex-direction: column;
   justify-content: center;
